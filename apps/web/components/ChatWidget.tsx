@@ -26,17 +26,17 @@ function limitByWordsAndChars(
   maxChars: number,
 ) {
   const charLimited = value.length > maxChars ? value.slice(0, maxChars) : value;
-  const words = normalizeText(charLimited).split(/\s+/).filter(Boolean);
+  const words = charLimited.trim().split(/\s+/).filter(Boolean);
 
   if (words.length <= maxWords) {
-    return normalizeText(charLimited);
+    return charLimited;
   }
 
   return words.slice(0, maxWords).join(" ");
 }
 
 function countWords(value: string) {
-  return normalizeText(value).split(/\s+/).filter(Boolean).length;
+  return value.trim().split(/\s+/).filter(Boolean).length;
 }
 
 function getOrCreateSessionId() {
@@ -124,10 +124,8 @@ export default function ChatWidget() {
     }
 
     const visibleQuestion = applyFrontendLimit(input);
-    const outboundQuestion = limitByWordsAndChars(
-      visibleQuestion,
-      SEND_MAX_WORDS,
-      SEND_MAX_CHARS,
+    const outboundQuestion = normalizeText(
+      limitByWordsAndChars(visibleQuestion, SEND_MAX_WORDS, SEND_MAX_CHARS),
     );
 
     if (!outboundQuestion) return;
@@ -311,3 +309,4 @@ export default function ChatWidget() {
     </div>
   );
 }
+
