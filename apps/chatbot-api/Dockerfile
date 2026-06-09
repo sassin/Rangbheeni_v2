@@ -1,25 +1,27 @@
-FROM node:20-alpine AS deps
-WORKDIR /app
-COPY package.json ./
-COPY apps/web/package.json apps/web/package.json
-COPY apps/content-api/package.json apps/content-api/package.json
-COPY apps/chatbot-api/package.json apps/chatbot-api/package.json
-COPY packages/shared-types/package.json packages/shared-types/package.json
-COPY packages/seed-data/package.json packages/seed-data/package.json
-RUN npm install
+﻿FROM node:22-alpine AS build
 
-FROM node:20-alpine AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-RUN npm run prisma:generate
+
+COPY package*.json ./
+COPY apps ./apps
+COPY packages ./packages
+COPY prisma ./prisma
+COPY tsconfig*.json ./
+
+RUN npm ci
+RUN npx prisma generate
 RUN npm --workspace @rangbheeni/chatbot-api run build
+RUN npm prune --omit=dev
 
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runtime
+
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/apps/chatbot-api/dist ./apps/chatbot-api/dist
+
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/package*.json ./
+COPY --from=build /app/apps/chatbot-api ./apps/chatbot-api
+COPY --from=build /app/packages ./packages
+COPY --from=build /app/prisma ./prisma
+
 CMD ["node", "apps/chatbot-api/dist/main.js"]
