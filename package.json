@@ -1,0 +1,38 @@
+{
+  "name": "rangbheeni-platform",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "dev:web": "npm --workspace @rangbheeni/web run dev",
+    "dev:content-api": "npm --workspace @rangbheeni/content-api run start:dev",
+    "dev:chatbot-api": "npm --workspace @rangbheeni/chatbot-api run start:dev",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "seed": "tsx prisma/seed.ts",
+    "chatbot:reindex": "tsx infra/scripts/reindex-chatbot.ts",
+    "build:web": "npm --workspace @rangbheeni/web run build",
+    "build:content-api": "npm --workspace @rangbheeni/content-api run build",
+    "build:chatbot-api": "npm --workspace @rangbheeni/chatbot-api run build"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.10.0",
+    "zod": "^3.25.0",
+    "@rangbheeni/seed-data": "1.0.0",
+    "@rangbheeni/shared-types": "1.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.10.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.8.0"
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  }
+}

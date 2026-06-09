@@ -1,0 +1,5 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "npm install && npm run prisma:generate && npm --workspace @rangbheeni/web run build",
+  "outputDirectory": "apps/web/.next"
+}

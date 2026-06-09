@@ -1,0 +1,1040 @@
+{
+  "products": {
+    "productsCollection": {
+      "pageTitle": "Our Products",
+      "intro": "Made from pre-loved textiles and crafted by women building dignified, climate-resilient livelihoods.",
+      "items": [
+        {
+          "id": "a2",
+          "name": "Upcycled Coin Purse",
+          "category": "accessories",
+          "short": "Compact zip coin purse made from reclaimed cotton panels.",
+          "images": [
+            "/images/products/accessories/a2.png"
+          ],
+          "storyTitle": "Small size, minimal waste",
+          "story": "Crafted from leftover sari and cotton fabric, this coin purse uses small textile remnants that might otherwise be discarded. Reinforced stitching ensures it withstands everyday use.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "a1",
+          "name": "Reversible Bucket Hat",
+          "category": "accessories",
+          "short": "Lightweight reversible hat made from pre-loved textiles.",
+          "images": [
+            "/images/products/accessories/a1.png"
+          ],
+          "storyTitle": "Shade with a sustainable story",
+          "story": "Two contrasting reclaimed fabrics are stitched together to create a breathable, reversible bucket hat—practical for daily wear and conscious living.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "a5",
+          "name": "Men’s Fabric Wallet",
+          "category": "accessories",
+          "short": "Slim fold wallet made from reinforced upcycled textile.",
+          "images": [
+            "/images/products/accessories/a5.png"
+          ],
+          "storyTitle": "Durable by design",
+          "story": "Selected textile panels are layered and reinforced to create a sturdy, lightweight wallet that reduces reliance on synthetic materials.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "a3",
+          "name": "Fabric Earpod Case",
+          "category": "accessories",
+          "short": "Soft padded case for earbuds made from scrap fabric.",
+          "images": [
+            "/images/products/accessories/a3.png"
+          ],
+          "storyTitle": "Protecting essentials sustainably",
+          "story": "Leftover fabric layers are stitched together to create a compact padded case for everyday gadgets, extending both product and textile life.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "a4",
+          "name": "Wall Key Hanging Organizer",
+          "featured": true,
+          "category": "accessories",
+          "short": "Fabric-based key hanging panel with stitched pockets.",
+          "images": [
+            "/images/products/accessories/a4.png"
+          ],
+          "storyTitle": "Organizing with intention",
+          "story": "Layered cotton panels are structured into a lightweight wall organizer, helping households stay organized while reducing textile waste.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "a7",
+          "name": "Multi-Use Utility Pouch",
+          "category": "accessories",
+          "short": "Versatile zip pouch made from reclaimed denim and cotton.",
+          "images": [
+            "/images/products/accessories/a7.png"
+          ],
+          "storyTitle": "Built for everyday use",
+          "story": "Designed for cosmetics, stationery, or travel essentials, this pouch transforms sturdy textile remnants into practical, long-lasting storage.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "a6",
+          "name": "Spectacle Pouch",
+          "category": "accessories",
+          "short": "Soft-lined pouch to protect glasses from scratches.",
+          "images": [
+            "/images/products/accessories/a6.png"
+          ],
+          "storyTitle": "Care in every stitch",
+          "story": "Selected cotton fabrics are layered with soft lining to create a protective spectacle pouch that keeps eyewear safe while reducing waste.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "bag-banana-1",
+          "name": "Banana Sling Bag",
+          "category": "bags",
+          "short": "Curved crossbody bag made from reclaimed cotton blends.",
+          "images": [
+            "/images/products/bags/b1.png"
+          ],
+          "storyTitle": "Shaped for movement",
+          "story": "Designed for everyday mobility, this curved sling bag uses rescued fabric panels layered for structure and durability. The ergonomic shape keeps essentials secure while supporting women-led circular livelihoods.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "bag-bottle-1",
+          "name": "Reusable Bottle Bag",
+          "category": "bags",
+          "short": "Compact carrier for water bottles, crafted from upcycled textile.",
+          "images": [
+            "/images/products/bags/b2.png"
+          ],
+          "storyTitle": "Carrying hydration sustainably",
+          "story": "Made to encourage reusable habits, this bottle bag transforms leftover cotton and denim into a sturdy daily-use carrier. Reinforced stitching ensures it withstands regular outdoor use.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "bag-laptop-1",
+          "name": "Upcycled Laptop Bag",
+          "category": "bags",
+          "short": "Structured laptop bag with padded interior from layered textile.",
+          "images": [
+            "/images/products/bags/b3.png"
+          ],
+          "storyTitle": "Protection with purpose",
+          "story": "Strong reclaimed fabrics are layered and quilted to create natural padding. This laptop bag combines durability and mindful design, reducing reliance on synthetic materials.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "bag-round-1",
+          "name": "Jazzwati Round Bag",
+          "category": "bags",
+          "featured": true,
+          "short": "Circular crossbody bag crafted from vibrant reclaimed textiles.",
+          "images": [
+            "/images/products/bags/b4.png"
+          ],
+          "storyTitle": "Circular design, circular impact",
+          "story": "The Jazzwati Round Bag celebrates circularity in both shape and purpose. Pre-loved fabric is carefully cut into curved panels and assembled into a lightweight yet durable everyday statement piece.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "bag-tote-2",
+          "name": "Classic Upcycled Tote",
+          "category": "bags",
+          "featured": true,
+          "short": "Spacious tote designed for daily errands and market visits.",
+          "images": [
+            "/images/products/bags/b5.png"
+          ],
+          "storyTitle": "From textile waste to everyday essential",
+          "story": "Constructed from durable sari and cotton panels, this tote is reinforced at stress points to handle everyday weight. It turns discarded textiles into long-lasting utility.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "home-coaster-1",
+          "name": "Upcycled Fabric Coaster Set",
+          "category": "home-utility",
+          "short": "Hand-stitched coasters made from layered textile remnants.",
+          "images": [
+            "/images/products/homeutility/c1.png"
+          ],
+          "storyTitle": "Protecting surfaces, preserving fabric",
+          "story": "Small textile scraps are layered and quilted to create absorbent, durable coasters. Designed for daily use, they give new life to fabric that might otherwise go to waste.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "jewel-varanda-1",
+          "name": "Varanda Hair Accessory",
+          "category": "jewellery",
+          "featured": true,
+          "short": "Handcrafted fabric hair decoration made from reclaimed textile.",
+          "images": [
+            "/images/products/jewellery/j1.png"
+          ],
+          "storyTitle": "Adornment with intention",
+          "story": "The Varanda is crafted using carefully selected fabric remnants, shaped and reinforced to create a lightweight decorative hair piece. It celebrates traditional styling while promoting circular textile practices.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "stat-bookmark-1",
+          "name": "Classic Fabric Bookmark",
+          "category": "stationery",
+          "short": "Slim bookmark crafted from reinforced cotton strips.",
+          "images": [
+            "/images/products/stationery/s1.png"
+          ],
+          "storyTitle": "Marking mindful reading",
+          "story": "Narrow textile remnants are layered and stitched to create durable bookmarks that replace plastic alternatives.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "stat-bookmark-2",
+          "name": "Patchwork Ribbon Bookmark",
+          "category": "stationery",
+          "featured": true,
+          "short": "Color-block bookmark made from coordinated scrap pieces.",
+          "images": [
+            "/images/products/stationery/s2.png"
+          ],
+          "storyTitle": "Small strips, lasting purpose",
+          "story": "Multiple fabric strips are joined into a compact ribbon bookmark that reduces textile waste while adding personality to reading.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "stat-folder-1",
+          "name": "Compact Document Folder",
+          "category": "stationery",
+          "featured": true,
+          "short": "Soft fabric sleeve for documents and notebooks.",
+          "images": [
+            "/images/products/stationery/s3.png"
+          ],
+          "storyTitle": "Protecting what matters",
+          "story": "Reclaimed cotton panels are layered and stitched to create a lightweight folder for daily document storage.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        },
+        {
+          "id": "stat-folder-2",
+          "name": "Patch Fabric File Sleeve",
+          "category": "stationery",
+          "short": "Hand-stitched file sleeve from reinforced textile scraps.",
+          "images": [
+            "/images/products/stationery/s4.png"
+          ],
+          "storyTitle": "Organizing with circular design",
+          "story": "Scrap textile layers are structured into a practical file sleeve that reduces dependency on synthetic document holders.",
+          "artisan": {
+            "name": "",
+            "location": "",
+            "quote": ""
+          }
+        }
+      ]
+    }
+  },
+  "categories": {
+    "PRODUCT_CATEGORIES": [
+      {
+        "key": "accessories",
+        "label": "Accessories"
+      },
+      {
+        "key": "bags",
+        "label": "Bags"
+      },
+      {
+        "key": "home-utility",
+        "label": "Home Utility"
+      },
+      {
+        "key": "jewellery",
+        "label": "Jewellery"
+      },
+      {
+        "key": "stationery",
+        "label": "Stationery"
+      },
+      {
+        "key": "other",
+        "label": "Other"
+      }
+    ]
+  },
+  "impact": {
+    "impactCollection": {
+      "heading": "Community Impact",
+      "description": "Climate action, livelihoods, and education measured in real outcomes",
+      "stats": [
+        {
+          "label": "Textile waste upcycled",
+          "value": "2000 kg",
+          "details": {
+            "subtitle": "Textiles diverted from burning, dumping, and landfill.",
+            "bullets": [
+              "Collected through community drives and partner institutions",
+              "Sorted for reuse and durability before production",
+              "Converted into handmade products for everyday use and gifting"
+            ],
+            "note": "This figure represents total textile waste upcycled so far."
+          }
+        },
+        {
+          "label": "Water saved",
+          "value": "20 million litres",
+          "details": {
+            "subtitle": "Approx. 20 million litres saved.",
+            "math": [
+              "1KG fabric = 10,000 liters of water (textile industry average)",
+              "2000 kg × 10,000 litres/kg = 20,000,000 litres saved"
+            ],
+            "bullets": [
+              "This is an estimate as per industry averages for new textile production water usage.",
+              "Actual savings may vary based on fabric types and production methods."
+            ],
+            "note": ""
+          }
+        },
+        {
+          "label": "CO₂ avoided",
+          "value": "20 metric tonnes",
+          "details": {
+            "subtitle": "Avoided emissions by keeping textiles in circular use.",
+            "math": [
+              "800 kg × 25 kg CO₂/kg = 20,000 kg CO₂",
+              "20,000 kg = 20 metric tonnes"
+            ],
+            "equivalents": [
+              {
+                "label": "Car driving avoided",
+                "value": "≈ 83,000 km"
+              },
+              {
+                "label": "Trees absorbing CO₂ (1 year)",
+                "value": "≈ 920"
+              },
+              {
+                "label": "Indian households’ electricity (1 year)",
+                "value": "≈ 24"
+              }
+            ],
+            "note": "Equivalents help communicate carbon savings in everyday terms."
+          }
+        },
+        {
+          "label": "Women with green livelihoods",
+          "value": "32",
+          "details": {
+            "subtitle": "Stable income pathways through upcycling work.",
+            "bullets": [
+              "Women engaged in regular production and finishing",
+              "Work designed to be safer and more dignified than informal waste-picking",
+              "Income supports household resilience and children’s education"
+            ]
+          }
+        },
+        {
+          "label": "Women trained",
+          "value": "30+",
+          "details": {
+            "subtitle": "Upskilling for long-term employability and resilience.",
+            "bullets": [
+              "Upcycling skills: cutting, stitching, patchwork, assembly",
+              "Quality finishing: seams, zippers, edges, durability checks",
+              "Production practices: batching, consistency, timelines"
+            ]
+          }
+        },
+        {
+          "label": "Families engaged",
+          "value": "285",
+          "details": {
+            "subtitle": "Households touched through community-led circular work.",
+            "bullets": [
+              "Textile collection drives and awareness moments",
+              "Livelihood participation and local supply networks",
+              "Education support pathways for children"
+            ]
+          }
+        }
+      ],
+      "equivalents": [
+        {
+          "label": "Cars off the road per year",
+          "value": "≈ 9"
+        },
+        {
+          "label": "Trees planted per year",
+          "value": "≈ 2000"
+        }
+      ],
+      "perCustomer": [
+        {
+          "label": "fuel saved",
+          "value": "17,000 litres"
+        },
+        {
+          "label": "Household CO₂ offset",
+          "value": "12 households"
+        }
+      ]
+    }
+  },
+  "footer": {
+    "footerContent": {
+      "copyrightName": "Rangbheeni",
+      "tagline": "Made for the Planet"
+    }
+  },
+  "navigation": {
+    "primaryNavigation": [
+      {
+        "href": "/journey",
+        "label": "Our Journey"
+      },
+      {
+        "href": "/about",
+        "label": "Our Core"
+      },
+      {
+        "href": "/products",
+        "label": "Our Products"
+      },
+      {
+        "href": "/stories",
+        "label": "Our Stories",
+        "hidden": true
+      },
+      {
+        "href": "/events",
+        "label": "Our Events",
+        "hidden": true
+      }
+    ],
+    "navigationCta": {
+      "href": "/#connect",
+      "label": "Connect"
+    }
+  },
+  "siteSettings": {
+    "siteSettings": {
+      "siteName": "Rangbheeni",
+      "defaultTitle": "Rangbheeni | Sustainable Textile NGO",
+      "defaultDescription": "Repurposing pre-loved textiles to empower marginalized women in India.",
+      "contactEmail": "enquiries.rangbheeni@gmail.com",
+      "socials": [
+        {
+          "label": "LinkedIn",
+          "href": "https://linkedin.com/company/rangbheeni",
+          "external": true,
+          "target": "_blank"
+        },
+        {
+          "label": "Instagram",
+          "href": "https://instagram.com/rangbheeni",
+          "external": true,
+          "target": "_blank"
+        },
+        {
+          "label": "Facebook",
+          "href": "https://www.facebook.com/profile.php?id=61565762047664",
+          "external": true,
+          "target": "_blank"
+        }
+      ]
+    }
+  },
+  "about": {
+    "aboutPageContent": {
+      "pageTitle": "Our Core",
+      "intro": "Women’s empowerment is central to true social change.",
+      "whoWeAre": {
+        "title": "Who we are",
+        "subtitle": "",
+        "paragraphs": [
+          "Rangbheeni is a women-led grassroot initiative working at the intersection of sustainability, livelihoods, and social equity rooted in the belief that those most affected by social and environmental challenges must be at the centre of the solutions.",
+          "Our work is not built for communities, but with them. Women from marginalized backgrounds are not just artisans, they are co-creators, decision-makers, and leaders shaping Rangbheeni every day.",
+          "Our grassroots programmes work in partnership with local communities to resolve the global skills gap and promote sustainable economic uplift. We believe that this work contributes to creating a more just, equitable, and sustainable world for everyone.",
+          "What makes Rangbheeni different is not just what we do, but how we do it, through trust, long-term engagement, and deep listening at the grassroots level."
+        ],
+        "mission": "To transform textile waste into sustainable solutions by empowering marginalised women with dignified livelihoods and supporting better educational opportunities for their children, ensuring those most affected by climate change become agents of change.",
+        "vision": "A sustainable world where waste is reimagined as a resource, women lead inclusive climate action, and every child has the opportunity to learn and flourish."
+      },
+      "founder": {
+        "name": "Kumkum Masatkar",
+        "title": "Founder and President, Rangbheeni",
+        "photo": "/images/founder/founder.jpg",
+        "paragraphs": [
+          "With over 9 years of experience in the social sector, Kumkum has worked at both grassroots and administrative levels with women, transgender communities, and marginalized groups across urban and rural India. She holds a Master’s degree in Community Organisation and Development Practices from TISS Mumbai, where her work focused on gender, health, livelihoods, and labour rights.",
+          "Kumkum’s field experience revealed that many marginalized women possess valuable skills but lack consistent livelihood opportunities, keeping them financially dependent and socially restricted",
+          "This insight led her to found Rangbheeni in April 2024, an upcycling-based textile enterprise that creates sustainable livelihoods for marginalized women while addressing textile waste."
+        ],
+        "quote": ""
+      },
+      "advisors": {
+        "title": "Our Advisors & Consultants",
+        "subtitle": "A small group supporting strategy, partnerships, and program design.",
+        "groupPhoto": {
+          "src": "/images/advisors/advisors-group.jpg",
+          "alt": "Advisors and consultants supporting Rangbheeni",
+          "caption": "Advisors and consultants guiding Rangbheeni’s work."
+        },
+        "items": [
+          {
+            "name": "Dr. Vaishali Masatkar",
+            "role": "Advisor",
+            "photo": "/images/advisors/Vaishali.png",
+            "shortBio": ""
+          },
+          {
+            "name": "Samidha Masatkar",
+            "role": "Advisor",
+            "photo": "/images/advisors/Samidha.png",
+            "cred": "",
+            "shortBio": "The best thing i have done is to be a part of Rangbheeni and contribute to the cause. I am a firm believer in the power of women and their ability to bring about change. I am proud to be associated with an organization that is making a real difference in the lives of women."
+          },
+          {
+            "name": "Abvhishek Bhardwaj",
+            "role": "Social Impact Consultant",
+            "photo": "/images/advisors/Abhishek.png",
+            "shortBio": ""
+          },
+          {
+            "name": "Arvind Malviya",
+            "role": "Legal Consultant",
+            "photo": "/images/advisors/Arvind.png",
+            "shortBio": "Rangbheeni is a unique initiative that combines sustainability with social empowerment. I am excited to contribute to their mission of creating a positive impact on the environment."
+          },
+          {
+            "name": "Sneha Nagrale",
+            "role": "Livelihood Experts Consultant",
+            "photo": "/images/advisors/Sneha.png",
+            "shortBio": ""
+          },
+          {
+            "name": "Sachin Jain",
+            "role": "Technology Consultant",
+            "photo": "/images/advisors/Sachin.png",
+            "shortBio": ""
+          },
+          {
+            "name": "Nasrulla Adamji",
+            "role": "Impact Consultant",
+            "photo": "/images/advisors/Nasrulla.png",
+            "shortBio": ""
+          },
+          {
+            "name": "Satish Rangari",
+            "role": "Environmental Consultant",
+            "photo": "/images/advisors/Satish.png",
+            "shortBio": ""
+          }
+        ]
+      },
+      "partners": {
+        "title": "Our Partners & Supporters",
+        "subtitle": "We’re grateful to the organizations that strengthen women-led climate action.",
+        "ctaLine": "",
+        "items": [
+          {
+            "name": "Partner 1",
+            "logo": "/images/partners/partner-1.png"
+          },
+          {
+            "name": "Partner 2",
+            "logo": "/images/partners/partner-2.png"
+          },
+          {
+            "name": "Partner 3",
+            "logo": "/images/partners/partner-3.png"
+          },
+          {
+            "name": "Partner 4",
+            "logo": "/images/partners/partner-4.png"
+          },
+          {
+            "name": "Partner 5",
+            "logo": "/images/partners/partner-5.png"
+          },
+          {
+            "name": "Partner 6",
+            "logo": "/images/partners/partner-6.png"
+          },
+          {
+            "name": "Partner 7",
+            "logo": "/images/partners/partner-7.png"
+          },
+          {
+            "name": "Partner 8",
+            "logo": "/images/partners/partner-8.png"
+          },
+          {
+            "name": "Partner 1",
+            "logo": "/images/partners/supporter-1.png"
+          },
+          {
+            "name": "Partner 2",
+            "logo": "/images/partners/supporter-2.png"
+          },
+          {
+            "name": "Partner 3",
+            "logo": "/images/partners/supporter-3.png"
+          },
+          {
+            "name": "Partner 4",
+            "logo": "/images/partners/supporter-4.png"
+          },
+          {
+            "name": "Partner 5",
+            "logo": "/images/partners/supporter-5.png"
+          },
+          {
+            "name": "Partner 6",
+            "logo": "/images/partners/supporter-6.png"
+          }
+        ]
+      }
+    }
+  },
+  "catalogue": {
+    "catalogueContent": [
+      {
+        "key": "holiday",
+        "label": "Seasonal",
+        "title": "Holiday Gifts",
+        "description": "Festive gifting options for end-of-year campaigns, events, and celebrations.",
+        "href": "https://docs.google.com/forms/d/e/1FAIpQLSeqcV5HrM06MpaHY46YmT4EwvI2IKnysoelvy_3Y5X_z9UnwQ/viewform?usp=publish-editor",
+        "accent": "var(--rang-primary)",
+        "texture": "repeating-linear-gradient(0deg, transparent, transparent 2px, #000 3px), repeating-linear-gradient(90deg, transparent, transparent 2px, #000 3px)"
+      },
+      {
+        "key": "corporate",
+        "label": "Partnerships",
+        "title": "Corporate Gifts",
+        "description": "Purpose-led gifting options for organizations, events, and collaborations.",
+        "href": "https://docs.google.com/forms/d/e/1FAIpQLSf59-CfY-I57_XDwl6IkHC6k3DxlGMcRsmeAK84o1PTrqZKrQ/viewform?usp=dialog",
+        "accent": "var(--rang-highlight)",
+        "texture": "repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 0, transparent 50%)"
+      },
+      {
+        "key": "womens-day",
+        "label": "Occasion",
+        "title": "Women's Day Gifts",
+        "description": "Thoughtful gifting ideas curated for Women’s Day and allied campaigns.",
+        "href": "https://docs.google.com/forms/d/e/1FAIpQLSea7-MkcFfYo34HAumH5A6Fwh5CR0Yx4Im76enpiRC9pG0UwQ/viewform?usp=publish-editor",
+        "accent": "var(--rang-secondary)",
+        "texture": "repeating-linear-gradient(90deg, transparent, transparent 2px, #000 3px)"
+      }
+    ]
+  },
+  "journey": {
+    "journeyPageContent": {
+      "pageTitle": "Our Journey",
+      "intro": "The people most affected by textile waste and climate change should be at the center of the solution.",
+      "origin": {
+        "title": "How it started",
+        "paragraphs": [
+          "Rangbheeni emerged from ground-level engagement, research, and continuous dialogue with the community.",
+          "Through this process, two interconnected challenges became clear:- limited livelihood opportunities for women and the growing issue of textile waste. While many women possessed skills like stitching and embroidery, there were no sustainable avenues to turn these into income. At the same time, discarded textiles were contributing to environmental damage, disproportionately affecting these communities.",
+          "Recognising this intersection, Rangbheeni was built to address both challenges together by transforming textile waste into sustainable products while creating dignified livelihood opportunities for women",
+          "What began with small conversations and trust-building has grown into a community-led effort focused on sustainability, resilience, and long-term change."
+        ]
+      },
+      "timeline": {
+        "title": "Journey so far",
+        "items": [
+          {
+            "year": "2023",
+            "title": "The idea takes shape",
+            "text": "Rangbheeni began with a simple experiment — collecting discarded textiles and exploring how they could be transformed into durable handmade products."
+          },
+          {
+            "year": "2023",
+            "title": "First training sessions",
+            "text": "Women from nearby communities began learning upcycling skills, stitching techniques, and quality finishing practices."
+          },
+          {
+            "year": "2024",
+            "title": "First products and exhibitions",
+            "text": "Upcycled products reached their first exhibitions and community events, helping demonstrate the viability of circular textile livelihoods."
+          },
+          {
+            "year": "2024",
+            "title": "Community network grows",
+            "text": "More families and women's groups joined the initiative, strengthening the local supply chain for textile collection and product making."
+          },
+          {
+            "year": "2025",
+            "title": "Institutional partnerships",
+            "text": "Workshops and collaborations with institutions and corporates helped expand awareness around sustainable textiles and circular production."
+          },
+          {
+            "year": "Today",
+            "title": "Circular livelihoods in motion",
+            "text": "Rangbheeni continues to train women, upcycle textile waste, and build climate-resilient income pathways for communities."
+          }
+        ]
+      },
+      "artisans": {
+        "title": "The people behind the work",
+        "subtitle": "Every product carries a story stitched by women shaping new futures for their families and communities.",
+        "items": [
+          {
+            "name": "Kanti Dhurve",
+            "location": "Madhya Pradesh",
+            "quote": "Turning fabric into something useful makes me proud.",
+            "photo": "/images/artisans/KaantiDhurve.JPEG"
+          },
+          {
+            "name": "Nausa Parpachi",
+            "location": "Madhya Pradesh",
+            "quote": "Each piece feels like it carries a new beginning.",
+            "photo": "/images/artisans/NauvsaParpachi.JPEG"
+          },
+          {
+            "name": "Pooja Pal",
+            "location": "Madhya Pradesh",
+            "quote": "Finishing details are where dignity shows up.",
+            "photo": "/images/artisans/PoojaPal.JPG"
+          },
+          {
+            "name": "Priya Pandagre",
+            "location": "Betul, MP",
+            "quote": "I can support my home and keep learning.",
+            "photo": "/images/artisans/PriyaPandagre.JPG"
+          }
+        ]
+      },
+      "next": {
+        "title": "What we’re building next",
+        "text": "Rangbheeni is expanding training programs, strengthening community partnerships, and increasing the amount of textile waste that can be diverted into circular production. Through workshops, collaborations, and sustainable product design, we aim to grow a model where environmental responsibility and social empowerment move forward together."
+      },
+      "connect": {
+        "email": "enquiries.rangbheeni@gmail.com",
+        "linkedin": "https://www.linkedin.com/company/rangbheeni",
+        "instagram": "https://www.instagram.com/rangbheeni",
+        "facebook": "https://www.facebook.com/p/Rangbheeni-61565762047664/"
+      }
+    }
+  },
+  "events": {
+    "pageTitle": "Events",
+    "intro": "Find Rangbheeni at exhibitions, workshops, and community collection drives. We also collaborate with institutions for sustainability sessions and upcycling experiences.",
+    "calendar": {
+      "label": "View our Google Calendar",
+      "url": "https://calendar.google.com/calendar/u/0/r"
+    },
+    "events": [
+      {
+        "id": "e1",
+        "title": "Community Clothes Collection Drive",
+        "type": "Collection Drive",
+        "date": "2026-03-21",
+        "time": "10:00 AM – 1:00 PM",
+        "city": "Jaipur",
+        "venue": "Community Center (Placeholder)",
+        "short": "Donate pre-loved clothes and help us divert textiles from landfill and burning.",
+        "ctaLabel": "Inquire",
+        "ctaHref": "/about#contact"
+      },
+      {
+        "id": "e2",
+        "title": "Upcycling Workshop for Institutions",
+        "type": "Workshop",
+        "date": "2026-04-05",
+        "time": "2:00 PM – 4:00 PM",
+        "city": "Delhi",
+        "venue": "Partner Campus (Placeholder)",
+        "short": "A hands-on sustainability session that connects circularity with women-led livelihoods.",
+        "ctaLabel": "Partner with us",
+        "ctaHref": "/about#contact"
+      },
+      {
+        "id": "e3",
+        "title": "Exhibition Showcase — Handmade Upcycled Products",
+        "type": "Exhibition",
+        "date": "2026-02-02",
+        "time": "11:00 AM – 7:00 PM",
+        "city": "Mumbai",
+        "venue": "Exhibition Hall (Placeholder)",
+        "short": "Meet the team, explore products, and hear stories behind the craft.",
+        "ctaLabel": "View products",
+        "ctaHref": "/products"
+      }
+    ]
+  },
+  "stories": [
+    {
+      "slug": "Rangbheeni rescuing Women in Crisis",
+      "title": "Rescuing Women in Crisis",
+      "excerpt": "Rangbheeni rescued Meera from a harmful situation and supported her with legal aid and safe shelter.",
+      "coverImage": "/images/stories/women-led/cover.jpg",
+      "featured": true,
+      "publishedDate": "2026-02-10",
+      "sections": [
+        {
+          "type": "p",
+          "text": "Rangbheeni works at the intersection of textile waste, climate justice, and social equity—transforming discarded materials into products and opportunity."
+        },
+        {
+          "type": "p",
+          "text": "Women are trained in upcycling skills, quality finishing, and production practices that translate into stable work."
+        },
+        {
+          "type": "quote",
+          "text": "When communities most affected by climate change lead the solution, impact becomes sustainable."
+        },
+        {
+          "type": "p",
+          "text": "Each product represents reclaimed value—of textile, of labor, and of future possibilities for children’s education."
+        }
+      ]
+    },
+    {
+      "slug": "Struggle to Self-Reliance",
+      "title": "From Struggle to Self-Reliance",
+      "excerpt": "Rangbheeni helped Anita start her tailoring business. Today, she not only supports her family but also trains 10 other women.",
+      "coverImage": "/images/stories/collection-drive/cover.jpeg",
+      "featured": true,
+      "publishedDate": "2026-01-25",
+      "sections": [
+        {
+          "type": "p",
+          "text": "Collection drives help divert usable textiles from dumping and burning while creating material for upcycling."
+        },
+        {
+          "type": "p",
+          "text": "Sorting and selection are done carefully—quality and durability matter for the final product."
+        },
+        {
+          "type": "quote",
+          "text": "Waste is not the end of a story—sometimes it’s the beginning."
+        },
+        {
+          "type": "p",
+          "text": "The drive also becomes a community education moment—people see the value of circular choices."
+        }
+      ]
+    },
+    {
+      "slug": "Opportunities to upskill",
+      "title": "Creating Opportunities",
+      "excerpt": "Over 200 women have been provided employment opportunities in sustainable livelihood programs, building pathways for financial independence and dignity.",
+      "coverImage": "/images/stories/institution-workshop/cover.jpg",
+      "featured": true,
+      "publishedDate": "2026-01-05",
+      "sections": [
+        {
+          "type": "p",
+          "text": "Rangbheeni conducts sustainability and DIY upcycling workshops for institutions and corporates."
+        },
+        {
+          "type": "p",
+          "text": "Participants learn practical ways to rethink textile waste while engaging with the idea of women-led climate action."
+        },
+        {
+          "type": "quote",
+          "text": "Sustainability becomes real when people can make something with their own hands."
+        }
+      ]
+    },
+    {
+      "slug": "training-day-from-basics-to-finish",
+      "title": "Training day: from basics to finish",
+      "excerpt": "A look inside a Rangbheeni upskilling session—from measurements and cutting to finishing and quality checks.",
+      "coverImage": "/images/stories/training-day/cover.jpg",
+      "featured": false,
+      "publishedDate": "2026-02-02",
+      "sections": [
+        {
+          "type": "p",
+          "text": "Skill development starts with fundamentals—tools, safety, stitching basics, and consistent practice."
+        },
+        {
+          "type": "p",
+          "text": "Over time, the group moves into finishing standards: strong seams, clean edges, and durable construction."
+        },
+        {
+          "type": "quote",
+          "text": "Dignity comes from skill—and skill comes from showing up, again and again."
+        },
+        {
+          "type": "p",
+          "text": "Every session strengthens confidence, teamwork, and the ability to produce consistent work with pride."
+        }
+      ]
+    },
+    {
+      "slug": "from-sarees-to-usable-everyday-products",
+      "title": "From sarees to usable everyday products",
+      "excerpt": "How pre-loved textiles are selected, prepared, and transformed into products designed for everyday use.",
+      "coverImage": "/images/stories/sarees-to-products/cover.jpg",
+      "featured": false,
+      "publishedDate": "2026-01-18",
+      "sections": [
+        {
+          "type": "p",
+          "text": "Not every fabric is suitable for upcycling. We sort textiles by strength, feel, and longevity."
+        },
+        {
+          "type": "p",
+          "text": "Preparation includes cleaning, reinforcement where needed, and design planning to reduce waste in cutting."
+        },
+        {
+          "type": "quote",
+          "text": "Circularity is not just reuse—it’s thoughtful design and long life."
+        },
+        {
+          "type": "p",
+          "text": "The goal is simple: make products that last, and livelihoods that do too."
+        }
+      ]
+    },
+    {
+      "slug": "exhibitions-and-tier-2-city-reach",
+      "title": "Exhibitions and Tier 2 city reach",
+      "excerpt": "Taking women-led circular products to new audiences through exhibitions across Tier 1 and Tier 2 cities.",
+      "coverImage": "/images/stories/exhibitions/cover.jpg",
+      "featured": false,
+      "publishedDate": "2026-01-12",
+      "sections": [
+        {
+          "type": "p",
+          "text": "Exhibitions are more than sales—they are awareness moments that help people connect climate choices to community outcomes."
+        },
+        {
+          "type": "p",
+          "text": "Each event is also feedback: what customers use, what they value, and what designs are most practical."
+        },
+        {
+          "type": "quote",
+          "text": "Visibility builds confidence—when people see the work, they respect the craft."
+        },
+        {
+          "type": "p",
+          "text": "Over time, this builds market access and helps women earn more predictable income from skilled work."
+        }
+      ]
+    },
+    {
+      "slug": "corporate-gifting-with-a-climate-story",
+      "title": "Corporate gifting with a climate story",
+      "excerpt": "Why meaningful gifting can be climate-conscious—and how upcycled products carry both purpose and proof.",
+      "coverImage": "/images/stories/corporate-gifting/cover.jpg",
+      "featured": true,
+      "publishedDate": "2026-02-15",
+      "sections": [
+        {
+          "type": "p",
+          "text": "Corporate gifting can become a sustainability touchpoint—when gifts are useful, durable, and rooted in circular production."
+        },
+        {
+          "type": "p",
+          "text": "Rangbheeni collaborations support women-led livelihoods while diverting textile waste from dumping and burning."
+        },
+        {
+          "type": "quote",
+          "text": "A gift can carry a story—not just a logo."
+        },
+        {
+          "type": "p",
+          "text": "We support bulk gifting and event collaborations with clear impact framing that partners can stand behind."
+        }
+      ]
+    },
+    {
+      "slug": "education-support-what-income-makes-possible",
+      "title": "Education support: what stable income makes possible",
+      "excerpt": "When livelihoods stabilize, families can plan—and children’s education becomes more secure and consistent.",
+      "coverImage": "/images/stories/education-support/cover.jpg",
+      "featured": false,
+      "publishedDate": "2026-01-30",
+      "sections": [
+        {
+          "type": "p",
+          "text": "Livelihoods are not only about income—they’re about predictability, choice, and dignity."
+        },
+        {
+          "type": "p",
+          "text": "As women earn more reliably through skilled work, families can prioritize school expenses and reduce interruptions."
+        },
+        {
+          "type": "quote",
+          "text": "Intergenerational change begins when a household can plan for tomorrow."
+        },
+        {
+          "type": "p",
+          "text": "Rangbheeni’s model is built to support both climate resilience and long-term opportunity."
+        }
+      ]
+    }
+  ]
+}

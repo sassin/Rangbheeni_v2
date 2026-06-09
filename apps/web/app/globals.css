@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+/* Brand Colors */
+/* Brand Colors + Aliases used across components */
+:root {
+  /* canonical tokens */
+  --rang-primary: #09710d;
+  --rang-secondary: #84bc41;
+  --rang-accent: #562b00;
+  --rang-warm: #7c3f00;
+  --rang-highlight: #099ec8;
+  --rang-base: #ffffff;
+
+  /* neutrals / surfaces */
+  --rang-linen: #f6f2ed;
+  --rang-paper: #ffffff;
+  --rang-mist: #f1f8fa;
+  --rang-sage: #f2f7f1;
+  --rang-jute: #f1ebe2;
+
+  /* backwards-compatible aliases (so you don't have to recode components) */
+  --color-primary: var(--rang-primary);
+  --color-lightgreen: var(--rang-secondary);
+  --color-brown: var(--rang-accent);
+  --color-warmbrown: var(--rang-warm);
+  --color-accentblue: var(--rang-highlight);
+  --color-white: var(--rang-base);
+}
+
+/* --- Rangbheeni global background (lightweight, no images) --- */
+body {
+  background: #ffffff;
+}
+
+/* make default text/link colors more “Rang” */
+a {
+  color: var(--color-brown);
+}
+a:hover {
+  color: var(--color-primary);
+}
+
+/* Font helpers */
+.font-heading {
+  font-family: var(--font-merriweather);
+}
+
+.font-body {
+  font-family: var(--font-opensans);
+}
+
+.font-quote {
+  font-family: var(--font-playfair);
+}
+
+.linen-bg {
+  background-color: var(--rang-linen);
+  position: relative;
+}
+
+.linen-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(0, 0, 0, 0.02) 1px,
+    transparent 1px
+  );
+  background-size: 4px 4px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.hyphenate {
+  hyphens: auto;
+}
+.page-jute {
+  background-color: var(--rang-jute);
+  position: relative;
+  min-height: 100vh;
+}
+
+.page-jute::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.015),
+      rgba(0, 0, 0, 0.015) 1px,
+      transparent 1px,
+      transparent 6px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.015),
+      rgba(0, 0, 0, 0.015) 1px,
+      transparent 1px,
+      transparent 6px
+    );
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.page-paper {
+  background-color: #f5f1ea; /* slightly warmer than linen */
+  position: relative;
+  min-height: 100vh;
+}
+
+.page-paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    radial-gradient(rgba(0, 0, 0, 0.015) 1px, transparent 1px);
+  background-size: 4px 4px, 6px 6px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+.page-sagepaper {
+  background-color: var(--rang-sage); /* already defined by you */
+  position: relative;
+  min-height: 100vh;
+}
+
+.page-sagepaper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(0, 0, 0, 0.018) 1px, transparent 1px),
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.012),
+      rgba(0, 0, 0, 0.012) 1px,
+      transparent 1px,
+      transparent 10px
+    );
+  background-size: 5px 5px, auto;
+  opacity: 0.45;
+  pointer-events: none;
+}
+.page-sage {
+  background-color: var(--rang-sage);
+  min-height: 100vh;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.paper-grain {
+  position: relative;
+  isolation: isolate;
+}
+
+.paper-grain::before {
+  content: "";
+  position: absolute;
+  inset: -100%;
+  z-index: 1;
+  opacity: 0.4;
+  pointer-events: none;
+  background-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+  /* Or a custom noise SVG */
+  filter: contrast(120%) brightness(100%);
+}
+
+/* Add a subtle 'move' to the grain so it feels alive */
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-1%, -2%); }
+  20% { transform: translate(2%, 1%); }
+  100% { transform: translate(0, 0); }
+}
+
+.animate-grain::before {
+  animation: grain-shift 8s steps(10) infinite;
+}
+
+/* --- Tactile Fabric & Brand Utilities --- */
+
+@layer utilities {
+  /* The diagonal Twill for the 'Jeans' look */
+  .bg-denim-twill {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.08) 0px,
+      rgba(0, 0, 0, 0.08) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    background-size: 3px 3px;
+  }
+
+  /* Vertical/Horizontal weave (Warp & Weft) */
+  .bg-weave {
+    background-image: 
+      linear-gradient(0deg, transparent 50%, rgba(0, 0, 0, 0.04) 50%),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.04) 50%, transparent 50%);
+    background-size: 4px 4px;
+  }
+
+  /* The Brand Color Mesh using your canonical tokens */
+  .bg-brand-mesh {
+    background: 
+      radial-gradient(circle at 0% 0%, var(--rang-primary) 0%, transparent 50%),
+      radial-gradient(circle at 100% 100%, var(--rang-highlight) 0%, transparent 50%),
+      radial-gradient(circle at 100% 0%, var(--rang-secondary) 0%, transparent 40%);
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+}
+
+/* Enhancing the paper grain animation to be more subtle for fabric */
+.animate-fabric-shift::before {
+  animation: grain-shift 12s steps(5) infinite;
+  opacity: 0.2;
+}
+
+/* globals.css */
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* Optional: Hide scrollbar for a more immersive "lookbook" feel */
+::-webkit-scrollbar {
+  display: none;
+}

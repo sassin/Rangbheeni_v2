@@ -1,0 +1,99 @@
+export type ContentStatus = "draft" | "published" | "archived";
+
+export type LinkItem = {
+  label: string;
+  href: string;
+  external?: boolean;
+  target?: "_self" | "_blank";
+};
+
+export type MediaAssetDto = {
+  id?: string;
+  url: string;
+  altText?: string | null;
+  width?: number | null;
+  height?: number | null;
+};
+
+export type ProductCategoryDto = {
+  id: string;
+  key: string;
+  label: string;
+  sortOrder: number;
+};
+
+export type ProductDto = {
+  id: string;
+  slug: string;
+  name: string;
+  category: ProductCategoryDto | null;
+  shortDescription: string;
+  longDescription?: string | null;
+  storyTitle?: string | null;
+  story?: string | null;
+  featured: boolean;
+  images: MediaAssetDto[];
+};
+
+export type EventDto = {
+  id: string;
+  slug: string;
+  title: string;
+  type?: string | null;
+  shortDescription?: string | null;
+  fullDescription?: string | null;
+  city?: string | null;
+  venue?: string | null;
+  address?: string | null;
+  startDate: string;
+  endDate?: string | null;
+  timeText?: string | null;
+  ctaLabel?: string | null;
+  ctaUrl?: string | null;
+  featured: boolean;
+  image?: MediaAssetDto | null;
+};
+
+export type StorySection =
+  | { type: "p"; text: string }
+  | { type: "quote"; text: string }
+  | { type: string; [key: string]: unknown };
+
+export type StoryDto = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  coverImage?: MediaAssetDto | null;
+  featured: boolean;
+  publishedDate?: string | null;
+  sections: StorySection[];
+};
+
+export type AnnouncementDto = {
+  id: string;
+  title: string;
+  message: string;
+  displayType: "modal" | "banner";
+  ctaLabel?: string | null;
+  ctaUrl?: string | null;
+  image?: MediaAssetDto | null;
+  startsAt?: string | null;
+  endsAt?: string | null;
+};
+
+export type ChatMessageRequest = {
+  message: string;
+  sessionId?: string;
+};
+
+export type ChatSource = {
+  title: string;
+  sourceType: string;
+};
+
+export type ChatMessageResponse = {
+  answer: string;
+  fallbackUsed: boolean;
+  sources: ChatSource[];
+};

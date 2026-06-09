@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ContentStatus {
+  draft
+  published
+  archived
+}
+
+enum AnnouncementDisplayType {
+  modal
+  banner
+}
+
+model MediaAsset {
+  id          String   @id @default(cuid())
+  key         String?  @unique
+  url         String
+  altText     String?
+  mimeType    String?
+  width       Int?
+  height      Int?
+  sizeBytes   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  productImages ProductImage[]
+  eventImages   Event[]
+  storyCovers   Story[]
+  announcementImages Announcement[]
+}
+
+model ProductCategory {
+  id        String        @id @default(cuid())
+  key       String        @unique
+  label     String
+  status    ContentStatus @default(published)
+  sortOrder Int           @default(0)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  products Product[]
+}
+
+model Product {
+  id               String        @id @default(cuid())
+  slug             String        @unique
+  externalId        String?       @unique
+  name             String
+  categoryId       String?
+  shortDescription String
+  longDescription  String?
+  storyTitle       String?
+  story            String?
+  featured         Boolean       @default(false)
+  status           ContentStatus @default(published)
+  sortOrder        Int           @default(0)
+  publishedAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  category ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  images   ProductImage[]
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  mediaId   String?
+  url       String
+  altText   String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media   MediaAsset? @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+
+  @@unique([productId, sortOrder])
+}
+
+model Event {
+  id               String        @id @default(cuid())
+  slug             String        @unique
+  externalId        String?       @unique
+  title            String
+  eventType        String?
+  shortDescription String?
+  fullDescription  String?
+  city             String?
+  venue            String?
+  address          String?
+  startDate        DateTime
+  endDate          DateTime?
+  timeText         String?
+  ctaLabel         String?
+  ctaUrl           String?
+  featured         Boolean       @default(false)
+  status           ContentStatus @default(published)
+  sortOrder        Int           @default(0)
+  imageId          String?
+  publishedAt      DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  image MediaAsset? @relation(fields: [imageId], references: [id], onDelete: SetNull)
+}
+
+model Story {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  title         String
+  excerpt       String
+  featured      Boolean       @default(false)
+  publishedDate DateTime?
+  status        ContentStatus @default(published)
+  sortOrder     Int           @default(0)
+  coverImageId  String?
+  sections      Json          @default("[]")
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  coverImage MediaAsset? @relation(fields: [coverImageId], references: [id], onDelete: SetNull)
+}
+
+model PageContent {
+  id          String        @id @default(cuid())
+  key         String        @unique
+  title       String?
+  content     Json
+  status      ContentStatus @default(published)
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Announcement {
+  id          String                  @id @default(cuid())
+  slug        String                  @unique
+  title       String
+  message     String
+  displayType AnnouncementDisplayType @default(modal)
+  ctaLabel    String?
+  ctaUrl      String?
+  imageId     String?
+  status      ContentStatus           @default(draft)
+  startsAt    DateTime?
+  endsAt      DateTime?
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+
+  image MediaAsset? @relation(fields: [imageId], references: [id], onDelete: SetNull)
+}
+
+model ChatbotDocument {
+  id                 String        @id @default(cuid())
+  title              String
+  sourceType          String
+  sourceId            String?
+  content             String
+  status              ContentStatus @default(published)
+  approvedForChatbot  Boolean       @default(true)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  chunks ChatbotChunk[]
+
+  @@unique([sourceType, sourceId])
+}
+
+model ChatbotChunk {
+  id         String   @id @default(cuid())
+  documentId String
+  chunkText  String
+  metadata   Json?
+  embedding  Unsupported("vector")?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  document ChatbotDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+}
+
+model ChatbotMessage {
+  id                String   @id @default(cuid())
+  sessionId          String?
+  userMessage        String
+  assistantResponse  String
+  fallbackUsed       Boolean  @default(false)
+  createdAt          DateTime @default(now())
+}
