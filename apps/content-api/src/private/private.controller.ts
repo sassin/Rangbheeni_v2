@@ -1,9 +1,9 @@
-import { Body, Controller, ForbiddenException, Headers, Post } from "@nestjs/common";
+﻿import { Body, Controller, ForbiddenException, Headers, Post } from "@nestjs/common";
 import { PrismaService } from "../common/prisma.service.js";
 import { StorageService } from "../common/storage.service.js";
 
 function requirePrivateKey(value?: string) {
-  const expected = process.env.PRIVATE_API_KEY;
+  const expected = process.env.CONTENT_API_PRIVATE_KEY;
   if (!expected || value !== expected) throw new ForbiddenException("Invalid private API key");
 }
 
@@ -33,3 +33,4 @@ export class PrivateController {
     return this.prisma.announcement.update({ where: { slug: body.slug }, data: { status: body.status } });
   }
 }
+
