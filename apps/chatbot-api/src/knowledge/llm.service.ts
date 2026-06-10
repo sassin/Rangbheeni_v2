@@ -1,9 +1,13 @@
 ﻿import { Injectable } from "@nestjs/common";
 
-export type SupportedAnswer = {
+type LlmResult = {
   answer_supported: boolean;
   answer: string;
 };
+
+function cleanBaseUrl(value?: string) {
+  return (value ?? "https://api.openai.com/v1").replace(/\/$/, "");
+}
 
 async function fetchWithTimeout(
   url: string,
@@ -11,7 +15,7 @@ async function fetchWithTimeout(
   timeoutMs: number,
 ) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     return await fetch(url, {
@@ -19,46 +23,39 @@ async function fetchWithTimeout(
       signal: controller.signal,
     });
   } finally {
-    clearTimeout(timeout);
+    clearTimeout(timer);
   }
 }
 
 @Injectable()
 export class LlmService {
-  private get baseUrl() {
-    return (process.env.LLM_BASE_URL ?? "").replace(/\/$/, "");
-  }
-
   private get apiKey() {
     return process.env.LLM_API_KEY ?? "";
   }
 
+  private get baseUrl() {
+    return cleanBaseUrl(process.env.LLM_BASE_URL);
+  }
+
   private get model() {
-    return process.env.LLM_CHAT_MODEL ?? "";
+    return process.env.LLM_CHAT_MODEL ?? "gpt-4o-mini";
   }
 
   isConfigured() {
-    return Boolean(this.baseUrl && this.apiKey && this.model);
+    return Boolean(this.apiKey);
   }
 
   async answerFromContext(
     question: string,
     context: string,
     fallback: string,
-  ): Promise<SupportedAnswer> {
+  ): Promise<LlmResult> {
     if (!this.isConfigured()) {
-      return { answer_supported: false, answer: fallback };
+      return {
+        answer_supported: false,
+        answer: fallback,
+      };
     }
-
-    const system = [
-      "You are the Rangbheeni website assistant.",
-      "Use only the Rangbheeni context provided by the developer message.",
-      "Do not use outside knowledge.",
-      "Do not guess.",
-      "Do not make commitments about price, stock, delivery, custom orders, return policy, discounts, or events unless the context explicitly says so.",
-      "Return only strict JSON with keys answer_supported and answer.",
-      `If the answer is not available in the context, set answer_supported to false and answer to exactly: ${fallback}`,
-    ].join("\n");
 
     try {
       const response = await fetchWithTimeout(
@@ -66,52 +63,98 @@ export class LlmService {
         {
           method: "POST",
           headers: {
-            "content-type": "application/json",
-            authorization: `Bearer ${this.apiKey}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.apiKey}`,
           },
           body: JSON.stringify({
             model: this.model,
-            temperature: 0.1,
-            max_tokens: 450,
+            temperature: 0.2,
+            max_tokens: 220,
             response_format: { type: "json_object" },
             messages: [
-              { role: "system", content: system },
-              { role: "developer", content: `Rangbheeni context:\n${context}` },
-              { role: "user", content: question },
+              {
+                role: "system",
+                content:
+                  "You are the Rangbheeni website assistant. Answer only from the provided context. Be professional, respectful, and user-friendly for both general visitors and corporate visitors. Give enough useful information without over-explaining. Keep answers to 2 to 4 concise sentences, maximum 90 words. Do not invent facts, prices, dates, availability, certifications, or partnerships. Do not list sources. If the context does not support the answer, return answer_supported=false.",
+              },
+              {
+                role: "user",
+                content: JSON.stringify({
+                  question,
+                  context,
+                  output_format: {
+                    answer_supported: "boolean",
+                    answer:
+                      "professional answer only; 2-4 concise sentences; max 90 words",
+                  },
+                }),
+              },
             ],
           }),
         },
-        25000,
+        25_000,
       );
 
       if (!response.ok) {
-        console.error(`LLM provider failed: ${response.status} ${await response.text()}`);
-        return { answer_supported: false, answer: fallback };
+        console.error(
+          `LLM request failed: ${response.status} ${await response.text()}`,
+        );
+        return {
+          answer_supported: false,
+          answer: fallback,
+        };
       }
 
       const payload = (await response.json()) as {
-        choices?: Array<{ message?: { content?: string } }>;
+        choices?: Array<{
+          message?: {
+            content?: string;
+          };
+        }>;
       };
 
-      const text = payload.choices?.[0]?.message?.content?.trim() ?? "";
+      const raw = payload.choices?.[0]?.message?.content;
 
-      try {
-        const parsed = JSON.parse(text) as SupportedAnswer;
-
-        if (
-          typeof parsed.answer_supported === "boolean" &&
-          typeof parsed.answer === "string"
-        ) {
-          return parsed;
-        }
-      } catch {
-        console.error("LLM returned non-JSON answer.");
+      if (!raw) {
+        return {
+          answer_supported: false,
+          answer: fallback,
+        };
       }
 
-      return { answer_supported: false, answer: fallback };
+      const parsed = JSON.parse(raw) as Partial<LlmResult>;
+
+      const answer =
+        typeof parsed.answer === "string" ? parsed.answer.trim() : "";
+
+      if (!parsed.answer_supported || !answer) {
+        return {
+          answer_supported: false,
+          answer: fallback,
+        };
+      }
+
+      const conciseAnswer = answer
+        .replace(/\s+/g, " ")
+        .split(/(?<=[.!?])\s+/)
+        .slice(0, 4)
+        .join(" ")
+        .split(/\s+/)
+        .slice(0, 90)
+        .join(" ")
+        .trim();
+
+      return {
+        answer_supported: true,
+        answer: conciseAnswer,
+      };
     } catch (error) {
       console.error("LLM request failed or timed out.", error);
-      return { answer_supported: false, answer: fallback };
+
+      return {
+        answer_supported: false,
+        answer: fallback,
+      };
     }
   }
 }
