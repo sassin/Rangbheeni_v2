@@ -69,7 +69,7 @@ export class LlmService {
           body: JSON.stringify({
             model: this.model,
             temperature: 0.2,
-            max_tokens: 130,
+            max_tokens: 120,
             response_format: { type: "json_object" },
             messages: [
               {

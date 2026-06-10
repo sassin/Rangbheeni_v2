@@ -69,6 +69,7 @@ export default function ChatWidget() {
 
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const messagesRef = useRef<HTMLDivElement | null>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setSessionId(getOrCreateSessionId());
@@ -84,9 +85,10 @@ export default function ChatWidget() {
     if (!open) return;
 
     window.requestAnimationFrame(() => {
+      messagesEndRef.current?.scrollIntoView({ block: "end" });
+
       const el = messagesRef.current;
-      if (!el) return;
-      el.scrollTop = el.scrollHeight;
+      if (el) el.scrollTop = el.scrollHeight;
     });
   }, [messages, open]);
 
@@ -194,7 +196,7 @@ export default function ChatWidget() {
   return (
     <div className="fixed bottom-14 right-5 z-[80] flex flex-col items-end gap-3">
       {open ? (
-        <div className="flex w-[min(92vw,390px)] flex-col overflow-hidden rounded-[1.8rem] border border-[var(--color-primary)]/25 bg-[#f4efe4]/95 shadow-2xl backdrop-blur">
+        <div className="flex h-[520px] max-h-[calc(100dvh-6rem)] w-[min(92vw,390px)] flex-col overflow-hidden rounded-[1.8rem] border border-[var(--color-primary)]/25 bg-[#f4efe4]/95 shadow-2xl backdrop-blur">
           <div className="shrink-0 border-b border-black/10 bg-white/45 px-5 py-4">
             <div className="flex items-center justify-between gap-4">
               <p className="font-body text-[10px] uppercase tracking-[0.24em] text-[var(--color-primary)]">
@@ -214,13 +216,13 @@ export default function ChatWidget() {
 
           <div
             ref={messagesRef}
-            className="h-[260px] min-h-[260px] max-h-[260px] space-y-3 overflow-y-auto overscroll-contain px-5 py-4 [scrollbar-gutter:stable]"
+            className="min-h-0 flex-1 space-y-3 overflow-y-scroll overscroll-contain px-5 py-4 [scrollbar-gutter:stable]"
           >
             {messages.map((message, index) => (
               <div
                 key={`${message.role}-${index}`}
                 className={[
-                  "rounded-2xl px-4 py-3 font-body text-sm leading-6",
+                  "break-words rounded-2xl px-4 py-3 font-body text-sm leading-6",
                   message.role === "user"
                     ? "ml-8 bg-[var(--color-lightgreen)]/35 text-[var(--color-brown)]"
                     : "mr-8 bg-white/70 text-neutral-800",
@@ -229,6 +231,7 @@ export default function ChatWidget() {
                 {message.loading ? <LoadingDots /> : message.text}
               </div>
             ))}
+            <div ref={messagesEndRef} />
           </div>
 
           <form onSubmit={submit} className="shrink-0 border-t border-black/10 bg-white/35 p-4">
@@ -252,7 +255,7 @@ export default function ChatWidget() {
                 }
               }}
               placeholder={pending ? "" : "Ask a short Rangbheeni-related question..."}
-              className="min-h-[76px] w-full resize-none rounded-2xl border border-black/10 bg-white/75 px-4 py-3 font-body text-sm leading-6 text-[var(--color-brown)] outline-none placeholder:text-neutral-500 focus:border-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-70"
+              className="h-20 max-h-20 w-full resize-none overflow-y-auto rounded-2xl border border-black/10 bg-white/75 px-4 py-3 font-body text-sm leading-6 text-[var(--color-brown)] outline-none placeholder:text-neutral-500 focus:border-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-70"
             />
 
             <div className="mt-3 flex justify-end">
@@ -277,7 +280,7 @@ export default function ChatWidget() {
             src="/images/Rangbheeni_logo.png"
             alt=""
             aria-hidden="true"
-            className="h-15 w-15 rounded-full object-contain"
+            className="h-14 w-14 rounded-full object-contain"
           />
         </button>
       )}
