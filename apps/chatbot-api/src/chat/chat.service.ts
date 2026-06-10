@@ -1,6 +1,6 @@
 ﻿import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../common/prisma.service.js";
-import { KnowledgeService } from "../knowledge/knowledge.service.js";
+import { KnowledgeService, type RetrievedChunk } from "../knowledge/knowledge.service.js";
 import { LlmService } from "../knowledge/llm.service.js";
 
 @Injectable()
@@ -40,10 +40,10 @@ export class ChatService {
       return { answer: this.fallback(), fallbackUsed: true, sources: [] };
     }
 
-    let chunks = [];
+    let chunks: RetrievedChunk[] = [];
 
     try {
-      chunks = await this.knowledge.search(question, 6);
+      chunks = await this.knowledge.search(question, 8);
     } catch (error) {
       console.error("Knowledge search failed.", error);
 
@@ -59,12 +59,8 @@ export class ChatService {
       return { answer: fallback, fallbackUsed: true, sources: [] };
     }
 
-    const minScore = Number(
-      process.env.CHATBOT_MIN_SCORE ??
-        (process.env.LLM_EMBEDDING_MODEL ? 0.72 : 0.35),
-    );
-
-    const goodChunks = chunks.filter((chunk: any) => chunk.score >= minScore);
+    const minScore = Number(process.env.CHATBOT_MIN_SCORE ?? 0.2);
+    const goodChunks = chunks.filter((chunk) => chunk.score >= minScore);
 
     if (!goodChunks.length) {
       const fallback = this.fallback();
@@ -80,8 +76,9 @@ export class ChatService {
     }
 
     const context = goodChunks
+      .slice(0, 6)
       .map(
-        (chunk: any, index: number) =>
+        (chunk, index) =>
           `[Source ${index + 1}: ${chunk.document.title}]\n${chunk.chunkText}`,
       )
       .join("\n\n---\n\n");
@@ -107,7 +104,7 @@ export class ChatService {
       fallbackUsed,
       sources: fallbackUsed
         ? []
-        : goodChunks.map((chunk: any) => ({
+        : goodChunks.slice(0, 6).map((chunk) => ({
             title: chunk.document.title,
             sourceType: chunk.document.sourceType,
           })),
