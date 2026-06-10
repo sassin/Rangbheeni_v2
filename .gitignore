@@ -50,3 +50,6 @@ temp/
 
 # generated archives
 *.zip
+
+s3.local.env
+s3-*-output.txt
