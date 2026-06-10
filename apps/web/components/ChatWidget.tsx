@@ -22,19 +22,10 @@ function normalizeText(value: string) {
   return value.replace(/\s+/g, " ").trim();
 }
 
-function limitByWordsAndChars(
-  value: string,
-  maxWords: number,
-  maxChars: number,
-) {
+function limitByWordsAndChars(value: string, maxWords: number, maxChars: number) {
   const charLimited = value.length > maxChars ? value.slice(0, maxChars) : value;
   const words = charLimited.trim().split(/\s+/).filter(Boolean);
-
-  if (words.length <= maxWords) {
-    return charLimited;
-  }
-
-  return words.slice(0, maxWords).join(" ");
+  return words.length <= maxWords ? charLimited : words.slice(0, maxWords).join(" ");
 }
 
 function getOrCreateSessionId() {
@@ -42,7 +33,6 @@ function getOrCreateSessionId() {
 
   const key = "rangbheeni_chat_session_id";
   const existing = window.localStorage.getItem(key);
-
   if (existing) return existing;
 
   const generated =
@@ -73,11 +63,12 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "assistant",
-      text: "Ask about Rangbheeni’s work, products, events, stories, or collaborations.",
+      text: "Hi, I can help with Rangbheeni’s products, stories, events, and collaborations.",
     },
   ]);
 
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
+  const messagesRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setSessionId(getOrCreateSessionId());
@@ -88,6 +79,16 @@ export default function ChatWidget() {
       window.setTimeout(() => inputRef.current?.focus(), 120);
     }
   }, [open, pending]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    window.requestAnimationFrame(() => {
+      const el = messagesRef.current;
+      if (!el) return;
+      el.scrollTop = el.scrollHeight;
+    });
+  }, [messages, open]);
 
   const canSend = useMemo(() => input.trim().length > 0 && !pending, [input, pending]);
 
@@ -103,6 +104,7 @@ export default function ChatWidget() {
     setMessages((current) => {
       const next = [...current];
       let loadingIndex = -1;
+
       for (let index = next.length - 1; index >= 0; index -= 1) {
         if (next[index]?.role === "assistant" && next[index]?.loading) {
           loadingIndex = index;
@@ -121,7 +123,6 @@ export default function ChatWidget() {
 
   async function submit(event?: FormEvent) {
     event?.preventDefault();
-
     if (pending) return;
 
     const now = Date.now();
@@ -153,20 +154,12 @@ export default function ChatWidget() {
       const controller = new AbortController();
       const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
-      const response = await fetch(
-        `${chatApiUrl.replace(/\/$/, "")}/chat/message`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message: outboundQuestion,
-            sessionId,
-          }),
-          signal: controller.signal,
-        },
-      );
+      const response = await fetch(`${chatApiUrl.replace(/\/$/, "")}/chat/message`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: outboundQuestion, sessionId }),
+        signal: controller.signal,
+      });
 
       window.clearTimeout(timeout);
 
@@ -178,25 +171,21 @@ export default function ChatWidget() {
       }
 
       if (!response.ok) {
-        const message =
+        replaceLoadingMessage(
           typeof payload?.message === "string"
             ? payload.message
-            : "I could not prepare a response right now. Please try again shortly.";
-
-        replaceLoadingMessage(message);
+            : "I could not respond right now. Please try again shortly.",
+        );
         return;
       }
 
-      const answer =
+      replaceLoadingMessage(
         typeof payload?.answer === "string" && payload.answer.trim()
           ? payload.answer.trim()
-          : "I do not have that information in Rangbheeni’s published content.";
-
-      replaceLoadingMessage(answer);
-    } catch {
-      replaceLoadingMessage(
-        "I could not prepare a response right now. Please try again shortly.",
+          : "I do not have that in Rangbheeni’s published information yet.",
       );
+    } catch {
+      replaceLoadingMessage("I could not respond right now. Please try again shortly.");
     } finally {
       setPending(false);
     }
@@ -205,8 +194,8 @@ export default function ChatWidget() {
   return (
     <div className="fixed bottom-14 right-5 z-[80] flex flex-col items-end gap-3">
       {open ? (
-        <div className="w-[min(92vw,390px)] overflow-hidden rounded-[1.8rem] border border-[var(--color-primary)]/25 bg-[#f4efe4]/95 shadow-2xl backdrop-blur">
-          <div className="border-b border-black/10 bg-white/45 px-5 py-4">
+        <div className="flex w-[min(92vw,390px)] flex-col overflow-hidden rounded-[1.8rem] border border-[var(--color-primary)]/25 bg-[#f4efe4]/95 shadow-2xl backdrop-blur">
+          <div className="shrink-0 border-b border-black/10 bg-white/45 px-5 py-4">
             <div className="flex items-center justify-between gap-4">
               <p className="font-body text-[10px] uppercase tracking-[0.24em] text-[var(--color-primary)]">
                 Rangbheeni assistant
@@ -223,7 +212,10 @@ export default function ChatWidget() {
             </div>
           </div>
 
-          <div className="max-h-[390px] space-y-3 overflow-y-auto px-5 py-4">
+          <div
+            ref={messagesRef}
+            className="h-[260px] min-h-[260px] max-h-[260px] space-y-3 overflow-y-auto overscroll-contain px-5 py-4 [scrollbar-gutter:stable]"
+          >
             {messages.map((message, index) => (
               <div
                 key={`${message.role}-${index}`}
@@ -239,7 +231,7 @@ export default function ChatWidget() {
             ))}
           </div>
 
-          <form onSubmit={submit} className="border-t border-black/10 bg-white/35 p-4">
+          <form onSubmit={submit} className="shrink-0 border-t border-black/10 bg-white/35 p-4">
             <textarea
               ref={inputRef}
               value={input}
@@ -251,8 +243,7 @@ export default function ChatWidget() {
                 const target = event.currentTarget;
                 const start = target.selectionStart ?? input.length;
                 const end = target.selectionEnd ?? input.length;
-                const next = `${input.slice(0, start)}${pasted}${input.slice(end)}`;
-                handleInput(next);
+                handleInput(`${input.slice(0, start)}${pasted}${input.slice(end)}`);
               }}
               onKeyDown={(event) => {
                 if (event.key === "Enter" && !event.shiftKey) {
@@ -261,7 +252,7 @@ export default function ChatWidget() {
                 }
               }}
               placeholder={pending ? "" : "Ask a short Rangbheeni-related question..."}
-              className="min-h-[86px] w-full resize-none rounded-2xl border border-black/10 bg-white/75 px-4 py-3 font-body text-sm leading-6 text-[var(--color-brown)] outline-none placeholder:text-neutral-500 focus:border-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-70"
+              className="min-h-[76px] w-full resize-none rounded-2xl border border-black/10 bg-white/75 px-4 py-3 font-body text-sm leading-6 text-[var(--color-brown)] outline-none placeholder:text-neutral-500 focus:border-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-70"
             />
 
             <div className="mt-3 flex justify-end">
@@ -293,5 +284,3 @@ export default function ChatWidget() {
     </div>
   );
 }
-
-
