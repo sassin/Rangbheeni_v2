@@ -203,7 +203,7 @@ export default function ChatWidget() {
   }
 
   return (
-    <div className="fixed bottom-8 right-5 z-[80] flex flex-col items-end gap-3">
+    <div className="fixed bottom-14 right-5 z-[80] flex flex-col items-end gap-3">
       {open ? (
         <div className="w-[min(92vw,390px)] overflow-hidden rounded-[1.8rem] border border-[var(--color-primary)]/25 bg-[#f4efe4]/95 shadow-2xl backdrop-blur">
           <div className="border-b border-black/10 bg-white/45 px-5 py-4">
@@ -279,28 +279,15 @@ export default function ChatWidget() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="grid h-14 w-14 place-items-center rounded-full border border-[var(--color-primary)]/35 bg-[#f4efe4]/95 text-[var(--color-brown)] shadow-xl backdrop-blur transition hover:border-[var(--color-primary)] hover:bg-[var(--color-lightgreen)]/35 hover:text-[var(--color-primary)]"
+          className="grid h-16 w-16 place-items-center rounded-full border border-[var(--color-primary)]/35 bg-[#f4efe4]/95 text-[var(--color-brown)] shadow-xl backdrop-blur transition hover:border-[var(--color-primary)] hover:bg-[var(--color-lightgreen)]/35 hover:text-[var(--color-primary)]"
           aria-label="Open chat"
         >
-          <svg
+          <img
+            src="/images/Rangbheeni_logo.png"
+            alt=""
             aria-hidden="true"
-            className="h-6 w-6"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M5.5 18.2c-1.2-1.2-1.9-2.8-1.9-4.6 0-4 3.7-7.2 8.4-7.2s8.4 3.2 8.4 7.2-3.7 7.2-8.4 7.2c-.9 0-1.8-.1-2.6-.4L5 21l.5-2.8Z"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M8.4 13.1h.01M12 13.1h.01M15.6 13.1h.01"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-            />
-          </svg>
+            className="h-15 w-15 rounded-full object-contain"
+          />
         </button>
       )}
     </div>
