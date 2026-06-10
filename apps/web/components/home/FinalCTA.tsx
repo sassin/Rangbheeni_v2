@@ -45,7 +45,7 @@ export default function FinalCTA() {
         <img
           src="/images/rangbheeni.svg"
           alt="Rangbheeni"
-          className="h-full w-full object-contain select-none drop-shadow-[0_15px_40px_rgba(0,0,0,0.4)]"
+          className="hidden h-full w-full object-contain select-none drop-shadow-[0_15px_40px_rgba(0,0,0,0.4)]"
         />
       </motion.div>
 

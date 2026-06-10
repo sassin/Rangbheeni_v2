@@ -53,3 +53,7 @@ temp/
 
 s3.local.env
 s3-*-output.txt
+
+chatbot.local.env
+
+chatbot.local.env
