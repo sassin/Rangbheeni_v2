@@ -167,13 +167,11 @@ export default async function EventsPage() {
     Date.UTC(today.getFullYear(), today.getMonth(), today.getDate()),
   );
 
-  const sorted = events
-    .slice()
-    .sort((a, b) => parseEventDate(a).getTime() - parseEventDate(b).getTime());
+  const sorted = events.slice();
 
-  const upcoming = sorted.filter(
-    (event) => parseEventDate(event).getTime() >= todayUTC.getTime(),
-  );
+  const upcoming = sorted
+    .filter((event) => parseEventDate(event).getTime() >= todayUTC.getTime())
+    .sort((a, b) => parseEventDate(a).getTime() - parseEventDate(b).getTime());
 
   const past = sorted
     .filter((event) => parseEventDate(event).getTime() < todayUTC.getTime())
@@ -288,4 +286,5 @@ export default async function EventsPage() {
     </PageBackground>
   );
 }
+
 

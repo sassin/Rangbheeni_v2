@@ -32,6 +32,7 @@ export type ProductDto = {
   storyTitle?: string | null;
   story?: string | null;
   featured: boolean;
+  featuredRank?: number | null;
   images: MediaAssetDto[];
 };
 
@@ -51,6 +52,7 @@ export type EventDto = {
   ctaLabel?: string | null;
   ctaUrl?: string | null;
   featured: boolean;
+  featuredRank?: number | null;
   image?: MediaAssetDto | null;
 };
 
@@ -66,6 +68,7 @@ export type StoryDto = {
   excerpt: string;
   coverImage?: MediaAssetDto | null;
   featured: boolean;
+  featuredRank?: number | null;
   publishedDate?: string | null;
   sections: StorySection[];
 };

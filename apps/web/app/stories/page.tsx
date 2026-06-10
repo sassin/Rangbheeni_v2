@@ -139,9 +139,14 @@ export default async function StoriesPage() {
   const stories = await getStories().catch(() => []);
 
   const ordered = stories.slice().sort((a, b) => {
-    const aFeatured = a.featured ? 1 : 0;
-    const bFeatured = b.featured ? 1 : 0;
-    if (aFeatured !== bFeatured) return bFeatured - aFeatured;
+    const ar = typeof a.featuredRank === "number" ? a.featuredRank : null;
+    const br = typeof b.featuredRank === "number" ? b.featuredRank : null;
+
+    if (ar !== null || br !== null) {
+      if (ar === null) return 1;
+      if (br === null) return -1;
+      if (ar !== br) return ar - br;
+    }
 
     const ad = a.publishedDate ? new Date(a.publishedDate).getTime() : 0;
     const bd = b.publishedDate ? new Date(b.publishedDate).getTime() : 0;

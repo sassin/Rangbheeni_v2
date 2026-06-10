@@ -1,13 +1,16 @@
 ﻿"use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import ProductsShowcase from "@/components/products/ProductsShowcase";
 import PageBackground from "@/components/layout/PageBackground";
 import RangDivider from "@/components/shared/RangDivider";
 import { CatalogueSwatchSelector } from "@/components/products/CatalogueSwatchSelector";
 
-
+type ProductsPageData = {
+  pageTitle?: string;
+  intro?: string;
+  items: any[];
+};
 
 const easeCurve: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -26,13 +29,12 @@ function DenimTexture() {
   );
 }
 
-export default function ProductsPageClient({ data }: { data: any }) {
-
-
+export default function ProductsPageClient({ data }: { data: ProductsPageData }) {
   return (
     <PageBackground variant="jute">
       <main className="relative min-h-screen overflow-x-hidden bg-[#efeeea] text-[var(--color-brown)]">
         <DenimTexture />
+
         <div className="relative z-10 md:pr-80 lg:pl-65">
           <section className="mx-auto max-w-5xl px-6 pt-28 md:pt-32">
             <motion.div
@@ -41,7 +43,7 @@ export default function ProductsPageClient({ data }: { data: any }) {
               transition={{ duration: 0.75, ease: easeCurve }}
               className="max-w-5xl"
             >
-              <h1 className="mt-4 font-heading text-4xl font-bold leading-[1.1] tracking-tighter text-[var(--rang-accent)] md:text-5xl lg:text-5xl]">
+              <h1 className="mt-4 font-heading text-4xl font-bold leading-[1.1] tracking-tighter text-[var(--rang-accent)] md:text-5xl lg:text-5xl">
                 {data.pageTitle ?? "Products"}
               </h1>
 
@@ -62,38 +64,36 @@ export default function ProductsPageClient({ data }: { data: any }) {
             </motion.div>
           </section>
 
-          <section className="mx-auto  max-w-5xl px-6 py-10 md:py-16">
+          <section className="mx-auto max-w-5xl px-6 py-10 md:py-16">
             <ProductsShowcase products={data.items} />
           </section>
 
           <section className="mx-auto max-w-5xl border-t border-black/10 px-6 pb-10 pt-4 md:pb-14">
-            <div className="relative">
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ duration: 0.55, ease: easeCurve }}
+            >
+              <h2 className="mt-4 font-heading text-5xl font-bold leading-[1.1] tracking-tighter text-[var(--rang-accent)] md:text-5xl lg:text-5xl">
+                Product catalogue
+              </h2>
+
+              <p className="mt-2 max-w-5xl font-body leading-5 text-neutral-700">
+                For corporate gifting, exhibitions, or bulk collaborations, download the Rangbheeni catalogue.
+              </p>
+
               <motion.div
-                initial={{ opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={{ duration: 0.55, ease: easeCurve }}
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+                className="origin-left"
               >
-                <h1 className="mt-4 font-heading text-5xl font-bold leading-[1.1] tracking-tighter text-[var(--rang-accent)] md:text-5xl lg:text-5xl]">
-                  Product catalogue
-                </h1>
-
-                <p className="mt-2 font-body max-w-5xl leading-5 text-neutral-700">
-                  For corporate gifting, exhibitions, or bulk collaborations, you can
-                  download the Rangbheeni catalogue.
-                </p>
-
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  whileInView={{ scaleX: 1 }}
-                  transition={{ delay: 0.3, duration: 0.8 }}
-                  className="origin-left"
-                >
-                  <RangDivider />
-                </motion.div>
-                <CatalogueSwatchSelector />
+                <RangDivider />
               </motion.div>
-            </div>
+
+              <CatalogueSwatchSelector />
+            </motion.div>
           </section>
         </div>
       </main>

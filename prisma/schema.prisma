@@ -59,6 +59,7 @@ model Product {
   storyTitle       String?
   story            String?
   featured         Boolean       @default(false)
+  featuredRank     Int?
   status           ContentStatus @default(published)
   sortOrder        Int           @default(0)
   publishedAt      DateTime?
@@ -67,6 +68,8 @@ model Product {
 
   category ProductCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   images   ProductImage[]
+
+  @@index([status, featuredRank, publishedAt, name])
 }
 
 model ProductImage {
@@ -102,6 +105,7 @@ model Event {
   ctaLabel         String?
   ctaUrl           String?
   featured         Boolean       @default(false)
+  featuredRank     Int?
   status           ContentStatus @default(published)
   sortOrder        Int           @default(0)
   imageId          String?
@@ -110,6 +114,8 @@ model Event {
   updatedAt        DateTime      @updatedAt
 
   image MediaAsset? @relation(fields: [imageId], references: [id], onDelete: SetNull)
+
+  @@index([status, featuredRank, startDate, title])
 }
 
 model Story {
@@ -117,7 +123,8 @@ model Story {
   slug          String        @unique
   title         String
   excerpt       String
-  featured      Boolean       @default(false)
+  featured         Boolean       @default(false)
+  featuredRank  Int?
   publishedDate DateTime?
   status        ContentStatus @default(published)
   sortOrder     Int           @default(0)
@@ -127,6 +134,8 @@ model Story {
   updatedAt     DateTime      @updatedAt
 
   coverImage MediaAsset? @relation(fields: [coverImageId], references: [id], onDelete: SetNull)
+
+  @@index([status, featuredRank, publishedDate, title])
 }
 
 model PageContent {

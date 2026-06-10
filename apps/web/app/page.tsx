@@ -7,6 +7,7 @@ import PageBackground from "@/components/layout/PageBackground";
 import { getPage, getProducts } from "@/lib/api";
 import { toLegacyProductsCollection } from "@/lib/adapters";
 import { fallbackImpact } from "@/lib/fallbackContent";
+import ProductCategoryImagePreloader from "@/components/ProductCategoryImagePreloader";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +29,7 @@ export default async function Home() {
         <CorporateCollab />
         <FinalCTA />
       </div>
+            <ProductCategoryImagePreloader />
     </PageBackground>
   );
 }
