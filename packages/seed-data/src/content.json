@@ -10,7 +10,7 @@
           "category": "accessories",
           "short": "Compact zip coin purse made from reclaimed cotton panels.",
           "images": [
-            "/images/products/accessories/a2.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/accessories/a2.png"
           ],
           "storyTitle": "Small size, minimal waste",
           "story": "Crafted from leftover sari and cotton fabric, this coin purse uses small textile remnants that might otherwise be discarded. Reinforced stitching ensures it withstands everyday use.",
@@ -26,7 +26,7 @@
           "category": "accessories",
           "short": "Lightweight reversible hat made from pre-loved textiles.",
           "images": [
-            "/images/products/accessories/a1.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/accessories/a1.png"
           ],
           "storyTitle": "Shade with a sustainable story",
           "story": "Two contrasting reclaimed fabrics are stitched together to create a breathable, reversible bucket hat—practical for daily wear and conscious living.",
@@ -42,7 +42,7 @@
           "category": "accessories",
           "short": "Slim fold wallet made from reinforced upcycled textile.",
           "images": [
-            "/images/products/accessories/a5.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/accessories/a5.png"
           ],
           "storyTitle": "Durable by design",
           "story": "Selected textile panels are layered and reinforced to create a sturdy, lightweight wallet that reduces reliance on synthetic materials.",
@@ -58,7 +58,7 @@
           "category": "accessories",
           "short": "Soft padded case for earbuds made from scrap fabric.",
           "images": [
-            "/images/products/accessories/a3.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/accessories/a3.png"
           ],
           "storyTitle": "Protecting essentials sustainably",
           "story": "Leftover fabric layers are stitched together to create a compact padded case for everyday gadgets, extending both product and textile life.",
@@ -75,7 +75,7 @@
           "category": "accessories",
           "short": "Fabric-based key hanging panel with stitched pockets.",
           "images": [
-            "/images/products/accessories/a4.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/accessories/a4.png"
           ],
           "storyTitle": "Organizing with intention",
           "story": "Layered cotton panels are structured into a lightweight wall organizer, helping households stay organized while reducing textile waste.",
@@ -91,7 +91,7 @@
           "category": "accessories",
           "short": "Versatile zip pouch made from reclaimed denim and cotton.",
           "images": [
-            "/images/products/accessories/a7.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/accessories/a7.png"
           ],
           "storyTitle": "Built for everyday use",
           "story": "Designed for cosmetics, stationery, or travel essentials, this pouch transforms sturdy textile remnants into practical, long-lasting storage.",
@@ -107,7 +107,7 @@
           "category": "accessories",
           "short": "Soft-lined pouch to protect glasses from scratches.",
           "images": [
-            "/images/products/accessories/a6.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/accessories/a6.png"
           ],
           "storyTitle": "Care in every stitch",
           "story": "Selected cotton fabrics are layered with soft lining to create a protective spectacle pouch that keeps eyewear safe while reducing waste.",
@@ -123,7 +123,7 @@
           "category": "bags",
           "short": "Curved crossbody bag made from reclaimed cotton blends.",
           "images": [
-            "/images/products/bags/b1.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/bags/b1.png"
           ],
           "storyTitle": "Shaped for movement",
           "story": "Designed for everyday mobility, this curved sling bag uses rescued fabric panels layered for structure and durability. The ergonomic shape keeps essentials secure while supporting women-led circular livelihoods.",
@@ -139,7 +139,7 @@
           "category": "bags",
           "short": "Compact carrier for water bottles, crafted from upcycled textile.",
           "images": [
-            "/images/products/bags/b2.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/bags/b2.png"
           ],
           "storyTitle": "Carrying hydration sustainably",
           "story": "Made to encourage reusable habits, this bottle bag transforms leftover cotton and denim into a sturdy daily-use carrier. Reinforced stitching ensures it withstands regular outdoor use.",
@@ -155,7 +155,7 @@
           "category": "bags",
           "short": "Structured laptop bag with padded interior from layered textile.",
           "images": [
-            "/images/products/bags/b3.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/bags/b3.png"
           ],
           "storyTitle": "Protection with purpose",
           "story": "Strong reclaimed fabrics are layered and quilted to create natural padding. This laptop bag combines durability and mindful design, reducing reliance on synthetic materials.",
@@ -172,7 +172,7 @@
           "featured": true,
           "short": "Circular crossbody bag crafted from vibrant reclaimed textiles.",
           "images": [
-            "/images/products/bags/b4.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/bags/b4.png"
           ],
           "storyTitle": "Circular design, circular impact",
           "story": "The Jazzwati Round Bag celebrates circularity in both shape and purpose. Pre-loved fabric is carefully cut into curved panels and assembled into a lightweight yet durable everyday statement piece.",
@@ -189,7 +189,7 @@
           "featured": true,
           "short": "Spacious tote designed for daily errands and market visits.",
           "images": [
-            "/images/products/bags/b5.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/bags/b5.png"
           ],
           "storyTitle": "From textile waste to everyday essential",
           "story": "Constructed from durable sari and cotton panels, this tote is reinforced at stress points to handle everyday weight. It turns discarded textiles into long-lasting utility.",
@@ -205,7 +205,7 @@
           "category": "home-utility",
           "short": "Hand-stitched coasters made from layered textile remnants.",
           "images": [
-            "/images/products/homeutility/c1.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/homeutility/c1.png"
           ],
           "storyTitle": "Protecting surfaces, preserving fabric",
           "story": "Small textile scraps are layered and quilted to create absorbent, durable coasters. Designed for daily use, they give new life to fabric that might otherwise go to waste.",
@@ -222,7 +222,7 @@
           "featured": true,
           "short": "Handcrafted fabric hair decoration made from reclaimed textile.",
           "images": [
-            "/images/products/jewellery/j1.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/jewellery/j1.png"
           ],
           "storyTitle": "Adornment with intention",
           "story": "The Varanda is crafted using carefully selected fabric remnants, shaped and reinforced to create a lightweight decorative hair piece. It celebrates traditional styling while promoting circular textile practices.",
@@ -238,7 +238,7 @@
           "category": "stationery",
           "short": "Slim bookmark crafted from reinforced cotton strips.",
           "images": [
-            "/images/products/stationery/s1.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/stationery/s1.png"
           ],
           "storyTitle": "Marking mindful reading",
           "story": "Narrow textile remnants are layered and stitched to create durable bookmarks that replace plastic alternatives.",
@@ -255,7 +255,7 @@
           "featured": true,
           "short": "Color-block bookmark made from coordinated scrap pieces.",
           "images": [
-            "/images/products/stationery/s2.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/stationery/s2.png"
           ],
           "storyTitle": "Small strips, lasting purpose",
           "story": "Multiple fabric strips are joined into a compact ribbon bookmark that reduces textile waste while adding personality to reading.",
@@ -272,7 +272,7 @@
           "featured": true,
           "short": "Soft fabric sleeve for documents and notebooks.",
           "images": [
-            "/images/products/stationery/s3.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/stationery/s3.png"
           ],
           "storyTitle": "Protecting what matters",
           "story": "Reclaimed cotton panels are layered and stitched to create a lightweight folder for daily document storage.",
@@ -288,7 +288,7 @@
           "category": "stationery",
           "short": "Hand-stitched file sleeve from reinforced textile scraps.",
           "images": [
-            "/images/products/stationery/s4.png"
+            "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/stationery/s4.png"
           ],
           "storyTitle": "Organizing with circular design",
           "story": "Scrap textile layers are structured into a practical file sleeve that reduces dependency on synthetic document holders.",
@@ -531,7 +531,7 @@
       "founder": {
         "name": "Kumkum Masatkar",
         "title": "Founder and President, Rangbheeni",
-        "photo": "/images/founder/founder.jpg",
+        "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/founder/founder.jpg",
         "paragraphs": [
           "With over 9 years of experience in the social sector, Kumkum has worked at both grassroots and administrative levels with women, transgender communities, and marginalized groups across urban and rural India. She holds a Master’s degree in Community Organisation and Development Practices from TISS Mumbai, where her work focused on gender, health, livelihoods, and labour rights.",
           "Kumkum’s field experience revealed that many marginalized women possess valuable skills but lack consistent livelihood opportunities, keeping them financially dependent and socially restricted",
@@ -543,7 +543,7 @@
         "title": "Our Advisors & Consultants",
         "subtitle": "A small group supporting strategy, partnerships, and program design.",
         "groupPhoto": {
-          "src": "/images/advisors/advisors-group.jpg",
+          "src": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/advisors/advisors-group.jpg",
           "alt": "Advisors and consultants supporting Rangbheeni",
           "caption": "Advisors and consultants guiding Rangbheeni’s work."
         },
@@ -551,50 +551,50 @@
           {
             "name": "Dr. Vaishali Masatkar",
             "role": "Advisor",
-            "photo": "/images/advisors/Vaishali.png",
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/advisors/Vaishali.png",
             "shortBio": ""
           },
           {
             "name": "Samidha Masatkar",
             "role": "Advisor",
-            "photo": "/images/advisors/Samidha.png",
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/advisors/Samidha.png",
             "cred": "",
             "shortBio": "The best thing i have done is to be a part of Rangbheeni and contribute to the cause. I am a firm believer in the power of women and their ability to bring about change. I am proud to be associated with an organization that is making a real difference in the lives of women."
           },
           {
             "name": "Abvhishek Bhardwaj",
             "role": "Social Impact Consultant",
-            "photo": "/images/advisors/Abhishek.png",
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/advisors/Abhishek.png",
             "shortBio": ""
           },
           {
             "name": "Arvind Malviya",
             "role": "Legal Consultant",
-            "photo": "/images/advisors/Arvind.png",
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/advisors/Arvind.png",
             "shortBio": "Rangbheeni is a unique initiative that combines sustainability with social empowerment. I am excited to contribute to their mission of creating a positive impact on the environment."
           },
           {
             "name": "Sneha Nagrale",
             "role": "Livelihood Experts Consultant",
-            "photo": "/images/advisors/Sneha.png",
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/advisors/Sneha.png",
             "shortBio": ""
           },
           {
             "name": "Sachin Jain",
             "role": "Technology Consultant",
-            "photo": "/images/advisors/Sachin.png",
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/advisors/Sachin.png",
             "shortBio": ""
           },
           {
             "name": "Nasrulla Adamji",
             "role": "Impact Consultant",
-            "photo": "/images/advisors/Nasrulla.png",
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/advisors/Nasrulla.png",
             "shortBio": ""
           },
           {
             "name": "Satish Rangari",
             "role": "Environmental Consultant",
-            "photo": "/images/advisors/Satish.png",
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/advisors/Satish.png",
             "shortBio": ""
           }
         ]
@@ -606,59 +606,59 @@
         "items": [
           {
             "name": "Partner 1",
-            "logo": "/images/partners/partner-1.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/partner-1.png"
           },
           {
             "name": "Partner 2",
-            "logo": "/images/partners/partner-2.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/partner-2.png"
           },
           {
             "name": "Partner 3",
-            "logo": "/images/partners/partner-3.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/partner-3.png"
           },
           {
             "name": "Partner 4",
-            "logo": "/images/partners/partner-4.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/partner-4.png"
           },
           {
             "name": "Partner 5",
-            "logo": "/images/partners/partner-5.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/partner-5.png"
           },
           {
             "name": "Partner 6",
-            "logo": "/images/partners/partner-6.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/partner-6.png"
           },
           {
             "name": "Partner 7",
-            "logo": "/images/partners/partner-7.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/partner-7.png"
           },
           {
             "name": "Partner 8",
-            "logo": "/images/partners/partner-8.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/partner-8.png"
           },
           {
             "name": "Partner 1",
-            "logo": "/images/partners/supporter-1.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/supporter-1.png"
           },
           {
             "name": "Partner 2",
-            "logo": "/images/partners/supporter-2.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/supporter-2.png"
           },
           {
             "name": "Partner 3",
-            "logo": "/images/partners/supporter-3.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/supporter-3.png"
           },
           {
             "name": "Partner 4",
-            "logo": "/images/partners/supporter-4.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/supporter-4.png"
           },
           {
             "name": "Partner 5",
-            "logo": "/images/partners/supporter-5.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/supporter-5.png"
           },
           {
             "name": "Partner 6",
-            "logo": "/images/partners/supporter-6.png"
+            "logo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/partners/supporter-6.png"
           }
         ]
       }
@@ -751,25 +751,25 @@
             "name": "Kanti Dhurve",
             "location": "Madhya Pradesh",
             "quote": "Turning fabric into something useful makes me proud.",
-            "photo": "/images/artisans/KaantiDhurve.JPEG"
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/artisans/KaantiDhurve.jpeg"
           },
           {
             "name": "Nausa Parpachi",
             "location": "Madhya Pradesh",
             "quote": "Each piece feels like it carries a new beginning.",
-            "photo": "/images/artisans/NauvsaParpachi.JPEG"
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/artisans/NauvsaParpachi.jpeg"
           },
           {
             "name": "Pooja Pal",
             "location": "Madhya Pradesh",
             "quote": "Finishing details are where dignity shows up.",
-            "photo": "/images/artisans/PoojaPal.JPG"
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/artisans/PoojaPal.JPG"
           },
           {
             "name": "Priya Pandagre",
             "location": "Betul, MP",
             "quote": "I can support my home and keep learning.",
-            "photo": "/images/artisans/PriyaPandagre.JPG"
+            "photo": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/artisans/PriyaPandagre.jpg"
           }
         ]
       },
@@ -836,7 +836,7 @@
       "slug": "Rangbheeni rescuing Women in Crisis",
       "title": "Rescuing Women in Crisis",
       "excerpt": "Rangbheeni rescued Meera from a harmful situation and supported her with legal aid and safe shelter.",
-      "coverImage": "/images/stories/women-led/cover.jpg",
+      "coverImage": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/stories/women-led/cover.jpg",
       "featured": true,
       "publishedDate": "2026-02-10",
       "sections": [
@@ -862,7 +862,7 @@
       "slug": "Struggle to Self-Reliance",
       "title": "From Struggle to Self-Reliance",
       "excerpt": "Rangbheeni helped Anita start her tailoring business. Today, she not only supports her family but also trains 10 other women.",
-      "coverImage": "/images/stories/collection-drive/cover.jpeg",
+      "coverImage": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/stories/collection-drive/cover.jpeg",
       "featured": true,
       "publishedDate": "2026-01-25",
       "sections": [
@@ -888,7 +888,7 @@
       "slug": "Opportunities to upskill",
       "title": "Creating Opportunities",
       "excerpt": "Over 200 women have been provided employment opportunities in sustainable livelihood programs, building pathways for financial independence and dignity.",
-      "coverImage": "/images/stories/institution-workshop/cover.jpg",
+      "coverImage": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/stories/institution-workshop/cover.jpg",
       "featured": true,
       "publishedDate": "2026-01-05",
       "sections": [
@@ -910,7 +910,7 @@
       "slug": "training-day-from-basics-to-finish",
       "title": "Training day: from basics to finish",
       "excerpt": "A look inside a Rangbheeni upskilling session—from measurements and cutting to finishing and quality checks.",
-      "coverImage": "/images/stories/training-day/cover.jpg",
+      "coverImage": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/stories/training-day/cover.jpg",
       "featured": false,
       "publishedDate": "2026-02-02",
       "sections": [
@@ -936,7 +936,7 @@
       "slug": "from-sarees-to-usable-everyday-products",
       "title": "From sarees to usable everyday products",
       "excerpt": "How pre-loved textiles are selected, prepared, and transformed into products designed for everyday use.",
-      "coverImage": "/images/stories/sarees-to-products/cover.jpg",
+      "coverImage": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/sari-tote-2.JPG",
       "featured": false,
       "publishedDate": "2026-01-18",
       "sections": [
@@ -962,7 +962,7 @@
       "slug": "exhibitions-and-tier-2-city-reach",
       "title": "Exhibitions and Tier 2 city reach",
       "excerpt": "Taking women-led circular products to new audiences through exhibitions across Tier 1 and Tier 2 cities.",
-      "coverImage": "/images/stories/exhibitions/cover.jpg",
+      "coverImage": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/stories/institution-workshop/cover.jpg",
       "featured": false,
       "publishedDate": "2026-01-12",
       "sections": [
@@ -988,7 +988,7 @@
       "slug": "corporate-gifting-with-a-climate-story",
       "title": "Corporate gifting with a climate story",
       "excerpt": "Why meaningful gifting can be climate-conscious—and how upcycled products carry both purpose and proof.",
-      "coverImage": "/images/stories/corporate-gifting/cover.jpg",
+      "coverImage": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/products/denim-pouch-1.jpg",
       "featured": true,
       "publishedDate": "2026-02-15",
       "sections": [
@@ -1014,7 +1014,7 @@
       "slug": "education-support-what-income-makes-possible",
       "title": "Education support: what stable income makes possible",
       "excerpt": "When livelihoods stabilize, families can plan—and children’s education becomes more secure and consistent.",
-      "coverImage": "/images/stories/education-support/cover.jpg",
+      "coverImage": "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev/images/stories/training-day/cover.jpg",
       "featured": false,
       "publishedDate": "2026-01-30",
       "sections": [
