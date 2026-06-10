@@ -1,6 +1,5 @@
 ﻿import { Module } from "@nestjs/common";
 import { ChatController } from "./chat/chat.controller.js";
-import { ChatDebugController } from "./chat/chat-debug.controller.js";
 import { ChatService } from "./chat/chat.service.js";
 import { ChatQueueService } from "./chat/chat-queue.service.js";
 import { PrismaService } from "./common/prisma.service.js";
@@ -9,7 +8,7 @@ import { EmbeddingService } from "./knowledge/embedding.service.js";
 import { LlmService } from "./knowledge/llm.service.js";
 
 @Module({
-  controllers: [ChatController, ChatDebugController],
+  controllers: [ChatController],
   providers: [
     ChatService,
     ChatQueueService,
@@ -20,4 +19,5 @@ import { LlmService } from "./knowledge/llm.service.js";
   ],
 })
 export class AppModule {}
+
 
