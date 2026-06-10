@@ -10,7 +10,7 @@ const SEND_MAX_WORDS = 80;
 const FRONTEND_MAX_CHARS = 900;
 const SEND_MAX_CHARS = 700;
 const MIN_SUBMIT_INTERVAL_MS = 5000;
-const REQUEST_TIMEOUT_MS = 15000;
+const REQUEST_TIMEOUT_MS = 30000;
 
 type ChatMessage = {
   role: "assistant" | "user";
@@ -306,4 +306,5 @@ export default function ChatWidget() {
     </div>
   );
 }
+
 
