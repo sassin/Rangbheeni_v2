@@ -33,7 +33,7 @@ function isValidEmail(email: string) {
 export function Announcement() {
   const [announcement, setAnnouncement] = useState<LaunchAnnouncement | null>(null);
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "invalid" | "error">("idle");
 
   useEffect(() => {
     if (!announcementEnabled) return;
@@ -80,7 +80,7 @@ export function Announcement() {
 
     const normalized = email.trim().toLowerCase();
     if (!isValidEmail(normalized)) {
-      setStatus("error");
+      setStatus("invalid");
       return;
     }
 
@@ -161,7 +161,7 @@ export function Announcement() {
                 value={email}
                 onChange={(event) => {
                   setEmail(event.target.value);
-                  if (status === "error") setStatus("idle");
+                  if (status === "error" || status === "invalid") setStatus("idle");
                 }}
                 placeholder="you@example.com"
                 className="min-h-11 flex-1 rounded-full border border-black/10 bg-white/80 px-4 font-body text-sm text-[var(--color-brown)] outline-none focus:border-[var(--color-primary)]"
@@ -182,9 +182,15 @@ export function Announcement() {
               </p>
             ) : null}
 
-            {status === "error" ? (
+            {status === "invalid" ? (
               <p className="mt-3 font-body text-sm text-red-700">
                 Please enter a valid email address.
+              </p>
+            ) : null}
+
+            {status === "error" ? (
+              <p className="mt-3 font-body text-sm text-red-700">
+                We could not save your email right now. Please try again shortly.
               </p>
             ) : null}
           </form>
