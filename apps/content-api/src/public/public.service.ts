@@ -1,4 +1,4 @@
-﻿import { Injectable, NotFoundException } from "@nestjs/common";
+﻿import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../common/prisma.service.js";
 
 type RankedItem = {
@@ -339,5 +339,26 @@ export class PublicService {
       startsAt: announcement.startsAt?.toISOString() ?? null,
       endsAt: announcement.endsAt?.toISOString() ?? null,
     };
+  }
+  async subscribeNewsletter(email: string) {
+    const normalized = String(email ?? "").trim().toLowerCase();
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) {
+      throw new BadRequestException("Valid email is required");
+    }
+
+    const subscriber = await this.prisma.newsletterSubscriber.upsert({
+      where: { email: normalized },
+      create: {
+        email: normalized,
+        source: "launch-announcement",
+        status: "active",
+      },
+      update: {
+        status: "active",
+      },
+    });
+
+    return { ok: true, id: subscriber.id };
   }
 }

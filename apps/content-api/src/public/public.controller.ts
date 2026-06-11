@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 import { PublicService } from "./public.service.js";
 
 @Controller()
@@ -68,5 +68,9 @@ export class PublicController {
   @Get("public/announcement/active")
   announcement() {
     return this.service.activeAnnouncement();
+  }
+  @Post("public/newsletter/subscribe")
+  subscribeNewsletter(@Body("email") email: string) {
+    return this.service.subscribeNewsletter(email);
   }
 }

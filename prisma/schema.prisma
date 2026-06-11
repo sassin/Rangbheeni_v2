@@ -203,3 +203,13 @@ model ChatbotMessage {
   fallbackUsed       Boolean  @default(false)
   createdAt          DateTime @default(now())
 }
+
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String   @default("launch-announcement")
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

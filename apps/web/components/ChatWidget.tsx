@@ -54,7 +54,7 @@ function LoadingDots() {
   );
 }
 
-export default function ChatWidget() {
+export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
@@ -69,7 +69,6 @@ export default function ChatWidget() {
 
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const messagesRef = useRef<HTMLDivElement | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setSessionId(getOrCreateSessionId());
@@ -85,8 +84,6 @@ export default function ChatWidget() {
     if (!open) return;
 
     window.requestAnimationFrame(() => {
-      messagesEndRef.current?.scrollIntoView({ block: "end" });
-
       const el = messagesRef.current;
       if (el) el.scrollTop = el.scrollHeight;
     });
@@ -216,7 +213,14 @@ export default function ChatWidget() {
 
           <div
             ref={messagesRef}
-            className="min-h-0 flex-1 space-y-3 overflow-y-scroll overscroll-contain px-5 py-4 [scrollbar-gutter:stable]"
+            onWheel={(event) => {
+              const el = messagesRef.current;
+              if (!el) return;
+              event.stopPropagation();
+              el.scrollTop += event.deltaY;
+            }}
+            style={{ overflowY: "scroll" }}
+            className="min-h-0 flex-1 space-y-3 overscroll-contain px-5 py-4 [scrollbar-gutter:stable] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-black/5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[var(--color-primary)]/45"
           >
             {messages.map((message, index) => (
               <div
@@ -231,7 +235,6 @@ export default function ChatWidget() {
                 {message.loading ? <LoadingDots /> : message.text}
               </div>
             ))}
-            <div ref={messagesEndRef} />
           </div>
 
           <form onSubmit={submit} className="shrink-0 border-t border-black/10 bg-white/35 p-4">
@@ -287,3 +290,5 @@ export default function ChatWidget() {
     </div>
   );
 }
+
+export default ChatWidget;
