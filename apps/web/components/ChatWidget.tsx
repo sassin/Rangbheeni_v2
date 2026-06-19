@@ -281,14 +281,14 @@ export function ChatWidget() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="grid h-16 w-16 place-items-center rounded-full border border-[var(--color-primary)]/35 bg-[#f4efe4]/95 text-[var(--color-brown)] shadow-xl backdrop-blur transition hover:border-[var(--color-primary)] hover:bg-[var(--color-lightgreen)]/35 hover:text-[var(--color-primary)]"
+          className="relative grid h-16 w-16 place-items-center overflow-hidden rounded-full border border-[var(--color-primary)]/35 bg-[#f4efe4]/95 text-[var(--color-brown)] shadow-xl backdrop-blur transition hover:border-[var(--color-primary)] hover:bg-[var(--color-lightgreen)]/35 hover:text-[var(--color-primary)]"
           aria-label="Open chat"
         >
           <img
-            src="/images/Rangbheeni_logo.png"
+            src="/images/rangbheeni.svg"
             alt=""
             aria-hidden="true"
-            className="h-14 w-14 rounded-full object-contain"
+            className="absolute left-[40%] top-[67%] h-14 w-14 -translate-x-1/2 -translate-y-1/2 scale-[4] object-contain"
           />
         </button>
       )}
