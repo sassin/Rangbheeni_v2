@@ -5,6 +5,13 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue } from "fram
 import { useRef } from "react";
 
 export default function FinalCTA() {
+
+  function RangDivider() {
+  return (
+    <div className="mt-4 h-1 w-28 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-lightgreen)] to-[var(--color-accentblue)]" />
+  );
+  }
+
   const containerRef = useRef<HTMLElement>(null);
   
   // Magnetic Logo Logic
@@ -63,8 +70,16 @@ export default function FinalCTA() {
               Let’s build sustainable <br />
               <span className="text-[var(--color-primary)]">communities together.</span>
             </motion.h2>
+
+            <motion.div 
+                                initial={{ scaleX: 0 }}
+                                whileInView={{ scaleX: 1 }}
+                                transition={{ delay: 0.5, duration: 0.8 }}
+                                className="origin-left"
+                              >
+                                 <RangDivider />
+            </motion.div>
             
-            <div className="mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accentblue)]" />
           </div>
           
           {/* BRAND-COLORED SOCIAL LINKS */}
