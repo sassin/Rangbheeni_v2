@@ -5,6 +5,7 @@
   stories: process.env.NEXT_PUBLIC_SHOW_STORIES !== "false",
   events: process.env.NEXT_PUBLIC_SHOW_EVENTS !== "false",
   aiChat: process.env.NEXT_PUBLIC_SHOW_AI_CHAT !== "false",
+  aiChatMaintenance: process.env.NEXT_PUBLIC_AI_CHAT_MAINTENANCE === "true",
 };
 
 export function isNavigationItemEnabled(item: { href?: string; label?: string }) {

@@ -280,9 +280,16 @@ export function ChatWidget() {
       ) : (
         <button
           type="button"
-          onClick={() => setOpen(true)}
-          className="relative grid h-16 w-16 place-items-center overflow-hidden rounded-full border border-[var(--color-primary)]/35 bg-[#f4efe4]/95 text-[var(--color-brown)] shadow-xl backdrop-blur transition hover:border-[var(--color-primary)] hover:bg-[var(--color-lightgreen)]/35 hover:text-[var(--color-primary)]"
-          aria-label="Open chat"
+          onClick={() => {
+            if (!featureFlags.aiChatMaintenance) setOpen(true);
+          }}
+          disabled={featureFlags.aiChatMaintenance}
+          title={featureFlags.aiChatMaintenance ? "Rangbheeni assistant is temporarily unavailable." : "Open chat"}
+          className={[
+            "relative grid h-16 w-16 place-items-center overflow-hidden rounded-full border border-[var(--color-primary)]/35 bg-[#f4efe4]/95 text-[var(--color-brown)] shadow-xl backdrop-blur transition hover:border-[var(--color-primary)] hover:bg-[var(--color-lightgreen)]/35 hover:text-[var(--color-primary)]",
+            featureFlags.aiChatMaintenance ? "cursor-not-allowed opacity-60 grayscale" : "",
+          ].join(" ")}
+          aria-label={featureFlags.aiChatMaintenance ? "Chat temporarily unavailable" : "Open chat"}
         >
           <img
             src="/images/rangbheeni.svg"
