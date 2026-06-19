@@ -48,14 +48,14 @@ export function Announcement() {
         const selected = data?.id ? data : defaultAnnouncement;
         const key = `rangbheeni_announcement_dismissed_${selected.id}`;
 
-        if (window.localStorage.getItem(key) === "true") return;
+        if (window.sessionStorage.getItem(key) === "true") return;
         setAnnouncement(selected);
       })
       .catch(() => {
         if (ignore) return;
 
         const key = `rangbheeni_announcement_dismissed_${defaultAnnouncement.id}`;
-        if (window.localStorage.getItem(key) !== "true") {
+        if (window.sessionStorage.getItem(key) !== "true") {
           setAnnouncement(defaultAnnouncement);
         }
       });
@@ -71,7 +71,7 @@ export function Announcement() {
   }, [announcement]);
 
   function close() {
-    if (storageKey) window.localStorage.setItem(storageKey, "true");
+    if (storageKey) window.sessionStorage.setItem(storageKey, "true");
     setAnnouncement(null);
   }
 
