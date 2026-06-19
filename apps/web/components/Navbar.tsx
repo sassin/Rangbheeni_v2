@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { isNavigationItemEnabled } from "@/lib/featureFlags";
 
 const nav = [
   { href: "/journey", label: "Our Journey" },
@@ -17,7 +18,7 @@ export function Navbar() {
           <span>Rangbheeni</span>
         </Link>
         <nav className="nav-links" aria-label="Primary navigation">
-          {nav.map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}
+          {nav.filter(isNavigationItemEnabled).map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}
           <Link className="nav-cta" href="/#connect">Connect</Link>
         </nav>
       </div>

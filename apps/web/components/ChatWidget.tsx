@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import { featureFlags } from "@/lib/featureFlags";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 const chatApiUrl =
@@ -55,6 +56,10 @@ function LoadingDots() {
 }
 
 export function ChatWidget() {
+  if (!featureFlags.aiChat) return null;
+
+  if (!featureFlags.aiChat) return null;
+
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
