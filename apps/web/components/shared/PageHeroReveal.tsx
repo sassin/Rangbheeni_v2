@@ -1,6 +1,5 @@
 ﻿"use client";
 
-import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import RangDivider from "@/components/shared/RangDivider";
 
@@ -16,12 +15,7 @@ export default function PageHeroReveal({
   description,
 }: PageHeroRevealProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8 }}
-    >
+    <div>
       <p className="font-body text-xs uppercase tracking-[0.28em] text-[var(--color-primary)]">
         {eyebrow}
       </p>
@@ -37,6 +31,6 @@ export default function PageHeroReveal({
       ) : null}
 
       <RangDivider />
-    </motion.div>
+    </div>
   );
 }

@@ -3,7 +3,9 @@ import type { StoryDto } from "@rangbheeni/shared-types";
 import { getStories } from "@/lib/api";
 import PageBackground from "@/components/layout/PageBackground";
 import DenimTexture from "@/components/shared/DenimTexture";
+import PageContentReveal from "@/components/shared/PageContentReveal";
 import PageHeroReveal from "@/components/shared/PageHeroReveal";
+import StoryGalleryCarousel from "@/components/stories/StoryGalleryCarousel";
 
 export const dynamic = "force-dynamic";
 
@@ -19,8 +21,26 @@ function formatDate(value?: string | null) {
   });
 }
 
-function RangLine() {
-  return <div className="mt-5 h-1 w-28 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-lightgreen)] to-[var(--color-accentblue)]" />;
+function getStorySectionImageUrl(section: any) {
+  if (section?.type === "image" && typeof section.url === "string") return section.url;
+  if (typeof section?.imageUrl === "string") return section.imageUrl;
+  if (typeof section?.image?.url === "string") return section.image.url;
+  return null;
+}
+
+function getGalleryImagesFromStories(stories: StoryDto[]) {
+  const urls: string[] = [];
+
+  for (const story of stories) {
+    if (story.coverImage?.url) urls.push(story.coverImage.url);
+
+    for (const section of story.sections || []) {
+      const url = getStorySectionImageUrl(section as any);
+      if (url) urls.push(url);
+    }
+  }
+
+  return Array.from(new Set(urls)).slice(0, 50);
 }
 
 function getFirstReadableParagraph(story: StoryDto) {
@@ -42,7 +62,7 @@ function StoryVisual({ story, large = false }: { story: StoryDto; large?: boolea
     <div
       className={[
         "relative overflow-hidden bg-[#e8dfcf]",
-        large ? "min-h-[360px] rounded-[2.2rem]" : "h-52 rounded-[1.6rem]",
+        large ? "h-64 rounded-[1.7rem] md:h-72" : "h-52 rounded-[1.6rem]",
       ].join(" ")}
     >
       <img
@@ -50,43 +70,47 @@ function StoryVisual({ story, large = false }: { story: StoryDto; large?: boolea
         alt={story.coverImage.altText || story.title}
         className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
       />
-      <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(86,43,0,0.26),transparent_48%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(86,43,0,0.22),transparent_48%)]" />
     </div>
   );
 }
 
 function PrimaryStoryCard({ story }: { story: StoryDto }) {
+  const firstParagraph = getFirstReadableParagraph(story);
+
   return (
     <Link
       href={`/stories/${story.slug}`}
       className={[
-        "group grid gap-7 overflow-hidden rounded-[2.3rem] border border-black/10 bg-white/55 p-6 shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-md",
-        story.coverImage?.url ? "lg:grid-cols-[0.9fr_1.1fr]" : "",
+        "group grid gap-5 overflow-hidden rounded-[1.8rem] border border-black/10 bg-white/55 p-4 shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-md md:p-5",
+        story.coverImage?.url ? "lg:grid-cols-[0.58fr_1fr]" : "",
       ].join(" ")}
     >
       <StoryVisual story={story} large />
 
-      <div className="flex  flex-col justify-center">
+      <div className="flex flex-col justify-center">
         <p className="font-body text-xs uppercase tracking-[0.24em] text-[var(--color-primary)]">
-          Current story
+          Featured story
         </p>
 
-        <h2 className="mt-4 font-heading text-3xl font-bold leading-[1.06] text-[var(--color-brown)] md:text-5xl">
+        <h2 className="mt-3 font-heading text-2xl font-bold leading-[1.08] text-[var(--color-brown)] md:text-4xl">
           {story.title}
         </h2>
 
         {story.publishedDate ? (
-          <p className="mt-4 font-body text-sm font-semibold text-neutral-500">
+          <p className="mt-3 font-body text-sm font-semibold text-neutral-500">
             {formatDate(story.publishedDate)}
           </p>
         ) : null}
 
-        <p className="mt-5 max-w-3xl font-body text-base leading-8 text-neutral-800">
-          {story.excerpt}
-        </p>
+        {firstParagraph ? (
+          <p className="mt-4 max-w-3xl font-body text-[15px] leading-7 text-neutral-800">
+            {firstParagraph}
+          </p>
+        ) : null}
 
-        <span className="mt-7 inline-flex w-fit rounded-full border border-[var(--color-primary)]/35 bg-white/70 px-6 py-3 font-body text-sm font-semibold text-[var(--color-brown)] shadow-sm backdrop-blur transition group-hover:border-[var(--color-primary)] group-hover:bg-[var(--color-lightgreen)]/30 group-hover:text-[var(--color-primary)]">
-          Read story
+        <span className="mt-5 inline-flex w-fit rounded-full border border-[var(--color-primary)]/35 bg-white/70 px-5 py-2.5 font-body text-sm font-semibold text-[var(--color-brown)] shadow-sm backdrop-blur transition group-hover:border-[var(--color-primary)] group-hover:bg-[var(--color-lightgreen)]/30 group-hover:text-[var(--color-primary)]">
+          Read more
         </span>
       </div>
     </Link>
@@ -164,49 +188,27 @@ export default async function StoriesPage() {
     return bd - ad;
   });
 
+  const galleryImages = getGalleryImagesFromStories(ordered);
+
   const primary = ordered[0];
-  const highlighted = ordered.slice(1, 7);
-  const archive = ordered.slice(7);
+  const highlighted = ordered.slice(1, 4);
+  const archive = ordered.slice(4);
 
   return (
     <PageBackground variant="paper">
       <main className="relative min-h-screen overflow-x-hidden bg-[#efeeea] text-[var(--color-brown)]">
         <DenimTexture opacity="soft" />
 
-        <div className="relative z-10 pb-20 pl-24 pr-8 pt-28 md:pl-52 md:pr-20 lg:pl-72">
+        <PageContentReveal className="relative z-10 pb-20 pl-24 pr-8 pt-28 md:pl-52 md:pr-20 lg:pl-72">
           <section className="max-w-6xl">
-            <p className="font-body text-xs uppercase tracking-[0.28em] text-[var(--color-primary)]">
-              Our Stories
-            </p>
-
-            <h1 className="mt-4 max-w-5xl font-heading text-4xl font-bold leading-[1.05] tracking-tight text-[var(--color-brown)] md:text-6xl">
-              Stories of cloth, craft, care, and community.
-            </h1>
-
-            <p className="mt-6 max-w-4xl font-body text-base leading-8 text-neutral-800 md:text-lg">
-              A curated view into Rangbheeni’s work with women, upcycled textiles,
-              community engagement, and climate-conscious livelihoods.
-            </p>
-
-            <RangLine />
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="#current-stories"
-                className="rounded-full border border-[var(--color-primary)]/35 bg-white/70 px-5 py-2.5 font-body text-sm font-semibold text-[var(--color-brown)] shadow-sm backdrop-blur transition hover:border-[var(--color-primary)] hover:bg-[var(--color-lightgreen)]/30 hover:text-[var(--color-primary)]"
-              >
-                Current stories
-              </a>
-              <a
-                href="#story-archive"
-                className="rounded-full border border-black/10 bg-white/55 px-5 py-2.5 font-body text-sm font-semibold text-[var(--color-brown)] hover:border-[var(--color-primary)]"
-              >
-                All stories
-              </a>
-            </div>
+            <PageHeroReveal
+              eyebrow="Our Stories"
+              title="Stories of cloth, craft, care, and community."
+              description="A curated view into Rangbheeni’s work with women, upcycled textiles, community engagement, and climate-conscious livelihoods."
+            />
           </section>
 
-          <section id="current-stories" className="mt-14 max-w-6xl scroll-mt-24">
+          <section id="featured-story" className="mt-12 max-w-6xl scroll-mt-24">
             {primary ? (
               <PrimaryStoryCard story={primary} />
             ) : (
@@ -221,7 +223,7 @@ export default async function StoriesPage() {
             )}
 
             {highlighted.length > 0 ? (
-              <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                 {highlighted.map((story, index) => (
                   <StoryTile key={story.id} story={story} index={index} />
                 ))}
@@ -229,7 +231,9 @@ export default async function StoriesPage() {
             ) : null}
           </section>
 
-          <section id="story-archive" className="mt-16 max-w-6xl scroll-mt-24 border-t border-black/10 pt-12">
+          <StoryGalleryCarousel images={galleryImages} />
+
+          <section id="story-archive" className="mt-14 max-w-6xl scroll-mt-24 border-t border-black/10 pt-12">
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div>
                 <h2 className="font-heading text-3xl font-bold text-[var(--color-brown)] md:text-4xl">
@@ -259,9 +263,8 @@ export default async function StoriesPage() {
               ) : null}
             </div>
           </section>
-        </div>
+        </PageContentReveal>
       </main>
     </PageBackground>
   );
 }
-

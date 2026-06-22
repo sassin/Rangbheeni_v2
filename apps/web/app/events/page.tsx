@@ -3,8 +3,9 @@ import type { EventDto } from "@rangbheeni/shared-types";
 import { getEvents } from "@/lib/api";
 import PageBackground from "@/components/layout/PageBackground";
 import DenimTexture from "@/components/shared/DenimTexture";
-import ExpandableEventCard from "@/components/events/ExpandableEventCard";
+import PageContentReveal from "@/components/shared/PageContentReveal";
 import PageHeroReveal from "@/components/shared/PageHeroReveal";
+import ExpandableEventCard from "@/components/events/ExpandableEventCard";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +23,12 @@ function formatDate(value: string) {
     day: "numeric",
     year: "numeric",
   });
+}
+
+function StaticRangLine() {
+  return (
+    <div className="mt-4 h-1 w-28 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-lightgreen)] to-[var(--color-accentblue)]" />
+  );
 }
 
 function PastEventRow({ event }: { event: EventDto }) {
@@ -69,7 +76,7 @@ export default async function EventsPage() {
       <main className="relative min-h-screen overflow-x-hidden bg-[#efeeea] text-[var(--color-brown)]">
         <DenimTexture opacity="soft" />
 
-        <div className="relative z-10 pb-20 pl-24 pr-8 pt-28 md:pl-52 md:pr-20 lg:pl-72">
+        <PageContentReveal className="relative z-10 pb-20 pl-24 pr-8 pt-28 md:pl-52 md:pr-20 lg:pl-72">
           <section className="max-w-6xl">
             <PageHeroReveal
               eyebrow="Our Events"
@@ -83,9 +90,9 @@ export default async function EventsPage() {
                 <h2 className="font-heading text-3xl font-bold text-[var(--color-brown)] md:text-4xl">
                   Upcoming event
                 </h2>
-                <div className="mt-4 h-1 w-28 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-lightgreen)] to-[var(--color-accentblue)]" />
+                <StaticRangLine />
                 <p className="mt-4 max-w-3xl font-body text-neutral-700">
-                  Compact listings open like a textile seam, so the page stays clean until details are needed.
+                  Compact listings open for details while keeping the event page clean and easy to scan.
                 </p>
               </div>
             </div>
@@ -127,7 +134,7 @@ export default async function EventsPage() {
                 <h2 className="font-heading text-3xl font-bold text-[var(--color-brown)] md:text-4xl">
                   Past events
                 </h2>
-                <div className="mt-4 h-1 w-28 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-lightgreen)] to-[var(--color-accentblue)]" />
+                <StaticRangLine />
               </div>
 
               <Link
@@ -148,7 +155,7 @@ export default async function EventsPage() {
               )}
             </div>
           </section>
-        </div>
+        </PageContentReveal>
       </main>
     </PageBackground>
   );
