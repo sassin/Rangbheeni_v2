@@ -3,6 +3,7 @@ import type { StoryDto } from "@rangbheeni/shared-types";
 import { getStories } from "@/lib/api";
 import PageBackground from "@/components/layout/PageBackground";
 import DenimTexture from "@/components/shared/DenimTexture";
+import AnimatedRangDivider from "@/components/shared/AnimatedRangDivider";
 
 export const dynamic = "force-dynamic";
 
@@ -19,9 +20,19 @@ function formatDate(value?: string | null) {
 }
 
 function RangLine() {
-  return (
-    <div className="mt-5 h-1 w-32 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-lightgreen)] to-[var(--color-accentblue)] opacity-90" />
-  );
+  return <AnimatedRangDivider />;
+}
+
+function getFirstReadableParagraph(story: StoryDto) {
+  for (const section of story.sections || []) {
+    const raw = section as any;
+    if ((raw.type === "p" || typeof raw.text === "string") && typeof raw.text === "string") {
+      const text = raw.text.trim();
+      if (text) return text;
+    }
+  }
+
+  return story.excerpt || "";
 }
 
 function StoryVisual({ story, large = false }: { story: StoryDto; large?: boolean }) {
@@ -55,7 +66,7 @@ function PrimaryStoryCard({ story }: { story: StoryDto }) {
     >
       <StoryVisual story={story} large />
 
-      <div className="flex min-h-[330px] flex-col justify-center">
+      <div className="flex  flex-col justify-center">
         <p className="font-body text-xs uppercase tracking-[0.24em] text-[var(--color-primary)]">
           Current story
         </p>
@@ -210,7 +221,7 @@ export default async function StoriesPage() {
             )}
 
             {highlighted.length > 0 ? (
-              <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                 {highlighted.map((story, index) => (
                   <StoryTile key={story.id} story={story} index={index} />
                 ))}
