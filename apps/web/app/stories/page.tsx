@@ -3,7 +3,7 @@ import type { StoryDto } from "@rangbheeni/shared-types";
 import { getStories } from "@/lib/api";
 import PageBackground from "@/components/layout/PageBackground";
 import DenimTexture from "@/components/shared/DenimTexture";
-import AnimatedRangDivider from "@/components/shared/AnimatedRangDivider";
+import PageHeroReveal from "@/components/shared/PageHeroReveal";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +20,7 @@ function formatDate(value?: string | null) {
 }
 
 function RangLine() {
-  return <AnimatedRangDivider />;
+  return <div className="mt-5 h-1 w-28 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-lightgreen)] to-[var(--color-accentblue)]" />;
 }
 
 function getFirstReadableParagraph(story: StoryDto) {

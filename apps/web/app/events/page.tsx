@@ -3,8 +3,8 @@ import type { EventDto } from "@rangbheeni/shared-types";
 import { getEvents } from "@/lib/api";
 import PageBackground from "@/components/layout/PageBackground";
 import DenimTexture from "@/components/shared/DenimTexture";
-import AnimatedRangDivider from "@/components/shared/AnimatedRangDivider";
 import ExpandableEventCard from "@/components/events/ExpandableEventCard";
+import PageHeroReveal from "@/components/shared/PageHeroReveal";
 
 export const dynamic = "force-dynamic";
 
@@ -71,15 +71,10 @@ export default async function EventsPage() {
 
         <div className="relative z-10 pb-20 pl-24 pr-8 pt-28 md:pl-52 md:pr-20 lg:pl-72">
           <section className="max-w-6xl">
-            <p className="font-body text-xs uppercase tracking-[0.28em] text-[var(--color-primary)]">
-              Our Events
-            </p>
-
-            <h1 className="mt-4 max-w-5xl font-heading text-4xl font-bold leading-[1.05] tracking-tight text-[var(--color-brown)] md:text-6xl">
-              Meet Rangbheeni at exhibitions, workshops, and community spaces.
-            </h1>
-
-            <AnimatedRangDivider />
+            <PageHeroReveal
+              eyebrow="Our Events"
+              title="Meet Rangbheeni at exhibitions, workshops, and community spaces."
+            />
           </section>
 
           <section className="mt-14 max-w-6xl">
@@ -88,7 +83,7 @@ export default async function EventsPage() {
                 <h2 className="font-heading text-3xl font-bold text-[var(--color-brown)] md:text-4xl">
                   Upcoming event
                 </h2>
-                <AnimatedRangDivider className="mt-4" />
+                <div className="mt-4 h-1 w-28 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-lightgreen)] to-[var(--color-accentblue)]" />
                 <p className="mt-4 max-w-3xl font-body text-neutral-700">
                   Compact listings open like a textile seam, so the page stays clean until details are needed.
                 </p>
@@ -132,7 +127,7 @@ export default async function EventsPage() {
                 <h2 className="font-heading text-3xl font-bold text-[var(--color-brown)] md:text-4xl">
                   Past events
                 </h2>
-                <AnimatedRangDivider className="mt-4" />
+                <div className="mt-4 h-1 w-28 rounded-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-lightgreen)] to-[var(--color-accentblue)]" />
               </div>
 
               <Link
