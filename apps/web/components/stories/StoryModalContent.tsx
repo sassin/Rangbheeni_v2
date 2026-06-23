@@ -2,6 +2,8 @@
 import type { StoryDto, StorySection } from "@rangbheeni/shared-types";
 import StoryShareButton from "@/components/stories/StoryShareButton";
 
+const MAX_STORY_WORDS = 950;
+
 type StoryImage = {
   url: string;
   alt: string;
@@ -24,6 +26,33 @@ function formatDate(value?: string | null) {
     day: "numeric",
     year: "numeric",
   });
+}
+
+function limitWords(text: string, maxWords: number) {
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  if (words.length <= maxWords) return text.trim();
+  return `${words.slice(0, maxWords).join(" ")}…`;
+}
+
+function limitBlocksByWords(blocks: TextBlock[], maxWords: number) {
+  let remaining = maxWords;
+  const limited: TextBlock[] = [];
+
+  for (const block of blocks) {
+    if (remaining <= 0) break;
+
+    const words = block.text.trim().split(/\s+/).filter(Boolean);
+    if (!words.length) continue;
+
+    const text = words.length > remaining
+      ? `${words.slice(0, remaining).join(" ")}…`
+      : block.text.trim();
+
+    limited.push({ ...block, text });
+    remaining -= Math.min(words.length, remaining);
+  }
+
+  return limited;
 }
 
 function getSectionText(section: StorySection) {
@@ -78,8 +107,6 @@ function collectArticleImages(story: StoryDto) {
     }
   }
 
-  // Article images are separate from thumbnail/cover when present.
-  // If no article image exists, the cover image is used as a safe fallback.
   if (!images.length && story.coverImage?.url) {
     images.push({
       url: story.coverImage.url,
@@ -105,23 +132,37 @@ function textBlocks(story: StoryDto): TextBlock[] {
     })
     .filter(Boolean) as TextBlock[];
 
-  if (blocks.length) return blocks;
-  return story.excerpt ? [{ type: "p", text: story.excerpt }] : [];
+  const source = blocks.length ? blocks : story.excerpt ? [{ type: "p", text: story.excerpt }] as TextBlock[] : [];
+  return limitBlocksByWords(source, MAX_STORY_WORDS);
+}
+
+function textWithDropCap(text: string, index: number) {
+  if (index !== 0 || !text) return text;
+
+  return (
+    <>
+      <span className="float-left mr-2 mt-1 font-heading text-6xl font-bold leading-[0.85] text-[var(--color-brown)]">
+        {text.slice(0, 1)}
+      </span>
+      {text.slice(1)}
+    </>
+  );
 }
 
 function StoryFigure({ image, index }: { image: StoryImage; index: number }) {
   const labels = ["Main image", "Second image", "Third image", "Fourth image"];
 
   return (
-    <figure className="my-7 break-inside-avoid overflow-hidden border-y border-black/20 bg-[#efe6d3] py-3">
-      <div className="overflow-hidden bg-[#ded2bb]">
+    <figure className="my-7 break-inside-avoid border-y border-black/25 py-3">
+      <div className="overflow-hidden border border-black/15 bg-[#d8ccb5] p-1">
         <img
           src={image.url}
           alt={image.alt}
-          className="max-h-[420px] w-full object-cover grayscale-[0.05] contrast-[1.02]"
+          className="max-h-[380px] w-full object-cover grayscale-[0.1] contrast-[1.04]"
         />
       </div>
-      <figcaption className="mt-2 flex flex-col gap-1 border-t border-black/10 pt-2 font-body text-[11px] leading-5 text-neutral-600 md:flex-row md:items-center md:justify-between">
+
+      <figcaption className="mt-2 flex flex-col gap-1 border-t border-black/15 pt-2 font-body text-[11px] leading-5 text-neutral-600 md:flex-row md:items-center md:justify-between">
         <span>{image.caption}</span>
         <span className="uppercase tracking-[0.18em] text-[var(--color-primary)]">
           {labels[index] || "Story image"}
@@ -146,12 +187,12 @@ function StoryBody({ story, images }: { story: StoryDto; images: StoryImage[] })
             {image ? <StoryFigure image={image} index={index} /> : null}
 
             {block?.type === "quote" ? (
-              <blockquote className="my-7 border-y border-black/25 py-5 font-heading text-2xl font-bold leading-9 text-[var(--color-brown)] md:text-3xl">
+              <blockquote className="my-7 border-y border-black/25 py-5 font-quote text-xl leading-9 text-[var(--color-brown)] md:text-2xl">
                 “{block.text}”
               </blockquote>
             ) : block ? (
-              <p className="mb-5 font-body text-[16px] leading-8 text-neutral-850 md:text-[17px] md:leading-9">
-                {block.text}
+              <p className="mb-5 font-body text-[16px] leading-8 text-neutral-800 md:text-[17px] md:leading-9">
+                {textWithDropCap(block.text, index)}
               </p>
             ) : null}
           </section>
@@ -173,18 +214,18 @@ export default function StoryModalContent({
   return (
     <article
       className={[
-        "relative overflow-hidden bg-[#f1eadb] text-[var(--color-brown)]",
+        "relative overflow-hidden bg-[#f4eddd] text-[var(--color-brown)]",
         modal
-          ? "max-h-[calc(100vh-2rem)] w-[min(980px,calc(100vw-1.5rem))] rounded-[1.1rem] shadow-[0_28px_90px_rgba(69,44,23,0.24)]"
+          ? "max-h-[calc(100vh-2rem)] w-[min(760px,calc(100vw-1.5rem))] rounded-[0.45rem] shadow-[0_28px_90px_rgba(69,44,23,0.24)]"
           : "min-h-screen",
       ].join(" ")}
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.18] mix-blend-multiply"
+        className="pointer-events-none absolute inset-0 opacity-[0.32] mix-blend-multiply"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(69,44,23,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(69,44,23,0.035) 1px, transparent 1px)",
-          backgroundSize: "26px 26px",
+            "radial-gradient(circle at 1px 1px, rgba(69,44,23,0.12) 1px, transparent 0), linear-gradient(rgba(69,44,23,0.04) 1px, transparent 1px)",
+          backgroundSize: "7px 7px, 100% 28px",
         }}
       />
 
@@ -195,11 +236,7 @@ export default function StoryModalContent({
         ].join(" ")}
       >
         <div className={modal ? "px-5 py-5 md:px-9 md:py-8" : "px-6 py-28 md:px-16 lg:px-24"}>
-          <div className="sticky top-0 z-20 -mx-5 -mt-5 mb-6 flex items-center justify-between gap-3 border-b border-black/20 bg-[#f1eadb]/95 px-5 py-3 backdrop-blur md:-mx-9 md:-mt-8 md:px-9">
-            <p className="font-heading text-sm font-bold uppercase tracking-[0.24em] text-[var(--color-brown)]">
-              Rangbheeni Chronicle
-            </p>
-
+          <div className="sticky top-0 z-20 -mx-5 -mt-5 mb-6 flex justify-end border-b border-black/25 bg-[#f4eddd]/96 px-5 py-3 backdrop-blur md:-mx-9 md:-mt-8 md:px-9">
             <div className="flex items-center gap-2">
               <StoryShareButton slug={story.slug} />
 
@@ -207,7 +244,7 @@ export default function StoryModalContent({
                 href="/stories"
                 aria-label="Close story"
                 title="Close story"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/15 bg-[#fbf7ec]/85 text-[var(--color-brown)] shadow-sm backdrop-blur transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/20 bg-[#fbf7ec]/80 text-[var(--color-brown)] shadow-sm backdrop-blur transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
               >
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
                   <path
@@ -221,23 +258,23 @@ export default function StoryModalContent({
             </div>
           </div>
 
-          <header className="mx-auto max-w-4xl border-y border-black/25 py-7 text-center">
-            <p className="font-body text-xs uppercase tracking-[0.28em] text-[var(--color-primary)]">
-              {formatDate(story.publishedDate)}
-            </p>
-
-            <h1 className="mt-4 font-heading text-4xl font-bold leading-[1.02] tracking-tight text-[var(--color-brown)] md:text-6xl">
+          <header className="mx-auto max-w-3xl border-y-[3px] border-double border-black/40 py-7">
+            <h1 className="mx-auto max-w-3xl text-center font-heading text-4xl font-bold leading-[1.02] tracking-tight text-[var(--color-brown)] md:text-5xl">
               {story.title}
             </h1>
 
+            <p className="mt-4 border-t border-black/20 pt-3 text-right font-body text-xs uppercase tracking-[0.22em] text-neutral-600">
+              {formatDate(story.publishedDate)}
+            </p>
+
             {story.excerpt ? (
-              <p className="mx-auto mt-5 max-w-3xl font-body text-base leading-8 text-neutral-800 md:text-lg">
-                {story.excerpt}
+              <p className="mx-auto mt-5 max-w-2xl border-t border-black/20 pt-4 text-center font-body text-base leading-8 text-neutral-800">
+                {limitWords(story.excerpt, 70)}
               </p>
             ) : null}
           </header>
 
-          <section className="mx-auto mt-8 max-w-4xl pb-8">
+          <section className="mx-auto mt-8 max-w-3xl pb-8">
             <StoryBody story={story} images={images} />
           </section>
         </div>
