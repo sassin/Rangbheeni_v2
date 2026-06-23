@@ -241,3 +241,90 @@ html.lenis, html.lenis body {
 ::-webkit-scrollbar {
   display: none;
 }
+/* Keep Rangbheeni chat launcher visually alive during maintenance.
+   The component can still block opening the chat, but the bubble should not look disabled. */
+.chat-button,
+.chat-button[disabled],
+.chat-button[aria-disabled="true"],
+button.chat-button[disabled],
+button.chat-button[aria-disabled="true"] {
+  opacity: 1 !important;
+  filter: none !important;
+  cursor: default;
+}
+
+.chat-button[disabled],
+.chat-button[aria-disabled="true"],
+button.chat-button[disabled],
+button.chat-button[aria-disabled="true"] {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 18px 42px rgba(69, 44, 23, 0.22) !important;
+}
+
+.chat-button[disabled]:hover,
+.chat-button[aria-disabled="true"]:hover,
+button.chat-button[disabled]:hover,
+button.chat-button[aria-disabled="true"]:hover {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+}
+
+/* Keep Rangbheeni chat launcher visually alive during maintenance.
+   The component can still block opening the chat, but the bubble should not look disabled. */
+.chat-button,
+.chat-button[disabled],
+.chat-button[aria-disabled="true"],
+button.chat-button[disabled],
+button.chat-button[aria-disabled="true"] {
+  opacity: 1 !important;
+  filter: none !important;
+  cursor: default;
+}
+
+.chat-button[disabled],
+.chat-button[aria-disabled="true"],
+button.chat-button[disabled],
+button.chat-button[aria-disabled="true"] {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 18px 42px rgba(69, 44, 23, 0.22) !important;
+}
+
+.chat-button[disabled]:hover,
+.chat-button[aria-disabled="true"]:hover,
+button.chat-button[disabled]:hover,
+button.chat-button[aria-disabled="true"]:hover {
+  background: var(--color-primary) !important;
+  color: #fff !important;
+}
+
+/* Maintenance mode should not visually gray the Rangbheeni chat launcher/logo. */
+.chat-button,
+.chat-button:hover,
+.chat-button:disabled,
+.chat-button[disabled],
+.chat-button[aria-disabled="true"] {
+  opacity: 1 !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  cursor: default !important;
+}
+
+.chat-button *,
+.chat-button img,
+.chat-button svg,
+.chat-button picture,
+.chat-button source {
+  opacity: 1 !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+  mix-blend-mode: normal !important;
+  color: inherit !important;
+}
+
+.chat-button img {
+  transform: none;
+}
