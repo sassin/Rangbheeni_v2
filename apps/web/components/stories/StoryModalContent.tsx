@@ -2,7 +2,8 @@
 import type { StoryDto, StorySection } from "@rangbheeni/shared-types";
 import StoryShareButton from "@/components/stories/StoryShareButton";
 
-const MAX_STORY_WORDS = 950;
+const MAX_STORY_WORDS = 1050;
+const MAX_ARTICLE_IMAGES = 4;
 
 type StoryImage = {
   url: string;
@@ -10,10 +11,10 @@ type StoryImage = {
   caption: string;
 };
 
-type TextBlock = {
-  type: "p" | "quote";
-  text: string;
-};
+type ArticleItem =
+  | { type: "image"; image: StoryImage }
+  | { type: "p"; text: string }
+  | { type: "quote"; text: string };
 
 function formatDate(value?: string | null) {
   if (!value) return "Rangbheeni story";
@@ -34,25 +35,18 @@ function limitWords(text: string, maxWords: number) {
   return `${words.slice(0, maxWords).join(" ")}…`;
 }
 
-function limitBlocksByWords(blocks: TextBlock[], maxWords: number) {
-  let remaining = maxWords;
-  const limited: TextBlock[] = [];
+function takeWords(text: string, remaining: number) {
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  if (!words.length || remaining <= 0) return { text: "", used: 0 };
 
-  for (const block of blocks) {
-    if (remaining <= 0) break;
-
-    const words = block.text.trim().split(/\s+/).filter(Boolean);
-    if (!words.length) continue;
-
-    const text = words.length > remaining
-      ? `${words.slice(0, remaining).join(" ")}…`
-      : block.text.trim();
-
-    limited.push({ ...block, text });
-    remaining -= Math.min(words.length, remaining);
+  if (words.length <= remaining) {
+    return { text: text.trim(), used: words.length };
   }
 
-  return limited;
+  return {
+    text: `${words.slice(0, remaining).join(" ")}…`,
+    used: remaining,
+  };
 }
 
 function getSectionText(section: StorySection) {
@@ -68,12 +62,12 @@ function getSectionImage(section: StorySection): StoryImage | null {
       ? raw.caption
       : typeof raw.alt === "string"
         ? raw.alt
-        : "Rangbheeni story image";
+        : "";
 
   if (raw.type === "image" && typeof raw.url === "string") {
     return {
       url: raw.url,
-      alt: typeof raw.alt === "string" ? raw.alt : caption,
+      alt: typeof raw.alt === "string" ? raw.alt : caption || "Rangbheeni story image",
       caption,
     };
   }
@@ -81,7 +75,10 @@ function getSectionImage(section: StorySection): StoryImage | null {
   if (raw.image && typeof raw.image.url === "string") {
     return {
       url: raw.image.url,
-      alt: typeof raw.image.alt === "string" ? raw.image.alt : caption,
+      alt:
+        typeof raw.image.alt === "string"
+          ? raw.image.alt
+          : caption || "Rangbheeni story image",
       caption: typeof raw.image.caption === "string" ? raw.image.caption : caption,
     };
   }
@@ -89,7 +86,7 @@ function getSectionImage(section: StorySection): StoryImage | null {
   if (typeof raw.imageUrl === "string") {
     return {
       url: raw.imageUrl,
-      alt: typeof raw.alt === "string" ? raw.alt : caption,
+      alt: typeof raw.alt === "string" ? raw.alt : caption || "Rangbheeni story image",
       caption,
     };
   }
@@ -97,43 +94,52 @@ function getSectionImage(section: StorySection): StoryImage | null {
   return null;
 }
 
-function collectArticleImages(story: StoryDto) {
-  const images: StoryImage[] = [];
+function buildArticleItems(story: StoryDto) {
+  const items: ArticleItem[] = [];
+  const seenImages = new Set<string>();
+  let imageCount = 0;
+  let wordsRemaining = MAX_STORY_WORDS;
 
   for (const section of story.sections || []) {
     const image = getSectionImage(section);
-    if (image && !images.some((existing) => existing.url === image.url)) {
-      images.push(image);
-    }
-  }
 
-  if (!images.length && story.coverImage?.url) {
-    images.push({
-      url: story.coverImage.url,
-      alt: story.coverImage.altText || story.title,
-      caption: story.coverImage.altText || story.title,
+    if (image && imageCount < MAX_ARTICLE_IMAGES && !seenImages.has(image.url)) {
+      seenImages.add(image.url);
+      imageCount += 1;
+      items.push({ type: "image", image });
+      continue;
+    }
+
+    const text = getSectionText(section);
+    if (!text || wordsRemaining <= 0) continue;
+
+    const limited = takeWords(text, wordsRemaining);
+    if (!limited.text) continue;
+
+    wordsRemaining -= limited.used;
+
+    items.push({
+      type: (section as any).type === "quote" ? "quote" : "p",
+      text: limited.text,
     });
   }
 
-  return images.slice(0, 4);
-}
+  if (!items.some((item) => item.type === "image") && story.coverImage?.url) {
+    items.unshift({
+      type: "image",
+      image: {
+        url: story.coverImage.url,
+        alt: story.coverImage.altText || story.title,
+        caption: story.coverImage.altText || "",
+      },
+    });
+  }
 
-function textBlocks(story: StoryDto): TextBlock[] {
-  const blocks = (story.sections || [])
-    .map((section) => {
-      const raw = section as any;
-      const text = getSectionText(section);
-      if (!text) return null;
+  if (!items.some((item) => item.type === "p" || item.type === "quote") && story.excerpt) {
+    items.push({ type: "p", text: limitWords(story.excerpt, MAX_STORY_WORDS) });
+  }
 
-      return {
-        type: raw.type === "quote" ? "quote" : "p",
-        text,
-      } as TextBlock;
-    })
-    .filter(Boolean) as TextBlock[];
-
-  const source = blocks.length ? blocks : story.excerpt ? [{ type: "p", text: story.excerpt }] as TextBlock[] : [];
-  return limitBlocksByWords(source, MAX_STORY_WORDS);
+  return items;
 }
 
 function textWithDropCap(text: string, index: number) {
@@ -141,7 +147,7 @@ function textWithDropCap(text: string, index: number) {
 
   return (
     <>
-      <span className="float-left mr-2 mt-1 font-heading text-6xl font-bold leading-[0.85] text-[var(--color-brown)]">
+      <span className="float-left mr-2 mt-1 font-heading text-6xl font-bold leading-[0.82] text-[var(--color-brown)]">
         {text.slice(0, 1)}
       </span>
       {text.slice(1)}
@@ -149,53 +155,58 @@ function textWithDropCap(text: string, index: number) {
   );
 }
 
-function StoryFigure({ image, index }: { image: StoryImage; index: number }) {
-  const labels = ["Main image", "Second image", "Third image", "Fourth image"];
-
+function StoryFigure({ image }: { image: StoryImage }) {
   return (
-    <figure className="my-7 break-inside-avoid border-y border-black/25 py-3">
-      <div className="overflow-hidden border border-black/15 bg-[#d8ccb5] p-1">
+    <figure className="my-7 break-inside-avoid">
+      <div className="overflow-hidden bg-[#d7cab2] p-[5px] shadow-[inset_0_0_22px_rgba(69,44,23,0.13),0_1px_0_rgba(69,44,23,0.18)]">
         <img
           src={image.url}
           alt={image.alt}
-          className="max-h-[380px] w-full object-cover grayscale-[0.1] contrast-[1.04]"
+          className="max-h-[340px] w-full object-cover grayscale-[0.22] contrast-[1.08] sepia-[0.12]"
         />
       </div>
 
-      <figcaption className="mt-2 flex flex-col gap-1 border-t border-black/15 pt-2 font-body text-[11px] leading-5 text-neutral-600 md:flex-row md:items-center md:justify-between">
-        <span>{image.caption}</span>
-        <span className="uppercase tracking-[0.18em] text-[var(--color-primary)]">
-          {labels[index] || "Story image"}
-        </span>
-      </figcaption>
+      {image.caption ? (
+        <figcaption className="mt-2 font-body text-[11px] leading-5 text-neutral-600">
+          {image.caption}
+        </figcaption>
+      ) : null}
     </figure>
   );
 }
 
-function StoryBody({ story, images }: { story: StoryDto; images: StoryImage[] }) {
-  const blocks = textBlocks(story);
-  const max = Math.max(blocks.length, images.length);
+function StoryBody({ story }: { story: StoryDto }) {
+  const items = buildArticleItems(story);
+  let paragraphIndex = 0;
 
   return (
     <div className="text-[var(--color-brown)]">
-      {Array.from({ length: max }).map((_, index) => {
-        const image = images[index];
-        const block = blocks[index];
+      {items.map((item, index) => {
+        if (item.type === "image") {
+          return <StoryFigure key={`${item.image.url}-${index}`} image={item.image} />;
+        }
+
+        if (item.type === "quote") {
+          return (
+            <blockquote
+              key={index}
+              className="my-7 px-4 font-quote text-xl leading-9 text-[var(--color-brown)] md:text-2xl"
+            >
+              “{item.text}”
+            </blockquote>
+          );
+        }
+
+        const currentParagraphIndex = paragraphIndex;
+        paragraphIndex += 1;
 
         return (
-          <section key={index} className="break-inside-avoid">
-            {image ? <StoryFigure image={image} index={index} /> : null}
-
-            {block?.type === "quote" ? (
-              <blockquote className="my-7 border-y border-black/25 py-5 font-quote text-xl leading-9 text-[var(--color-brown)] md:text-2xl">
-                “{block.text}”
-              </blockquote>
-            ) : block ? (
-              <p className="mb-5 font-body text-[16px] leading-8 text-neutral-800 md:text-[17px] md:leading-9">
-                {textWithDropCap(block.text, index)}
-              </p>
-            ) : null}
-          </section>
+          <p
+            key={index}
+            className="mb-5 font-body text-[16px] leading-8 text-neutral-800 md:text-[17px] md:leading-9"
+          >
+            {textWithDropCap(item.text, currentParagraphIndex)}
+          </p>
         );
       })}
     </div>
@@ -209,75 +220,70 @@ export default function StoryModalContent({
   story: StoryDto;
   modal?: boolean;
 }) {
-  const images = collectArticleImages(story);
-
   return (
     <article
+      data-lenis-prevent
+      data-lenis-prevent-wheel
       className={[
-        "relative overflow-hidden bg-[#f4eddd] text-[var(--color-brown)]",
+        "relative isolate bg-[#efe3c8] text-[var(--color-brown)]",
         modal
-          ? "max-h-[calc(100vh-2rem)] w-[min(760px,calc(100vw-1.5rem))] rounded-[0.45rem] shadow-[0_28px_90px_rgba(69,44,23,0.24)]"
-          : "min-h-screen",
+          ? "story-newspaper-scroll story-newspaper-paper max-h-[calc(100dvh-1.5rem)] w-[min(560px,calc(100vw-1rem))] overflow-y-auto overscroll-contain rounded-[0.35rem] shadow-[0_30px_100px_rgba(69,44,23,0.28)]"
+          : "min-h-screen w-full",
       ].join(" ")}
     >
       <div
-        className="pointer-events-none absolute inset-0 opacity-[0.32] mix-blend-multiply"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, rgba(69,44,23,0.12) 1px, transparent 0), linear-gradient(rgba(69,44,23,0.04) 1px, transparent 1px)",
-          backgroundSize: "7px 7px, 100% 28px",
-        }}
-      />
-
-      <div
         className={[
-          "relative overflow-y-auto",
-          modal ? "max-h-[calc(100vh-2rem)]" : "min-h-screen",
+          "relative z-10",
+          modal
+            ? "px-5 py-5 md:px-7 md:py-7"
+            : "min-h-screen px-6 py-28 md:px-16 lg:px-24",
         ].join(" ")}
       >
-        <div className={modal ? "px-5 py-5 md:px-9 md:py-8" : "px-6 py-28 md:px-16 lg:px-24"}>
-          <div className="sticky top-0 z-20 -mx-5 -mt-5 mb-6 flex justify-end border-b border-black/25 bg-[#f4eddd]/96 px-5 py-3 backdrop-blur md:-mx-9 md:-mt-8 md:px-9">
-            <div className="flex items-center gap-2">
-              <StoryShareButton slug={story.slug} />
+        <div className="sticky top-3 z-30 mb-3 ml-auto flex w-fit items-center gap-2">
+            <StoryShareButton slug={story.slug} />
 
-              <Link
-                href="/stories"
-                aria-label="Close story"
-                title="Close story"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/20 bg-[#fbf7ec]/80 text-[var(--color-brown)] shadow-sm backdrop-blur transition hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
-              >
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
-                  <path
-                    d="M6 6l12 12M18 6L6 18"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </Link>
-            </div>
+            <Link
+              href="/stories"
+              aria-label="Close story"
+              title="Close story"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#f8efd9]/90 text-[var(--color-brown)] shadow-[0_1px_0_rgba(69,44,23,0.22),0_8px_24px_rgba(69,44,23,0.12)] transition hover:text-[var(--color-primary)]"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
+                <path
+                  d="M6 6l12 12M18 6L6 18"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </Link>
           </div>
 
-          <header className="mx-auto max-w-3xl border-y-[3px] border-double border-black/40 py-7">
-            <h1 className="mx-auto max-w-3xl text-center font-heading text-4xl font-bold leading-[1.02] tracking-tight text-[var(--color-brown)] md:text-5xl">
-              {story.title}
-            </h1>
-
-            <p className="mt-4 border-t border-black/20 pt-3 text-right font-body text-xs uppercase tracking-[0.22em] text-neutral-600">
-              {formatDate(story.publishedDate)}
-            </p>
-
-            {story.excerpt ? (
-              <p className="mx-auto mt-5 max-w-2xl border-t border-black/20 pt-4 text-center font-body text-base leading-8 text-neutral-800">
-                {limitWords(story.excerpt, 70)}
-              </p>
-            ) : null}
-          </header>
-
-          <section className="mx-auto mt-8 max-w-3xl pb-8">
-            <StoryBody story={story} images={images} />
-          </section>
+        <div className="mx-auto max-w-[470px] text-center">
+          <p className="font-heading text-2xl font-bold leading-none tracking-tight text-[var(--color-brown)] md:text-3xl">
+            The Rangbheeni Chronicle
+          </p>
         </div>
+
+        <header className="mx-auto mt-8 max-w-[470px]">
+          <h1 className="text-center font-heading text-4xl font-bold leading-[1.03] tracking-tight text-[var(--color-brown)] md:text-5xl">
+            {story.title}
+          </h1>
+
+          <p className="mt-4 text-right font-body text-xs uppercase tracking-[0.22em] text-neutral-600">
+            {formatDate(story.publishedDate)}
+          </p>
+
+          {story.excerpt ? (
+            <p className="mx-auto mt-5 max-w-[450px] text-center font-body text-base leading-8 text-neutral-800">
+              {limitWords(story.excerpt, 70)}
+            </p>
+          ) : null}
+        </header>
+
+        <section className="mx-auto mt-7 max-w-[470px] pb-12">
+          <StoryBody story={story} />
+        </section>
       </div>
     </article>
   );

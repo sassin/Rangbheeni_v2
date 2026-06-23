@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className="min-h-screen bg-[#efeeea] font-sans text-neutral-900 antialiased overflow-x-hidden">
         <svg className="pointer-events-none absolute h-0 w-0 opacity-0" aria-hidden="true">
           <defs>
@@ -71,3 +71,4 @@ export default function RootLayout({
     </html>
   );
 }
+
