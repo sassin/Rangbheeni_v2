@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -6,27 +6,13 @@ type StoryGalleryCarouselProps = {
   images: readonly string[];
 };
 
-const SESSION_KEY = "rangbheeni-story-gallery-start";
-
 export default function StoryGalleryCarousel({ images }: StoryGalleryCarouselProps) {
-  const safeImages = images.slice(0, 50);
+  const safeImages = useMemo(() => images.slice(0, 50), [images]);
   const [start, setStart] = useState(0);
 
   useEffect(() => {
     if (!safeImages.length) return;
-
-    const existing = window.sessionStorage.getItem(SESSION_KEY);
-    if (existing !== null) {
-      const parsed = Number(existing);
-      if (Number.isFinite(parsed)) {
-        setStart(parsed % safeImages.length);
-        return;
-      }
-    }
-
-    const next = Math.floor(Math.random() * safeImages.length);
-    window.sessionStorage.setItem(SESSION_KEY, String(next));
-    setStart(next);
+    setStart(Math.floor(Math.random() * safeImages.length));
   }, [safeImages.length]);
 
   const ordered = useMemo(() => {
@@ -38,10 +24,7 @@ export default function StoryGalleryCarousel({ images }: StoryGalleryCarouselPro
 
   function move(direction: -1 | 1) {
     if (!safeImages.length) return;
-
-    const next = (start + direction + safeImages.length) % safeImages.length;
-    window.sessionStorage.setItem(SESSION_KEY, String(next));
-    setStart(next);
+    setStart((current) => (current + direction + safeImages.length) % safeImages.length);
   }
 
   if (!safeImages.length) return null;
@@ -67,7 +50,7 @@ export default function StoryGalleryCarousel({ images }: StoryGalleryCarouselPro
           type="button"
           onClick={() => move(-1)}
           aria-label="Previous gallery photos"
-          className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/35 text-[var(--color-brown)] backdrop-blur-md transition hover:bg-white/70 hover:text-[var(--color-primary)]"
+          className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/35 text-[var(--color-brown)] backdrop-blur-md transition hover:scale-105 hover:bg-white/70 hover:text-[var(--color-primary)] active:scale-95"
         >
           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
             <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -78,7 +61,7 @@ export default function StoryGalleryCarousel({ images }: StoryGalleryCarouselPro
           type="button"
           onClick={() => move(1)}
           aria-label="Next gallery photos"
-          className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/35 text-[var(--color-brown)] backdrop-blur-md transition hover:bg-white/70 hover:text-[var(--color-primary)]"
+          className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/35 text-[var(--color-brown)] backdrop-blur-md transition hover:scale-105 hover:bg-white/70 hover:text-[var(--color-primary)] active:scale-95"
         >
           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
             <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -89,12 +72,12 @@ export default function StoryGalleryCarousel({ images }: StoryGalleryCarouselPro
           {looped.map((src, index) => (
             <div
               key={`${src}-${index}`}
-              className="h-44 w-64 shrink-0 overflow-hidden rounded-[1.35rem] border border-black/10 bg-[#e8dfcf] shadow-sm md:h-52 md:w-80"
+              className="h-44 w-64 shrink-0 overflow-hidden rounded-[1.35rem] border border-black/10 bg-[#e8dfcf] shadow-sm transition duration-500 group-hover:shadow-md md:h-52 md:w-80"
             >
               <img
                 src={src}
                 alt=""
-                className="h-full w-full object-cover grayscale-[0.08] transition duration-700 group-hover:grayscale-0"
+                className="h-full w-full object-cover grayscale-[0.08] transition duration-700 group-hover:scale-[1.025] group-hover:grayscale-0"
                 loading="lazy"
               />
             </div>
@@ -104,11 +87,17 @@ export default function StoryGalleryCarousel({ images }: StoryGalleryCarouselPro
 
       <style jsx>{`
         .story-gallery-track {
-          animation: storyGalleryMarquee 80s linear infinite;
+          animation: storyGalleryMarquee 56s linear infinite;
         }
 
         .group:hover .story-gallery-track {
           animation-play-state: paused;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .story-gallery-track {
+            animation: none;
+          }
         }
 
         @keyframes storyGalleryMarquee {

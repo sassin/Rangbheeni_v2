@@ -98,7 +98,7 @@ function PrimaryStoryCard({ story }: { story: StoryDto }) {
         ) : null}
 
         {firstParagraph ? (
-          <p className="mt-4 max-w-3xl font-body text-[15px] leading-7 text-neutral-800">
+          <p className="mt-4 hidden max-w-3xl font-body text-[15px] leading-7 text-neutral-800 md:block">
             {firstParagraph}
           </p>
         ) : null}
@@ -132,7 +132,7 @@ function StoryTile({ story, index }: { story: StoryDto; index: number }) {
           {story.title}
         </h3>
 
-        <p className="mt-3 line-clamp-4 font-body text-sm leading-7 text-neutral-700">
+        <p className="mt-3 hidden font-body text-sm leading-7 text-neutral-700 md:line-clamp-4">
           {story.excerpt}
         </p>
 
@@ -179,8 +179,8 @@ function StoriesContentFallback() {
             <div className="h-3 w-32 rounded-full bg-[var(--color-primary)]/15" />
             <div className="mt-5 h-10 w-4/5 rounded-2xl bg-[var(--color-brown)]/10" />
             <div className="mt-4 h-4 w-28 rounded-full bg-black/10" />
-            <div className="mt-5 h-4 w-full max-w-2xl rounded-full bg-black/10" />
-            <div className="mt-3 h-4 w-5/6 rounded-full bg-black/10" />
+            <div className="mt-5 hidden h-4 w-full max-w-2xl rounded-full bg-black/10 md:block" />
+            <div className="mt-3 hidden h-4 w-5/6 rounded-full bg-black/10 md:block" />
             <div className="mt-6 h-10 w-32 rounded-full bg-white/45" />
           </div>
         </div>
@@ -199,8 +199,8 @@ function StoriesContentFallback() {
             <div className="pt-5">
               <div className="h-3 w-24 rounded-full bg-[var(--color-primary)]/15" />
               <div className="mt-4 h-7 w-3/4 rounded-full bg-[var(--color-brown)]/10" />
-              <div className="mt-4 h-4 w-full rounded-full bg-black/10" />
-              <div className="mt-3 h-4 w-5/6 rounded-full bg-black/10" />
+              <div className="mt-4 hidden h-4 w-full rounded-full bg-black/10 md:block" />
+              <div className="mt-3 hidden h-4 w-5/6 rounded-full bg-black/10 md:block" />
             </div>
           </div>
         ))}

@@ -233,7 +233,7 @@ export default function StoryModalContent({
               href="/stories"
               aria-label="Close story"
               title="Close story"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#f8efd9]/90 text-[var(--color-brown)] shadow-[0_1px_0_rgba(69,44,23,0.22),0_8px_24px_rgba(69,44,23,0.12)] transition hover:text-[var(--color-primary)]"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#f8efd9]/90 text-[var(--color-brown)] shadow-[0_1px_0_rgba(69,44,23,0.22),0_8px_24px_rgba(69,44,23,0.12)] transition hover:scale-105 hover:text-[var(--color-primary)] active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
             >
               <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
                 <path
