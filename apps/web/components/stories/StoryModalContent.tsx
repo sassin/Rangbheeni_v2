@@ -1,5 +1,5 @@
 ﻿import Link from "next/link";
-import type { StoryDto, StorySection } from "@rangbheeni/shared-types";
+import type { StoryBlockDto, StoryDto } from "@rangbheeni/shared-types";
 import StoryShareButton from "@/components/stories/StoryShareButton";
 
 const MAX_STORY_WORDS = 1050;
@@ -14,7 +14,8 @@ type StoryImage = {
 type ArticleItem =
   | { type: "image"; image: StoryImage }
   | { type: "p"; text: string }
-  | { type: "quote"; text: string };
+  | { type: "quote"; text: string }
+  | { type: "subheading"; text: string };
 
 function formatDate(value?: string | null) {
   if (!value) return "Rangbheeni story";
@@ -49,49 +50,19 @@ function takeWords(text: string, remaining: number) {
   };
 }
 
-function getSectionText(section: StorySection) {
-  const value = (section as any).text;
-  return typeof value === "string" ? value.trim() : "";
+function getBlockText(block: StoryBlockDto) {
+  return typeof block.text === "string" ? block.text.trim() : "";
 }
 
-function getSectionImage(section: StorySection): StoryImage | null {
-  const raw = section as any;
+function getBlockImage(block: StoryBlockDto): StoryImage | null {
+  if (block.type !== "image" || !block.image?.url) return null;
 
-  const caption =
-    typeof raw.caption === "string"
-      ? raw.caption
-      : typeof raw.alt === "string"
-        ? raw.alt
-        : "";
-
-  if (raw.type === "image" && typeof raw.url === "string") {
-    return {
-      url: raw.url,
-      alt: typeof raw.alt === "string" ? raw.alt : caption || "Rangbheeni story image",
-      caption,
-    };
-  }
-
-  if (raw.image && typeof raw.image.url === "string") {
-    return {
-      url: raw.image.url,
-      alt:
-        typeof raw.image.alt === "string"
-          ? raw.image.alt
-          : caption || "Rangbheeni story image",
-      caption: typeof raw.image.caption === "string" ? raw.image.caption : caption,
-    };
-  }
-
-  if (typeof raw.imageUrl === "string") {
-    return {
-      url: raw.imageUrl,
-      alt: typeof raw.alt === "string" ? raw.alt : caption || "Rangbheeni story image",
-      caption,
-    };
-  }
-
-  return null;
+  const caption = block.caption || block.image.altText || "";
+  return {
+    url: block.image.url,
+    alt: block.altText || block.image.altText || caption || "Rangbheeni story image",
+    caption,
+  };
 }
 
 function buildArticleItems(story: StoryDto) {
@@ -100,8 +71,8 @@ function buildArticleItems(story: StoryDto) {
   let imageCount = 0;
   let wordsRemaining = MAX_STORY_WORDS;
 
-  for (const section of story.sections || []) {
-    const image = getSectionImage(section);
+  for (const block of story.blocks || []) {
+    const image = getBlockImage(block);
 
     if (image && imageCount < MAX_ARTICLE_IMAGES && !seenImages.has(image.url)) {
       seenImages.add(image.url);
@@ -110,7 +81,7 @@ function buildArticleItems(story: StoryDto) {
       continue;
     }
 
-    const text = getSectionText(section);
+    const text = getBlockText(block);
     if (!text || wordsRemaining <= 0) continue;
 
     const limited = takeWords(text, wordsRemaining);
@@ -119,7 +90,12 @@ function buildArticleItems(story: StoryDto) {
     wordsRemaining -= limited.used;
 
     items.push({
-      type: (section as any).type === "quote" ? "quote" : "p",
+      type:
+        block.type === "quote"
+          ? "quote"
+          : block.type === "subheading"
+            ? "subheading"
+            : "p",
       text: limited.text,
     });
   }
@@ -184,6 +160,17 @@ function StoryBody({ story }: { story: StoryDto }) {
       {items.map((item, index) => {
         if (item.type === "image") {
           return <StoryFigure key={`${item.image.url}-${index}`} image={item.image} />;
+        }
+
+        if (item.type === "subheading") {
+          return (
+            <h2
+              key={index}
+              className="mb-4 mt-8 font-heading text-2xl font-bold leading-tight text-[var(--color-brown)]"
+            >
+              {item.text}
+            </h2>
+          );
         }
 
         if (item.type === "quote") {

@@ -56,6 +56,6 @@ export function toLegacyStory(story: StoryDto) {
     coverImage: story.coverImage?.url ?? "/images/placeholder.jpg",
     featured: story.featured,
     publishedDate: story.publishedDate ?? undefined,
-    sections: story.sections,
+    blocks: story.blocks,
   };
 }

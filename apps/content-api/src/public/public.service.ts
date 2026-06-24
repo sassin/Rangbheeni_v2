@@ -266,7 +266,13 @@ export class PublicService {
 
     const stories = await this.prisma.story.findMany({
       where,
-      include: { coverImage: true },
+      include: {
+        coverImage: true,
+        blocks: {
+          include: { media: true },
+          orderBy: { sortOrder: "asc" },
+        },
+      },
     });
 
     return stories
@@ -284,7 +290,15 @@ export class PublicService {
           featuredRank,
           publishedDate: story.publishedDate?.toISOString() ?? null,
           coverImage: this.media(story.coverImage),
-          sections: story.sections,
+          blocks: story.blocks.map((block) => ({
+            id: block.id,
+            type: block.type,
+            sortOrder: block.sortOrder,
+            text: block.text,
+            caption: block.caption,
+            altText: block.altText,
+            image: this.media(block.media),
+          })),
         };
       });
   }
@@ -292,7 +306,13 @@ export class PublicService {
   async story(slug: string) {
     const story = await this.prisma.story.findFirst({
       where: { slug, status: "published" },
-      include: { coverImage: true },
+      include: {
+        coverImage: true,
+        blocks: {
+          include: { media: true },
+          orderBy: { sortOrder: "asc" },
+        },
+      },
     });
 
     if (!story) throw new NotFoundException("Story not found");
@@ -308,7 +328,15 @@ export class PublicService {
       featuredRank,
       publishedDate: story.publishedDate?.toISOString() ?? null,
       coverImage: this.media(story.coverImage),
-      sections: story.sections,
+      blocks: story.blocks.map((block) => ({
+            id: block.id,
+            type: block.type,
+            sortOrder: block.sortOrder,
+            text: block.text,
+            caption: block.caption,
+            altText: block.altText,
+            image: this.media(block.media),
+          })),
     };
   }
 

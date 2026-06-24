@@ -61,6 +61,16 @@ export type StorySection =
   | { type: "quote"; text: string }
   | { type: string; [key: string]: unknown };
 
+export type StoryBlockDto = {
+  id: string;
+  type: "paragraph" | "quote" | "image" | "subheading";
+  sortOrder: number;
+  text?: string | null;
+  caption?: string | null;
+  altText?: string | null;
+  image?: MediaAssetDto | null;
+};
+
 export type StoryDto = {
   id: string;
   slug: string;
@@ -70,7 +80,7 @@ export type StoryDto = {
   featured: boolean;
   featuredRank?: number | null;
   publishedDate?: string | null;
-  sections: StorySection[];
+  blocks: StoryBlockDto[];
 };
 
 export type AnnouncementDto = {
