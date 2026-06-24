@@ -111,7 +111,7 @@ export default function ExpandableEventCard({
   event: EventDto;
   featured?: boolean;
 }) {
-  const [open, setOpen] = useState(featured);
+  const [open, setOpen] = useState(false);
   const date = formatMonthDay(event.startDate);
   const ctaHref = event.ctaUrl || "mailto:enquiries.rangbheeni@gmail.com";
   const ctaLabel = event.ctaLabel || "Inquire about this event";
