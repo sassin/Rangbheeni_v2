@@ -18,22 +18,30 @@ enum AnnouncementDisplayType {
   banner
 }
 
-model MediaAsset {
-  id          String   @id @default(cuid())
-  key         String?  @unique
-  url         String
-  altText     String?
-  mimeType    String?
-  width       Int?
-  height      Int?
-  sizeBytes   Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+enum StoryBlockType {
+  paragraph
+  quote
+  image
+  subheading
+}
 
-  productImages ProductImage[]
-  eventImages   Event[]
-  storyCovers   Story[]
+model MediaAsset {
+  id        String   @id @default(cuid())
+  key       String?  @unique
+  url       String
+  altText   String?
+  mimeType  String?
+  width     Int?
+  height    Int?
+  sizeBytes Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  productImages      ProductImage[]
+  eventImages        Event[]
+  storyCovers        Story[]
   announcementImages Announcement[]
+  storyBlocks        StoryBlock[]
 }
 
 model ProductCategory {
@@ -51,7 +59,7 @@ model ProductCategory {
 model Product {
   id               String        @id @default(cuid())
   slug             String        @unique
-  externalId        String?       @unique
+  externalId       String?       @unique
   name             String
   categoryId       String?
   shortDescription String
@@ -82,7 +90,7 @@ model ProductImage {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
   media   MediaAsset? @relation(fields: [mediaId], references: [id], onDelete: SetNull)
 
   @@unique([productId, sortOrder])
@@ -91,7 +99,7 @@ model ProductImage {
 model Event {
   id               String        @id @default(cuid())
   slug             String        @unique
-  externalId        String?       @unique
+  externalId       String?       @unique
   title            String
   eventType        String?
   shortDescription String?
@@ -123,7 +131,7 @@ model Story {
   slug          String        @unique
   title         String
   excerpt       String
-  featured         Boolean       @default(false)
+  featured      Boolean       @default(false)
   featuredRank  Int?
   publishedDate DateTime?
   status        ContentStatus @default(published)
@@ -132,10 +140,33 @@ model Story {
   sections      Json          @default("[]")
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+  blocks        StoryBlock[]
 
   coverImage MediaAsset? @relation(fields: [coverImageId], references: [id], onDelete: SetNull)
 
   @@index([status, featuredRank, publishedDate, title])
+}
+
+model StoryBlock {
+  id        String         @id @default(cuid())
+  storyId   String
+  type      StoryBlockType
+  sortOrder Int
+
+  text    String?
+  mediaId String?
+  caption String?
+  altText String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  story Story       @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  media MediaAsset? @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+
+  @@unique([storyId, sortOrder])
+  @@index([storyId])
+  @@index([mediaId])
 }
 
 model PageContent {
@@ -170,13 +201,13 @@ model Announcement {
 model ChatbotDocument {
   id                 String        @id @default(cuid())
   title              String
-  sourceType          String
-  sourceId            String?
-  content             String
-  status              ContentStatus @default(published)
-  approvedForChatbot  Boolean       @default(true)
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
+  sourceType         String
+  sourceId           String?
+  content            String
+  status             ContentStatus @default(published)
+  approvedForChatbot Boolean       @default(true)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
 
   chunks ChatbotChunk[]
 
@@ -184,26 +215,25 @@ model ChatbotDocument {
 }
 
 model ChatbotChunk {
-  id         String   @id @default(cuid())
+  id         String                 @id @default(cuid())
   documentId String
   chunkText  String
   metadata   Json?
   embedding  Unsupported("vector")?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
 
   document ChatbotDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
 }
 
 model ChatbotMessage {
   id                String   @id @default(cuid())
-  sessionId          String?
-  userMessage        String
-  assistantResponse  String
-  fallbackUsed       Boolean  @default(false)
-  createdAt          DateTime @default(now())
+  sessionId         String?
+  userMessage       String
+  assistantResponse String
+  fallbackUsed      Boolean  @default(false)
+  createdAt         DateTime @default(now())
 }
-
 
 model NewsletterSubscriber {
   id        String   @id @default(cuid())
