@@ -7,7 +7,7 @@ import PageContentReveal from "@/components/shared/PageContentReveal";
 import PageHeroReveal from "@/components/shared/PageHeroReveal";
 import StoryGalleryCarousel from "@/components/stories/StoryGalleryCarousel";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 function formatDate(value?: string | null) {
   if (!value) return "";
