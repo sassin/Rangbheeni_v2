@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import { Suspense } from "react";
 import type { StoryDto } from "@rangbheeni/shared-types";
 import { getStories } from "@/lib/api";
 import PageBackground from "@/components/layout/PageBackground";
@@ -21,13 +22,6 @@ function formatDate(value?: string | null) {
   });
 }
 
-function getStorySectionImageUrl(section: any) {
-  if (section?.type === "image" && typeof section.url === "string") return section.url;
-  if (typeof section?.imageUrl === "string") return section.imageUrl;
-  if (typeof section?.image?.url === "string") return section.image.url;
-  return null;
-}
-
 function getGalleryImagesFromStories(stories: StoryDto[]) {
   const urls: string[] = [];
 
@@ -35,10 +29,7 @@ function getGalleryImagesFromStories(stories: StoryDto[]) {
     if (story.coverImage?.url) urls.push(story.coverImage.url);
 
     for (const block of story.blocks || []) {
-      const url =
-      block.type === "image" && block.image?.url
-        ? block.image.url
-        : null;
+      const url = block.type === "image" && block.image?.url ? block.image.url : null;
       if (url) urls.push(url);
     }
   }
@@ -83,6 +74,7 @@ function PrimaryStoryCard({ story }: { story: StoryDto }) {
   return (
     <Link
       href={`/stories/${story.slug}`}
+      prefetch
       className={[
         "group grid gap-5 overflow-hidden rounded-[1.8rem] border border-black/10 bg-white/55 p-4 shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-md md:p-5",
         story.coverImage?.url ? "lg:grid-cols-[0.58fr_1fr]" : "",
@@ -123,6 +115,7 @@ function StoryTile({ story, index }: { story: StoryDto; index: number }) {
   return (
     <Link
       href={`/stories/${story.slug}`}
+      prefetch
       className={[
         "group relative overflow-hidden rounded-[1.8rem] border border-black/10 bg-white/55 p-4 shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-md",
         index % 3 === 1 ? "md:mt-8" : "",
@@ -155,6 +148,7 @@ function ArchiveRow({ story }: { story: StoryDto }) {
   return (
     <Link
       href={`/stories/${story.slug}`}
+      prefetch
       className="grid gap-2 border-b border-black/10 py-4 transition hover:border-[var(--color-primary)]/40 md:grid-cols-[160px_1fr_auto] md:items-center"
     >
       <span className="font-body text-sm font-semibold text-[var(--color-primary)]">
@@ -172,7 +166,50 @@ function ArchiveRow({ story }: { story: StoryDto }) {
   );
 }
 
-export default async function StoriesPage() {
+function StoriesContentFallback() {
+  return (
+    <section
+      aria-hidden="true"
+      className="mt-12 max-w-6xl stories-soft-enter"
+    >
+      <div className="rounded-[1.8rem] border border-black/10 bg-white/35 p-4 shadow-sm backdrop-blur md:p-5">
+        <div className="grid gap-5 lg:grid-cols-[0.58fr_1fr]">
+          <div className="h-64 rounded-[1.7rem] bg-white/35 md:h-72" />
+          <div className="flex flex-col justify-center">
+            <div className="h-3 w-32 rounded-full bg-[var(--color-primary)]/15" />
+            <div className="mt-5 h-10 w-4/5 rounded-2xl bg-[var(--color-brown)]/10" />
+            <div className="mt-4 h-4 w-28 rounded-full bg-black/10" />
+            <div className="mt-5 h-4 w-full max-w-2xl rounded-full bg-black/10" />
+            <div className="mt-3 h-4 w-5/6 rounded-full bg-black/10" />
+            <div className="mt-6 h-10 w-32 rounded-full bg-white/45" />
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {[0, 1, 2].map((item) => (
+          <div
+            key={item}
+            className={[
+              "rounded-[1.8rem] border border-black/10 bg-white/30 p-4 shadow-sm backdrop-blur",
+              item === 1 ? "md:mt-8" : "",
+            ].join(" ")}
+          >
+            <div className="h-52 rounded-[1.6rem] bg-white/30" />
+            <div className="pt-5">
+              <div className="h-3 w-24 rounded-full bg-[var(--color-primary)]/15" />
+              <div className="mt-4 h-7 w-3/4 rounded-full bg-[var(--color-brown)]/10" />
+              <div className="mt-4 h-4 w-full rounded-full bg-black/10" />
+              <div className="mt-3 h-4 w-5/6 rounded-full bg-black/10" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+async function StoriesContent() {
   const stories = await getStories().catch(() => []);
 
   const ordered = stories.slice().sort((a, b) => {
@@ -197,6 +234,73 @@ export default async function StoriesPage() {
   const archive = ordered.slice(4);
 
   return (
+    <div className="stories-soft-enter">
+      <section id="featured-story" className="mt-12 max-w-6xl scroll-mt-24">
+        {primary ? (
+          <PrimaryStoryCard story={primary} />
+        ) : (
+          <div className="rounded-[2rem] border border-dashed border-[var(--color-primary)]/35 bg-white/45 p-8">
+            <h2 className="font-heading text-2xl font-bold text-[var(--color-brown)]">
+              No stories are currently published.
+            </h2>
+            <p className="mt-3 font-body text-neutral-700">
+              Stories will appear here once they are published in the Rangbheeni database.
+            </p>
+          </div>
+        )}
+
+        {highlighted.length > 0 ? (
+          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {highlighted.map((story, index) => (
+              <StoryTile key={story.id} story={story} index={index} />
+            ))}
+          </div>
+        ) : null}
+      </section>
+
+      <div className="stories-soft-enter-gallery">
+        <StoryGalleryCarousel images={galleryImages} />
+      </div>
+
+      <section
+        id="story-archive"
+        className="mt-14 max-w-6xl scroll-mt-24 border-t border-black/10 pt-12 stories-soft-enter-archive"
+      >
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="font-heading text-3xl font-bold text-[var(--color-brown)] md:text-4xl">
+              All stories
+            </h2>
+            <p className="mt-2 max-w-3xl font-body text-neutral-700">
+              Older stories are kept here as a compact archive. This can become a separate
+              archive route later without changing the database.
+            </p>
+          </div>
+
+          <Link
+            href="mailto:enquiries.rangbheeni@gmail.com"
+            className="font-body text-sm font-semibold text-[var(--color-primary)] hover:underline"
+          >
+            Inquire about stories
+          </Link>
+        </div>
+
+        <div className="mt-7 border-t border-black/10">
+          {archive.length > 0 ? (
+            archive.map((story) => <ArchiveRow key={story.id} story={story} />)
+          ) : ordered.length > 0 ? (
+            <p className="py-6 font-body text-neutral-700">
+              All published stories are already shown above.
+            </p>
+          ) : null}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default function StoriesPage() {
+  return (
     <PageBackground variant="paper">
       <main className="relative min-h-screen overflow-x-hidden bg-[#efeeea] text-[var(--color-brown)]">
         <DenimTexture opacity="soft" />
@@ -210,61 +314,9 @@ export default async function StoriesPage() {
             />
           </section>
 
-          <section id="featured-story" className="mt-12 max-w-6xl scroll-mt-24">
-            {primary ? (
-              <PrimaryStoryCard story={primary} />
-            ) : (
-              <div className="rounded-[2rem] border border-dashed border-[var(--color-primary)]/35 bg-white/45 p-8">
-                <h2 className="font-heading text-2xl font-bold text-[var(--color-brown)]">
-                  No stories are currently published.
-                </h2>
-                <p className="mt-3 font-body text-neutral-700">
-                  Stories will appear here once they are published in the Rangbheeni database.
-                </p>
-              </div>
-            )}
-
-            {highlighted.length > 0 ? (
-              <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-                {highlighted.map((story, index) => (
-                  <StoryTile key={story.id} story={story} index={index} />
-                ))}
-              </div>
-            ) : null}
-          </section>
-
-          <StoryGalleryCarousel images={galleryImages} />
-
-          <section id="story-archive" className="mt-14 max-w-6xl scroll-mt-24 border-t border-black/10 pt-12">
-            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="font-heading text-3xl font-bold text-[var(--color-brown)] md:text-4xl">
-                  All stories
-                </h2>
-                <p className="mt-2 max-w-3xl font-body text-neutral-700">
-                  Older stories are kept here as a compact archive. This can become a separate
-                  archive route later without changing the database.
-                </p>
-              </div>
-
-              <Link
-                href="mailto:enquiries.rangbheeni@gmail.com"
-                className="font-body text-sm font-semibold text-[var(--color-primary)] hover:underline"
-              >
-                Inquire about stories
-              </Link>
-            </div>
-
-            <div className="mt-7 border-t border-black/10">
-              {archive.length > 0 ? (
-                archive.map((story) => <ArchiveRow key={story.id} story={story} />)
-              ) : ordered.length > 0 ? (
-                <p className="py-6 font-body text-neutral-700">
-                  All published stories are already shown above.
-                </p>
-              ) : null}
-            </div>
-          </section>
+          <Suspense fallback={<StoriesContentFallback />}>
+            <StoriesContent />
+          </Suspense>
         </PageContentReveal>
       </main>
     </PageBackground>

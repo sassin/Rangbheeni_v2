@@ -408,3 +408,45 @@ button.chat-button[aria-disabled="true"]:hover {
   filter: sepia(0.08) grayscale(0.08) contrast(1.03);
 }
 
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Stories page: soft in-page reveal */
+@keyframes stories-soft-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.stories-soft-enter {
+  animation: stories-soft-enter 650ms ease both;
+}
+
+.stories-soft-enter-gallery {
+  animation: stories-soft-enter 800ms ease 120ms both;
+}
+
+.stories-soft-enter-archive {
+  animation: stories-soft-enter 800ms ease 220ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stories-soft-enter,
+  .stories-soft-enter-gallery,
+  .stories-soft-enter-archive {
+    animation: none !important;
+  }
+}
