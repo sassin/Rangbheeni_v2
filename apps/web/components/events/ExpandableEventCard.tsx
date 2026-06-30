@@ -1,55 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import type { EventDto } from "@rangbheeni/shared-types";
-
-function formatDate(value: string) {
-  const dt = new Date(value);
-  if (Number.isNaN(dt.getTime())) return value;
-
-  return dt.toLocaleDateString(undefined, {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
-
-function isSameEventDay(startValue?: string | null, endValue?: string | null) {
-  if (!startValue || !endValue) return true;
-
-  const start = new Date(startValue);
-  const end = new Date(endValue);
-
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return true;
-
-  return (
-    start.getFullYear() === end.getFullYear() &&
-    start.getMonth() === end.getMonth() &&
-    start.getDate() === end.getDate()
-  );
-}
-
-function formatMonthDay(value: string) {
-  const dt = new Date(value);
-  if (Number.isNaN(dt.getTime())) return { month: "", day: "" };
-
-  return {
-    month: dt.toLocaleDateString(undefined, { month: "short" }),
-    day: dt.toLocaleDateString(undefined, { day: "2-digit" }),
-  };
-}
-
-function splitEventParagraphs(text?: string | null) {
-  const fallback = "More event details will be announced soon.";
-
-  return (text || fallback)
-    .split(/\n+/)
-    .map((part) => part.trim())
-    .filter(Boolean);
-}
 
 function ZipperSeam({ open }: { open: boolean }) {
   const teeth = Array.from({ length: 30 });
@@ -136,9 +90,10 @@ export default function ExpandableEventCard({
   featured?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  const date = formatMonthDay(event.startDate);
-  const ctaHref = event.ctaUrl || "mailto:enquiries.rangbheeni@gmail.com";
-  const ctaLabel = event.ctaLabel || "Inquire about this event";
+  const summary =
+    event.shortDescription ||
+    event.fullDescription ||
+    "Event details will be updated soon.";
 
   return (
     <article
@@ -156,10 +111,10 @@ export default function ExpandableEventCard({
       >
         <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-[1.15rem] bg-[#f4efe4]/90 shadow-sm">
           <span className="font-body text-[10px] uppercase tracking-[0.22em] text-[var(--color-primary)]">
-            {date.month}
+            {event.dateBadge.month}
           </span>
           <span className="mt-1 font-heading text-3xl font-bold leading-none text-[var(--color-brown)]">
-            {date.day}
+            {event.dateBadge.day}
           </span>
         </div>
 
@@ -175,14 +130,12 @@ export default function ExpandableEventCard({
           </h3>
 
           <p className="mt-2 line-clamp-2 font-body text-sm leading-6 text-neutral-700">
-            {event.shortDescription ||
-              event.fullDescription ||
-              "Event details will be updated soon."}
+            {summary}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-<span
+          <span
             className={[
               "inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white/70 text-[var(--color-brown)] transition",
               open ? "rotate-180 border-[var(--color-primary)]/30 text-[var(--color-primary)]" : "",
@@ -230,7 +183,7 @@ export default function ExpandableEventCard({
                 ) : null}
 
                 <div className="max-w-3xl space-y-4 font-body text-sm leading-7 text-neutral-800">
-                  {splitEventParagraphs(event.fullDescription || event.shortDescription).map((paragraph, index) => (
+                  {event.descriptionParagraphs.map((paragraph, index) => (
                     <p
                       key={index}
                       className="text-justify hyphens-auto [text-align-last:left] [text-justify:inter-word]"
@@ -241,16 +194,19 @@ export default function ExpandableEventCard({
                 </div>
 
                 <div className="mt-5 space-y-2 font-body text-sm leading-6 text-neutral-700">
-                  {!isSameEventDay(event.startDate, event.endDate) ? (
+                  {event.showDateRange ? (
                     <>
-                      <p>
-                        <span className="font-semibold text-[var(--color-brown)]">Start:</span>{" "}
-                        {formatDate(event.startDate)}
-                      </p>
-                      {event.endDate ? (
+                      {event.startLabel ? (
+                        <p>
+                          <span className="font-semibold text-[var(--color-brown)]">Start:</span>{" "}
+                          {event.startLabel}
+                        </p>
+                      ) : null}
+
+                      {event.endLabel ? (
                         <p>
                           <span className="font-semibold text-[var(--color-brown)]">End:</span>{" "}
-                          {formatDate(event.endDate)}
+                          {event.endLabel}
                         </p>
                       ) : null}
                     </>
@@ -272,10 +228,10 @@ export default function ExpandableEventCard({
                 </div>
 
                 <Link
-                  href={ctaHref}
+                  href={event.ctaHref}
                   className="mt-5 inline-flex rounded-full border border-[var(--color-primary)]/35 bg-white/75 px-5 py-2.5 font-body text-sm font-semibold text-[var(--color-brown)] shadow-sm transition hover:border-[var(--color-primary)] hover:bg-[var(--color-lightgreen)]/30 hover:text-[var(--color-primary)]"
                 >
-                  {ctaLabel}
+                  {event.ctaText}
                 </Link>
               </div>
             </div>

@@ -115,6 +115,99 @@ export class PublicService {
     return String(a.title).localeCompare(String(b.title));
   }
 
+  private splitEventParagraphs(text?: string | null) {
+    const fallback = "More event details will be announced soon.";
+
+    return String(text || fallback)
+      .split(/\n+/)
+      .map((part) => part.trim())
+      .filter(Boolean);
+  }
+
+  private formatEventDate(value?: Date | string | null) {
+    if (!value) return null;
+
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "UTC",
+    }).format(date);
+  }
+
+  private eventDateBadge(value: Date | string) {
+    const date = value instanceof Date ? value : new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+      return { month: "", day: "" };
+    }
+
+    return {
+      month: new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        timeZone: "UTC",
+      }).format(date),
+      day: new Intl.DateTimeFormat("en-US", {
+        day: "2-digit",
+        timeZone: "UTC",
+      }).format(date),
+    };
+  }
+
+  private isSameEventDay(startValue?: Date | string | null, endValue?: Date | string | null) {
+    if (!startValue || !endValue) return true;
+
+    const start = startValue instanceof Date ? startValue : new Date(startValue);
+    const end = endValue instanceof Date ? endValue : new Date(endValue);
+
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return true;
+
+    return (
+      start.getUTCFullYear() === end.getUTCFullYear() &&
+      start.getUTCMonth() === end.getUTCMonth() &&
+      start.getUTCDate() === end.getUTCDate()
+    );
+  }
+
+  private eventDto(event: any) {
+    const featuredRank = this.rank(event);
+    const description = event.fullDescription || event.shortDescription;
+    const startLabel = this.formatEventDate(event.startDate);
+    const endLabel = event.endDate ? this.formatEventDate(event.endDate) : null;
+
+    return {
+      id: event.id,
+      eventCode: typeof event.eventCode === "number" ? event.eventCode : null,
+      slug: event.slug,
+      title: event.title,
+      type: event.eventType,
+      shortDescription: event.shortDescription,
+      fullDescription: event.fullDescription,
+      descriptionParagraphs: this.splitEventParagraphs(description),
+      city: event.city,
+      venue: event.venue,
+      address: event.address,
+      startDate: event.startDate.toISOString(),
+      endDate: event.endDate?.toISOString() ?? null,
+      timeText: event.timeText,
+      dateBadge: this.eventDateBadge(event.startDate),
+      startLabel,
+      endLabel,
+      showDateRange: event.endDate ? !this.isSameEventDay(event.startDate, event.endDate) : false,
+      ctaLabel: event.ctaLabel,
+      ctaUrl: event.ctaUrl,
+      ctaText: event.ctaLabel || "Inquire about this event",
+      ctaHref: event.ctaUrl || "mailto:enquiries.rangbheeni@gmail.com",
+      featured: featuredRank !== null,
+      featuredRank,
+      image: this.media(event.image),
+    };
+  }
+
   async health() {
     return { ok: true, service: "rangbheeni-content-api" };
   }
@@ -201,29 +294,7 @@ export class PublicService {
     return events
       .sort((a, b) => this.compareEvents(a, b))
       .slice(0, options?.limit ?? events.length)
-      .map((event) => {
-        const featuredRank = this.rank(event);
-
-        return {
-          id: event.id,
-          slug: event.slug,
-          title: event.title,
-          type: event.eventType,
-          shortDescription: event.shortDescription,
-          fullDescription: event.fullDescription,
-          city: event.city,
-          venue: event.venue,
-          address: event.address,
-          startDate: event.startDate.toISOString(),
-          endDate: event.endDate?.toISOString() ?? null,
-          timeText: event.timeText,
-          ctaLabel: event.ctaLabel,
-          ctaUrl: event.ctaUrl,
-          featured: featuredRank !== null,
-          featuredRank,
-          image: this.media(event.image),
-        };
-      });
+      .map((event) => this.eventDto(event));
   }
 
   async event(slug: string) {
@@ -234,27 +305,7 @@ export class PublicService {
 
     if (!event) throw new NotFoundException("Event not found");
 
-    const featuredRank = this.rank(event);
-
-    return {
-      id: event.id,
-      slug: event.slug,
-      title: event.title,
-      type: event.eventType,
-      shortDescription: event.shortDescription,
-      fullDescription: event.fullDescription,
-      city: event.city,
-      venue: event.venue,
-      address: event.address,
-      startDate: event.startDate.toISOString(),
-      endDate: event.endDate?.toISOString() ?? null,
-      timeText: event.timeText,
-      ctaLabel: event.ctaLabel,
-      ctaUrl: event.ctaUrl,
-      featured: featuredRank !== null,
-      featuredRank,
-      image: this.media(event.image),
-    };
+    return this.eventDto(event);
   }
 
   async stories(options?: { featured?: boolean; limit?: number }) {

@@ -36,21 +36,34 @@ export type ProductDto = {
   images: MediaAssetDto[];
 };
 
+export type EventDateBadgeDto = {
+  month: string;
+  day: string;
+};
+
 export type EventDto = {
   id: string;
+  eventCode?: number | null;
   slug: string;
   title: string;
   type?: string | null;
   shortDescription?: string | null;
   fullDescription?: string | null;
+  descriptionParagraphs: string[];
   city?: string | null;
   venue?: string | null;
   address?: string | null;
   startDate: string;
   endDate?: string | null;
   timeText?: string | null;
+  dateBadge: EventDateBadgeDto;
+  startLabel?: string | null;
+  endLabel?: string | null;
+  showDateRange: boolean;
   ctaLabel?: string | null;
   ctaUrl?: string | null;
+  ctaText: string;
+  ctaHref: string;
   featured: boolean;
   featuredRank?: number | null;
   image?: MediaAssetDto | null;
