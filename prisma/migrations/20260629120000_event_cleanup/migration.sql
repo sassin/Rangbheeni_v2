@@ -23,7 +23,7 @@ OWNED BY "Event"."eventCode";
 CREATE UNIQUE INDEX IF NOT EXISTS "Event_eventCode_key"
 ON "Event"("eventCode");
 
-DROP INDEX IF EXISTS "Event_externalId_key";
+ALTER TABLE "Event" DROP CONSTRAINT IF EXISTS "Event_externalId_key";
 
 ALTER TABLE "Event"
 DROP COLUMN IF EXISTS "externalId";
