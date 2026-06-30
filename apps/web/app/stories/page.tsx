@@ -1,7 +1,7 @@
 ﻿import Link from "next/link";
 import { Suspense } from "react";
 import type { StoryDto } from "@rangbheeni/shared-types";
-import { getStories } from "@/lib/api";
+import { getStories, getGalleryImages } from "@/lib/api";
 import PageBackground from "@/components/layout/PageBackground";
 import DenimTexture from "@/components/shared/DenimTexture";
 import PageContentReveal from "@/components/shared/PageContentReveal";
@@ -210,7 +210,24 @@ function StoriesContentFallback() {
 }
 
 async function StoriesContent() {
-  const stories = await getStories().catch(() => []);
+  const [stories, galleryItems] = await Promise.all([
+    getStories().catch(() => []),
+    getGalleryImages().catch(() => []),
+  ]);
+
+  const carouselImages = galleryItems.flatMap((item) =>
+    item.image?.url
+      ? [
+          {
+            id: item.id,
+            url: item.image.url,
+            altText: item.image.altText,
+            hoverText: item.hoverText,
+            sortOrder: item.sortOrder,
+          },
+        ]
+      : []
+  );
 
   const ordered = stories.slice().sort((a, b) => {
     const ar = typeof a.featuredRank === "number" ? a.featuredRank : null;
@@ -226,9 +243,6 @@ async function StoriesContent() {
     const bd = b.publishedDate ? new Date(b.publishedDate).getTime() : 0;
     return bd - ad;
   });
-
-  const galleryImages = getGalleryImagesFromStories(ordered);
-
   const primary = ordered[0];
   const highlighted = ordered.slice(1, 4);
   const archive = ordered.slice(4);
@@ -259,7 +273,7 @@ async function StoriesContent() {
       </section>
 
       <div className="stories-soft-enter-gallery">
-        <StoryGalleryCarousel images={galleryImages} />
+        <StoryGalleryCarousel images={carouselImages} />
       </div>
 
       <section

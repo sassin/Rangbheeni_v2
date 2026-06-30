@@ -2,114 +2,99 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-type StoryGalleryCarouselProps = {
-  images: readonly string[];
+export type StoryGalleryCarouselImage = {
+  id: string;
+  url: string;
+  altText?: string | null;
+  hoverText?: string | null;
+  sortOrder: number;
 };
 
-export default function StoryGalleryCarousel({ images }: StoryGalleryCarouselProps) {
-  const safeImages = useMemo(() => images.slice(0, 50), [images]);
-  const [start, setStart] = useState(0);
+export default function StoryGalleryCarousel({
+  images,
+}: {
+  images: StoryGalleryCarouselImage[];
+}) {
+  const [startSortOrder, setStartSortOrder] = useState<number | null>(null);
+
+  const orderedImages = useMemo(
+    () =>
+      [...images]
+        .filter((image) => image.url)
+        .sort((a, b) => a.sortOrder - b.sortOrder),
+    [images]
+  );
 
   useEffect(() => {
-    if (!safeImages.length) return;
-    setStart(Math.floor(Math.random() * safeImages.length));
-  }, [safeImages.length]);
+    if (!orderedImages.length) return;
 
-  const ordered = useMemo(() => {
-    if (!safeImages.length) return [];
-    return [...safeImages.slice(start), ...safeImages.slice(0, start)];
-  }, [safeImages, start]);
+    const sortOrders = orderedImages.map((image) => image.sortOrder);
+    const min = Math.min(...sortOrders);
+    const max = Math.max(...sortOrders);
+    const randomSortOrder = Math.floor(Math.random() * (max - min + 1)) + min;
 
-  const looped = [...ordered, ...ordered];
+    setStartSortOrder(randomSortOrder);
+  }, [orderedImages]);
 
-  function move(direction: -1 | 1) {
-    if (!safeImages.length) return;
-    setStart((current) => (current + direction + safeImages.length) % safeImages.length);
-  }
+  const rotatedImages = useMemo(() => {
+    if (!orderedImages.length) return [];
 
-  if (!safeImages.length) return null;
+    const startIndex =
+      startSortOrder === null
+        ? 0
+        : orderedImages.findIndex((image) => image.sortOrder >= startSortOrder);
+
+    const safeStartIndex = startIndex >= 0 ? startIndex : 0;
+
+    return [
+      ...orderedImages.slice(safeStartIndex),
+      ...orderedImages.slice(0, safeStartIndex),
+    ];
+  }, [orderedImages, startSortOrder]);
+
+  if (!rotatedImages.length) return null;
+
+  const marqueeImages = [...rotatedImages, ...rotatedImages];
 
   return (
-    <section className="mt-14 max-w-6xl border-y border-black/10 py-10">
-      <div className="mb-6 flex items-end justify-between gap-6">
+    <div className="relative overflow-hidden py-8">
+      <div className="mb-5 flex items-end justify-between gap-4">
         <div>
-          <p className="font-body text-xs uppercase tracking-[0.28em] text-[var(--color-primary)]">
-            Gallery
+          <p className="font-body text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-primary)]">
+            Rangbheeni in motion
           </p>
           <h2 className="mt-2 font-heading text-3xl font-bold text-[var(--color-brown)] md:text-4xl">
-            Fragments of fabric, process, and place.
+            Glimpses from our work
           </h2>
         </div>
       </div>
 
-      <div className="group relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#efeeea] via-[#efeeea]/90 to-transparent" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#efeeea] via-[#efeeea]/90 to-transparent" />
+      <div className="group relative">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-[#f7efe1] to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-[#f7efe1] to-transparent" />
 
-        <button
-          type="button"
-          onClick={() => move(-1)}
-          aria-label="Previous gallery photos"
-          className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/35 text-[var(--color-brown)] backdrop-blur-md transition hover:scale-105 hover:bg-white/70 hover:text-[var(--color-primary)] active:scale-95"
-        >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
-            <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => move(1)}
-          aria-label="Next gallery photos"
-          className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black/10 bg-white/35 text-[var(--color-brown)] backdrop-blur-md transition hover:scale-105 hover:bg-white/70 hover:text-[var(--color-primary)] active:scale-95"
-        >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" aria-hidden="true">
-            <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-
-        <div className="story-gallery-track flex w-max gap-4 py-2">
-          {looped.map((src, index) => (
-            <div
-              key={`${src}-${index}`}
-              className="h-44 w-64 shrink-0 overflow-hidden rounded-[1.35rem] border border-black/10 bg-[#e8dfcf] shadow-sm transition duration-500 group-hover:shadow-md md:h-52 md:w-80"
+        <div className="flex w-max gap-4 motion-safe:animate-[story-gallery-marquee_56s_linear_infinite] group-hover:[animation-play-state:paused]">
+          {marqueeImages.map((image, index) => (
+            <figure
+              key={`${image.id}-${index}`}
+              className="group/card relative h-56 w-72 shrink-0 overflow-hidden rounded-[1.35rem] border border-black/10 bg-white/60 shadow-sm md:h-64 md:w-96"
             >
               <img
-                src={src}
-                alt=""
-                className="h-full w-full object-cover grayscale-[0.08] transition duration-700 group-hover:scale-[1.025] group-hover:grayscale-0"
+                src={image.url}
+                alt={image.altText || image.hoverText || "Rangbheeni gallery image"}
+                className="h-full w-full object-cover transition duration-500 group-hover/card:scale-[1.04]"
                 loading="lazy"
               />
-            </div>
+
+              {image.hoverText ? (
+                <figcaption className="absolute inset-x-0 bottom-0 translate-y-full bg-black/55 px-4 py-3 font-body text-sm leading-5 text-white transition duration-300 group-hover/card:translate-y-0">
+                  {image.hoverText}
+                </figcaption>
+              ) : null}
+            </figure>
           ))}
         </div>
       </div>
-
-      <style jsx>{`
-        .story-gallery-track {
-          animation: storyGalleryMarquee 56s linear infinite;
-        }
-
-        .group:hover .story-gallery-track {
-          animation-play-state: paused;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .story-gallery-track {
-            animation: none;
-          }
-        }
-
-        @keyframes storyGalleryMarquee {
-          0% {
-            transform: translateX(0);
-          }
-
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
-    </section>
+    </div>
   );
 }

@@ -96,6 +96,14 @@ export type StoryDto = {
   blocks: StoryBlockDto[];
 };
 
+export type GalleryImageDto = {
+  id: string;
+  hoverText?: string | null;
+  visible: boolean;
+  sortOrder: number;
+  image: MediaAssetDto | null;
+};
+
 export type AnnouncementDto = {
   id: string;
   title: string;

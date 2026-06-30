@@ -391,6 +391,22 @@ export class PublicService {
     };
   }
 
+  async galleryImages() {
+    const galleryImages = await this.prisma.galleryImage.findMany({
+      where: { visible: true },
+      orderBy: { sortOrder: "asc" },
+      include: { media: true },
+    });
+
+    return galleryImages.map((galleryImage) => ({
+      id: galleryImage.id,
+      hoverText: galleryImage.hoverText,
+      visible: galleryImage.visible,
+      sortOrder: galleryImage.sortOrder,
+      image: this.media(galleryImage.media),
+    }));
+  }
+
   async activeAnnouncement() {
     const now = new Date();
     const announcement = await this.prisma.announcement.findFirst({

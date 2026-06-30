@@ -42,6 +42,7 @@ model MediaAsset {
   storyCovers        Story[]
   announcementImages Announcement[]
   storyBlocks        StoryBlock[]
+  galleryImage       GalleryImage?
 }
 
 model ProductCategory {
@@ -241,4 +242,17 @@ model NewsletterSubscriber {
   status    String   @default("active")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model GalleryImage {
+  id        String   @id
+  mediaId   String   @unique
+  hoverText String?
+  visible   Boolean  @default(true)
+  sortOrder Int      @unique
+  updatedAt DateTime @updatedAt
+
+  media MediaAsset @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@index([visible, sortOrder])
 }
