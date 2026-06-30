@@ -99,7 +99,6 @@ model Event {
   id               String        @id @default(cuid())
   eventCode        Int           @unique @default(autoincrement())
   slug             String        @unique
-  externalId       String?       @unique
   title            String
   eventType        String?
   shortDescription String?
