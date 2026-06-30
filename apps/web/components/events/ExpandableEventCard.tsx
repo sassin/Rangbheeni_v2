@@ -164,17 +164,7 @@ export default function ExpandableEventCard({
         </div>
 
         <div className="flex items-center gap-3">
-          {event.image?.url ? (
-            <div className="hidden h-20 w-24 overflow-hidden rounded-[1rem] bg-[#e8dfcf] md:block">
-              <img
-                src={event.image.url}
-                alt={event.image.altText || event.title}
-                className="h-full w-full object-cover"
-              />
-            </div>
-          ) : null}
-
-          <span
+<span
             className={[
               "inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white/70 text-[var(--color-brown)] transition",
               open ? "rotate-180 border-[var(--color-primary)]/30 text-[var(--color-primary)]" : "",
@@ -208,6 +198,19 @@ export default function ExpandableEventCard({
           >
             <div className="px-4 pb-5 pt-4 md:px-5">
               <div className="border-l border-[var(--color-primary)]/25 pl-5">
+                {event.image?.url ? (
+                  <figure className="mb-5 overflow-hidden rounded-[1.35rem] border border-black/10 bg-[#e8dfcf] p-2 shadow-sm">
+                    <div className="flex max-h-[520px] items-center justify-center overflow-hidden rounded-[1rem] bg-[#f6efe1]">
+                      <img
+                        src={event.image.url}
+                        alt={event.image.altText || event.title}
+                        className="max-h-[520px] w-full object-contain"
+                        loading="lazy"
+                      />
+                    </div>
+                  </figure>
+                ) : null}
+
                 <p className="max-w-3xl font-body text-sm leading-7 text-neutral-800">
                   {event.fullDescription ||
                     event.shortDescription ||
