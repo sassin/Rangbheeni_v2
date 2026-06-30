@@ -59,7 +59,6 @@ model ProductCategory {
 model Product {
   id               String        @id @default(cuid())
   slug             String        @unique
-  externalId       String?       @unique
   name             String
   categoryId       String?
   shortDescription String
@@ -98,6 +97,7 @@ model ProductImage {
 
 model Event {
   id               String        @id @default(cuid())
+  eventCode        Int           @unique @default(autoincrement())
   slug             String        @unique
   externalId       String?       @unique
   title            String
