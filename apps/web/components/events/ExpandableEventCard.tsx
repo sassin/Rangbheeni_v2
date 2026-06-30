@@ -95,6 +95,13 @@ export default function ExpandableEventCard({
     event.fullDescription ||
     "Event details will be updated soon.";
 
+  const dateBadge = event.dateBadge ?? { month: "", day: "" };
+  const descriptionParagraphs =
+    event.descriptionParagraphs?.length ? event.descriptionParagraphs : [summary];
+  const ctaHref =
+    event.ctaHref || event.ctaUrl || "mailto:enquiries.rangbheeni@gmail.com";
+  const ctaText = event.ctaText || event.ctaLabel || "Inquire about this event";
+
   return (
     <article
       className={[
@@ -111,10 +118,10 @@ export default function ExpandableEventCard({
       >
         <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-[1.15rem] bg-[#f4efe4]/90 shadow-sm">
           <span className="font-body text-[10px] uppercase tracking-[0.22em] text-[var(--color-primary)]">
-            {event.dateBadge.month}
+            {dateBadge.month}
           </span>
           <span className="mt-1 font-heading text-3xl font-bold leading-none text-[var(--color-brown)]">
-            {event.dateBadge.day}
+            {dateBadge.day}
           </span>
         </div>
 
@@ -183,7 +190,7 @@ export default function ExpandableEventCard({
                 ) : null}
 
                 <div className="max-w-3xl space-y-4 font-body text-sm leading-7 text-neutral-800">
-                  {event.descriptionParagraphs.map((paragraph, index) => (
+                  {descriptionParagraphs.map((paragraph, index) => (
                     <p
                       key={index}
                       className="text-justify hyphens-auto [text-align-last:left] [text-justify:inter-word]"
@@ -228,10 +235,10 @@ export default function ExpandableEventCard({
                 </div>
 
                 <Link
-                  href={event.ctaHref}
+                  href={ctaHref}
                   className="mt-5 inline-flex rounded-full border border-[var(--color-primary)]/35 bg-white/75 px-5 py-2.5 font-body text-sm font-semibold text-[var(--color-brown)] shadow-sm transition hover:border-[var(--color-primary)] hover:bg-[var(--color-lightgreen)]/30 hover:text-[var(--color-primary)]"
                 >
-                  {event.ctaText}
+                  {ctaText}
                 </Link>
               </div>
             </div>
