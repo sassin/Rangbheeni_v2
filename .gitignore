@@ -57,3 +57,10 @@ s3-*-output.txt
 chatbot.local.env
 
 chatbot.local.env
+
+# Local Cloudflare Wrangler state
+.wrangler/
+
+# Local gallery upload source images
+content/gallery/*
+!content/gallery/gallery.json
