@@ -17,6 +17,21 @@ function formatDate(value: string) {
   });
 }
 
+function isSameEventDay(startValue?: string | null, endValue?: string | null) {
+  if (!startValue || !endValue) return true;
+
+  const start = new Date(startValue);
+  const end = new Date(endValue);
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return true;
+
+  return (
+    start.getFullYear() === end.getFullYear() &&
+    start.getMonth() === end.getMonth() &&
+    start.getDate() === end.getDate()
+  );
+}
+
 function formatMonthDay(value: string) {
   const dt = new Date(value);
   if (Number.isNaN(dt.getTime())) return { month: "", day: "" };
@@ -164,12 +179,6 @@ export default function ExpandableEventCard({
               event.fullDescription ||
               "Event details will be updated soon."}
           </p>
-
-          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-body text-xs font-medium text-neutral-600">
-            <span>{formatDate(event.startDate)}</span>
-            {event.timeText ? <span>{event.timeText}</span> : null}
-            {event.city ? <span>{event.city}</span> : null}
-          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -231,9 +240,35 @@ export default function ExpandableEventCard({
                   ))}
                 </div>
 
-                <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 font-body text-sm text-neutral-700">
-                  {event.venue ? <span>{event.venue}</span> : null}
-                  {event.address ? <span>{event.address}</span> : null}
+                <div className="mt-5 space-y-2 font-body text-sm leading-6 text-neutral-700">
+                  {!isSameEventDay(event.startDate, event.endDate) ? (
+                    <>
+                      <p>
+                        <span className="font-semibold text-[var(--color-brown)]">Start:</span>{" "}
+                        {formatDate(event.startDate)}
+                      </p>
+                      {event.endDate ? (
+                        <p>
+                          <span className="font-semibold text-[var(--color-brown)]">End:</span>{" "}
+                          {formatDate(event.endDate)}
+                        </p>
+                      ) : null}
+                    </>
+                  ) : null}
+
+                  {event.venue ? (
+                    <p>
+                      <span className="font-semibold text-[var(--color-brown)]">Venue:</span>{" "}
+                      {event.venue}
+                    </p>
+                  ) : null}
+
+                  {event.address ? (
+                    <p>
+                      <span className="font-semibold text-[var(--color-brown)]">Address:</span>{" "}
+                      {event.address}
+                    </p>
+                  ) : null}
                 </div>
 
                 <Link
