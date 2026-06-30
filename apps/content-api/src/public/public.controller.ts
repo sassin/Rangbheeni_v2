@@ -65,6 +65,19 @@ export class PublicController {
     return this.service.story(slug);
   }
 
+  @Get("public/gallery-images")
+
+
+  galleryImages() {
+
+
+    return this.service.galleryImages();
+
+
+  }
+
+
+
   @Get("public/announcement/active")
   announcement() {
     return this.service.activeAnnouncement();
