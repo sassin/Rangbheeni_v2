@@ -27,6 +27,15 @@ function formatMonthDay(value: string) {
   };
 }
 
+function splitEventParagraphs(text?: string | null) {
+  const fallback = "More event details will be announced soon.";
+
+  return (text || fallback)
+    .split(/\n+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
 function ZipperSeam({ open }: { open: boolean }) {
   const teeth = Array.from({ length: 30 });
 
@@ -211,11 +220,16 @@ export default function ExpandableEventCard({
                   </figure>
                 ) : null}
 
-                <p className="max-w-3xl font-body text-sm leading-7 text-neutral-800">
-                  {event.fullDescription ||
-                    event.shortDescription ||
-                    "More event details will be announced soon."}
-                </p>
+                <div className="max-w-3xl space-y-4 font-body text-sm leading-7 text-neutral-800">
+                  {splitEventParagraphs(event.fullDescription || event.shortDescription).map((paragraph, index) => (
+                    <p
+                      key={index}
+                      className="text-justify hyphens-auto [text-align-last:left] [text-justify:inter-word]"
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
 
                 <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 font-body text-sm text-neutral-700">
                   {event.venue ? <span>{event.venue}</span> : null}
