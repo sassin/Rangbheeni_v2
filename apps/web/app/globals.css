@@ -164,7 +164,11 @@ html {
   z-index: 1;
   opacity: 0.4;
   pointer-events: none;
-  background-image: url("https://www.transparenttextures.com/patterns/asfalt-light.png");
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(86, 67, 45, 0.08) 1px, transparent 0),
+    linear-gradient(90deg, rgba(86, 67, 45, 0.035) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(86, 67, 45, 0.025) 1px, transparent 1px);
+  background-size: 18px 18px, 42px 42px, 42px 42px;
   /* Or a custom noise SVG */
   filter: contrast(120%) brightness(100%);
 }
