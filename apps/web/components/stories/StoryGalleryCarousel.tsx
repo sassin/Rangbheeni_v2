@@ -11,57 +11,29 @@ export type StoryGalleryCarouselImage = {
   sortOrder: number;
 };
 
-const SESSION_START_KEY = "rangbheeni-gallery-weave-start-v2";
-const FRAME_SIZE = 4;
-const FRAME_INTERVAL_MS = 3600;
+const SESSION_START_KEY = "rangbheeni-gallery-reel-v1";
+const ROTATE_MS = 6500;
 
 function circularItem<T>(items: T[], index: number) {
   return items[((index % items.length) + items.length) % items.length];
 }
 
-function buildFrame(
-  images: StoryGalleryCarouselImage[],
-  startIndex: number
-): StoryGalleryCarouselImage[] {
-  if (!images.length) return [];
-
-  const frame: StoryGalleryCarouselImage[] = [];
-  const count = Math.min(FRAME_SIZE, images.length);
-
-  for (let offset = 0; offset < count; offset += 1) {
-    frame.push(circularItem(images, startIndex + offset));
-  }
-
-  return frame;
-}
-
-function getRandomStartIndex(images: StoryGalleryCarouselImage[]) {
-  if (!images.length) return 0;
-
-  const sortOrders = images.map((image) => image.sortOrder);
-  const min = Math.min(...sortOrders);
-  const max = Math.max(...sortOrders);
-
-  let randomSortOrder: number | null = null;
+function randomStart(length: number) {
+  if (!length) return 0;
 
   try {
     const stored = window.sessionStorage.getItem(SESSION_START_KEY);
-
     if (stored) {
       const parsed = Number(stored);
-      if (Number.isFinite(parsed)) randomSortOrder = parsed;
+      if (Number.isFinite(parsed)) return parsed % length;
     }
 
-    if (randomSortOrder === null) {
-      randomSortOrder = Math.floor(Math.random() * (max - min + 1)) + min;
-      window.sessionStorage.setItem(SESSION_START_KEY, String(randomSortOrder));
-    }
+    const next = Math.floor(Math.random() * length);
+    window.sessionStorage.setItem(SESSION_START_KEY, String(next));
+    return next;
   } catch {
-    randomSortOrder = Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * length);
   }
-
-  const index = images.findIndex((image) => image.sortOrder >= randomSortOrder);
-  return index >= 0 ? index : 0;
 }
 
 export default function StoryGalleryCarousel({
@@ -69,12 +41,12 @@ export default function StoryGalleryCarousel({
 }: {
   images: StoryGalleryCarouselImage[];
 }) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = Boolean(useReducedMotion());
   const rootRef = useRef<HTMLElement | null>(null);
 
   const [startIndex, setStartIndex] = useState(0);
+  const [visible, setVisible] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
   const [loadedUrls, setLoadedUrls] = useState<Set<string>>(() => new Set());
 
   const orderedImages = useMemo(
@@ -85,30 +57,34 @@ export default function StoryGalleryCarousel({
     [images]
   );
 
-  const currentFrame = useMemo(
-    () => buildFrame(orderedImages, startIndex),
-    [orderedImages, startIndex]
-  );
+  const frame = useMemo(() => {
+    if (!orderedImages.length) return [];
 
-  const nextFrame = useMemo(
-    () => buildFrame(orderedImages, startIndex + 1),
-    [orderedImages, startIndex]
-  );
+    return Array.from({ length: Math.min(4, orderedImages.length) }, (_, index) =>
+      circularItem(orderedImages, startIndex + index)
+    );
+  }, [orderedImages, startIndex]);
+
+  const preloadImages = useMemo(() => {
+    if (!orderedImages.length) return [];
+
+    return Array.from({ length: Math.min(3, orderedImages.length) }, (_, index) =>
+      circularItem(orderedImages, startIndex + frame.length + index)
+    );
+  }, [orderedImages, startIndex, frame.length]);
 
   useEffect(() => {
     if (!orderedImages.length) return;
-    setStartIndex(getRandomStartIndex(orderedImages));
-  }, [orderedImages]);
+    setStartIndex(randomStart(orderedImages.length));
+  }, [orderedImages.length]);
 
   useEffect(() => {
     const node = rootRef.current;
     if (!node) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.25 }
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0.18, rootMargin: "120px 0px" }
     );
 
     observer.observe(node);
@@ -117,13 +93,13 @@ export default function StoryGalleryCarousel({
   }, []);
 
   useEffect(() => {
-    if (!isVisible || !orderedImages.length) return;
+    if (!visible) return;
 
-    const urlsToPrepare = [...currentFrame, ...nextFrame]
+    const urls = [...frame, ...preloadImages]
       .map((image) => image?.url)
       .filter(Boolean) as string[];
 
-    for (const url of urlsToPrepare) {
+    for (const url of urls) {
       if (loadedUrls.has(url)) continue;
 
       const image = new window.Image();
@@ -136,186 +112,140 @@ export default function StoryGalleryCarousel({
       };
       image.src = url;
     }
-  }, [currentFrame, isVisible, loadedUrls, nextFrame, orderedImages.length]);
+  }, [frame, loadedUrls, preloadImages, visible]);
 
   useEffect(() => {
-    if (
-      reduceMotion ||
-      paused ||
-      !isVisible ||
-      orderedImages.length <= 1
-    ) {
+    if (reduceMotion || paused || !visible || orderedImages.length <= 1) {
       return;
     }
 
     const timer = window.setInterval(() => {
-      setStartIndex((current) => {
-        const next = (current + 1) % orderedImages.length;
-        const frame = buildFrame(orderedImages, next);
-
-        const ready = frame.every(
-          (image) => !image?.url || loadedUrls.has(image.url)
-        );
-
-        return ready ? next : current;
-      });
-    }, FRAME_INTERVAL_MS);
+      setStartIndex((current) => (current + 1) % orderedImages.length);
+    }, ROTATE_MS);
 
     return () => window.clearInterval(timer);
-  }, [isVisible, loadedUrls, orderedImages, paused, reduceMotion]);
+  }, [orderedImages.length, paused, reduceMotion, visible]);
 
-  if (!currentFrame.length) return null;
+  if (!frame.length) return null;
 
-  const [large, tall, smallOne, smallTwo] = currentFrame;
-  const caption =
-    large?.hoverText ||
-    tall?.hoverText ||
-    smallOne?.hoverText ||
-    smallTwo?.hoverText ||
-    null;
+  const [mainImage, ...reelImages] = frame;
 
   return (
     <section
       ref={rootRef}
-      className="mx-auto mt-20 w-full max-w-5xl px-4 sm:mt-24 sm:px-6 lg:px-0"
+      className="w-full"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
     >
       <div className="mb-5 flex items-center gap-4">
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--color-brown)]/25 to-transparent" />
-        <p className="shrink-0 font-body text-[11px] font-semibold uppercase tracking-[0.26em] text-[var(--color-primary)]">
-          Rangbheeni in motion
+        <p className="font-body text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-primary)]">
+          Gallery wall
         </p>
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-[var(--color-brown)]/25 to-transparent" />
+        <div className="h-px flex-1 bg-gradient-to-r from-[var(--color-brown)]/20 to-transparent" />
       </div>
 
-      <div className="relative overflow-hidden rounded-[2rem] border border-black/10 bg-[#f8efdf]/70 p-3 shadow-sm backdrop-blur-sm md:p-4">
+      <div className="relative overflow-hidden rounded-[1.8rem] border border-black/10 bg-white/35 p-2 shadow-sm backdrop-blur">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-[0.16] [background-image:radial-gradient(circle_at_1px_1px,rgba(111,78,45,0.55)_1px,transparent_0)] [background-size:14px_14px]"
+          className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:linear-gradient(90deg,rgba(108,73,37,0.32)_1px,transparent_1px),linear-gradient(0deg,rgba(68,104,83,0.20)_1px,transparent_1px)] [background-size:18px_18px]"
         />
 
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-[0.18] [background-image:linear-gradient(90deg,rgba(140,91,47,0.25)_1px,transparent_1px),linear-gradient(0deg,rgba(72,113,91,0.2)_1px,transparent_1px)] [background-size:28px_28px]"
-        />
-
-        <div className="relative grid min-h-[360px] gap-3 md:min-h-[430px] md:grid-cols-[1.08fr_0.92fr]">
-          <PatchFrame
-            image={large}
-            name="large"
-            className="md:row-span-2"
-            imageClassName="aspect-[4/3] md:h-full md:aspect-auto"
+        <div className="relative grid gap-2 lg:grid-cols-[1.45fr_0.85fr]">
+          <GalleryImageFrame
+            image={mainImage}
+            reduceMotion={reduceMotion}
             loadedUrls={loadedUrls}
             setLoadedUrls={setLoadedUrls}
+            className="h-[310px] sm:h-[360px] lg:h-[420px]"
+            imageClassName="object-cover"
+            priority
           />
 
-          <PatchFrame
-            image={tall}
-            name="tall"
-            className="hidden md:block"
-            imageClassName="aspect-[16/10]"
-            loadedUrls={loadedUrls}
-            setLoadedUrls={setLoadedUrls}
-          />
-
-          <div className="grid grid-cols-2 gap-3">
-            <PatchFrame
-              image={smallOne}
-              name="small-one"
-              imageClassName="aspect-square"
-              loadedUrls={loadedUrls}
-              setLoadedUrls={setLoadedUrls}
-            />
-
-            <PatchFrame
-              image={smallTwo}
-              name="small-two"
-              imageClassName="aspect-square"
-              loadedUrls={loadedUrls}
-              setLoadedUrls={setLoadedUrls}
-            />
-          </div>
-        </div>
-
-        {caption ? (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={caption}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="relative mt-3 inline-flex max-w-xl rounded-full border border-white/70 bg-white/65 px-4 py-2 font-body text-xs leading-5 text-[var(--color-brown)] shadow-sm"
-            >
-              {caption}
-            </motion.div>
-          </AnimatePresence>
-        ) : null}
-
-        {orderedImages.length > 1 ? (
-          <div className="relative mt-4 flex justify-center gap-1.5">
-            {orderedImages.map((image, index) => (
-              <button
-                key={image.id}
-                type="button"
-                onClick={() => setStartIndex(index)}
-                className={[
-                  "h-1.5 rounded-full transition-all duration-500",
-                  index === startIndex
-                    ? "w-8 bg-[var(--color-primary)]"
-                    : "w-2 bg-[var(--color-brown)]/20 hover:bg-[var(--color-brown)]/45",
-                ].join(" ")}
-                aria-label={`Show gallery image group ${image.sortOrder}`}
+          <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1">
+            {reelImages.map((image, index) => (
+              <GalleryImageFrame
+                key={`${image.id}-${index}`}
+                image={image}
+                reduceMotion={reduceMotion}
+                loadedUrls={loadedUrls}
+                setLoadedUrls={setLoadedUrls}
+                className="h-[140px] sm:h-[150px] lg:h-[calc((420px-16px)/3)]"
+                imageClassName="object-cover"
+                delay={index * 0.05}
               />
             ))}
           </div>
-        ) : null}
+        </div>
       </div>
     </section>
   );
 }
 
-function PatchFrame({
+function GalleryImageFrame({
   image,
-  name,
-  className = "",
-  imageClassName,
+  reduceMotion,
   loadedUrls,
   setLoadedUrls,
+  className,
+  imageClassName,
+  priority = false,
+  delay = 0,
 }: {
   image?: StoryGalleryCarouselImage;
-  name: string;
-  className?: string;
-  imageClassName: string;
+  reduceMotion: boolean;
   loadedUrls: Set<string>;
   setLoadedUrls: React.Dispatch<React.SetStateAction<Set<string>>>;
+  className: string;
+  imageClassName: string;
+  priority?: boolean;
+  delay?: number;
 }) {
   if (!image) return null;
 
   return (
     <figure
       className={[
-        "relative overflow-hidden rounded-[1.35rem] border border-white/70 bg-white/45 shadow-sm",
+        "group relative overflow-hidden rounded-[1.35rem] border border-white/55 bg-white/35 shadow-sm",
         className,
       ].join(" ")}
     >
       <AnimatePresence mode="wait">
         <motion.img
-          key={`${name}-${image.id}`}
+          key={image.id}
           src={image.url}
-          alt={image.altText || image.hoverText || "Rangbheeni gallery image"}
-          className={[
-            "h-full w-full object-cover",
-            imageClassName,
-          ].join(" ")}
-          loading={loadedUrls.has(image.url) ? "eager" : "lazy"}
-          initial={{ opacity: 0, scale: 1.035, filter: "blur(6px)" }}
-          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-          exit={{ opacity: 0, scale: 0.99, filter: "blur(3px)" }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          alt={image.altText || image.hoverText || "Rangbheeni work image"}
+          className={["absolute inset-0 h-full w-full", imageClassName].join(" ")}
+          loading={priority || loadedUrls.has(image.url) ? "eager" : "lazy"}
+          initial={
+            reduceMotion
+              ? false
+              : {
+                  opacity: 0,
+                  scale: 1.025,
+                  filter: "blur(5px)",
+                }
+          }
+          animate={{
+            opacity: 1,
+            scale: 1,
+            filter: "blur(0px)",
+          }}
+          exit={
+            reduceMotion
+              ? undefined
+              : {
+                  opacity: 0,
+                  scale: 0.995,
+                  filter: "blur(3px)",
+                }
+          }
+          transition={{
+            duration: 1.15,
+            delay,
+            ease: [0.22, 1, 0.36, 1],
+          }}
           onLoad={() => {
             setLoadedUrls((current) => {
               const next = new Set(current);
@@ -326,12 +256,13 @@ function PatchFrame({
         />
       </AnimatePresence>
 
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/12 via-transparent to-white/10" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/18 via-transparent to-white/8" />
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-[linear-gradient(90deg,rgba(255,255,255,0.16)_0_8px,transparent_8px_16px)] opacity-70"
-      />
+      {image.hoverText ? (
+        <div className="absolute inset-x-3 bottom-3 translate-y-2 rounded-full border border-white/50 bg-white/70 px-3 py-1.5 font-body text-[10px] leading-4 text-[var(--color-brown)] opacity-0 shadow-sm backdrop-blur-md transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          {image.hoverText}
+        </div>
+      ) : null}
     </figure>
   );
 }
