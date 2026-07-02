@@ -5,9 +5,16 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const manifestPath = process.argv[2] || "content/gallery/gallery.json";
-const publicBaseUrl =
-  process.env.R2_PUBLIC_BASE_URL ||
-  "https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev";
+const PUBLIC_BASE_URL =
+  process.env.MEDIA_PUBLIC_BASE_URL ||
+  process.env.R2_PUBLIC_BASE_URL;
+
+if (!PUBLIC_BASE_URL) {
+  console.error(
+    "Missing MEDIA_PUBLIC_BASE_URL or R2_PUBLIC_BASE_URL. Refusing to register gallery images with an implicit media domain."
+  );
+  process.exit(1);
+}
 
 function cleanBaseUrl(value) {
   return String(value).replace(/\/+$/, "");
