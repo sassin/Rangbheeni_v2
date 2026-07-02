@@ -7,6 +7,35 @@ type RankedItem = {
   sortOrder?: number | null;
 };
 
+
+function cleanBaseUrl(value?: string) {
+  return (value ?? "").replace(/\/+$/, "");
+}
+
+const MEDIA_SOURCE_BASE_URL = cleanBaseUrl(
+  process.env.MEDIA_SOURCE_BASE_URL || process.env.R2_PUBLIC_BASE_URL
+);
+
+const MEDIA_PUBLIC_BASE_URL = cleanBaseUrl(process.env.MEDIA_PUBLIC_BASE_URL);
+
+function toPublicMediaUrl(url?: string | null) {
+  if (!url) return url ?? null;
+
+  if (!MEDIA_SOURCE_BASE_URL || !MEDIA_PUBLIC_BASE_URL) {
+    return url;
+  }
+
+  if (url === MEDIA_SOURCE_BASE_URL) {
+    return MEDIA_PUBLIC_BASE_URL;
+  }
+
+  if (url.startsWith(`${MEDIA_SOURCE_BASE_URL}/`)) {
+    return `${MEDIA_PUBLIC_BASE_URL}${url.slice(MEDIA_SOURCE_BASE_URL.length)}`;
+  }
+
+  return url;
+}
+
 @Injectable()
 export class PublicService {
   constructor(private readonly prisma: PrismaService) {}
@@ -15,7 +44,7 @@ export class PublicService {
     if (!asset) return null;
     return {
       id: asset.id,
-      url: asset.url,
+      url: toPublicMediaUrl(asset.url),
       altText: asset.altText,
       width: asset.width,
       height: asset.height,
@@ -75,7 +104,7 @@ export class PublicService {
         .sort((a: any, b: any) => a.sortOrder - b.sortOrder)
         .map((image: any) => ({
           id: image.media?.id ?? image.id,
-          url: image.media?.url ?? image.url,
+          url: toPublicMediaUrl(image.media?.url ?? image.url),
           altText: image.altText ?? image.media?.altText ?? product.name,
           width: image.media?.width,
           height: image.media?.height,
