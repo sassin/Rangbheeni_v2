@@ -9,10 +9,26 @@ function cleanBaseUrl(value?: string) {
   return (value ?? "https://api.openai.com/v1").replace(/\/$/, "");
 }
 
+function readIntEnv(name: string, fallback: number, min: number, max: number) {
+  const parsed = Number(process.env[name]);
+
+  if (!Number.isFinite(parsed)) return fallback;
+
+  return Math.min(Math.max(Math.floor(parsed), min), max);
+}
+
+function readFloatEnv(name: string, fallback: number, min: number, max: number) {
+  const parsed = Number(process.env[name]);
+
+  if (!Number.isFinite(parsed)) return fallback;
+
+  return Math.min(Math.max(parsed, min), max);
+}
+
 async function fetchWithTimeout(
   url: string,
   options: RequestInit,
-  timeoutMs: number,
+  timeoutMs: number
 ) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -26,6 +42,17 @@ async function fetchWithTimeout(
     clearTimeout(timer);
   }
 }
+
+const LLM_TIMEOUT_MS = readIntEnv("LLM_TIMEOUT_MS", 20_000, 2_000, 30_000);
+const LLM_MAX_TOKENS = readIntEnv("LLM_MAX_TOKENS", 120, 40, 300);
+const LLM_TEMPERATURE = readFloatEnv("LLM_TEMPERATURE", 0.2, 0, 1);
+const LLM_MAX_ANSWER_WORDS = readIntEnv("LLM_MAX_ANSWER_WORDS", 90, 30, 160);
+const LLM_MAX_ANSWER_SENTENCES = readIntEnv(
+  "LLM_MAX_ANSWER_SENTENCES",
+  4,
+  1,
+  6
+);
 
 @Injectable()
 export class LlmService {
@@ -48,7 +75,7 @@ export class LlmService {
   async answerFromContext(
     question: string,
     context: string,
-    fallback: string,
+    fallback: string
   ): Promise<LlmResult> {
     if (!this.isConfigured()) {
       return {
@@ -68,8 +95,8 @@ export class LlmService {
           },
           body: JSON.stringify({
             model: this.model,
-            temperature: 0.2,
-            max_tokens: 120,
+            temperature: LLM_TEMPERATURE,
+            max_tokens: LLM_MAX_TOKENS,
             response_format: { type: "json_object" },
             messages: [
               {
@@ -92,12 +119,12 @@ export class LlmService {
             ],
           }),
         },
-        25_000,
+        LLM_TIMEOUT_MS
       );
 
       if (!response.ok) {
         console.error(
-          `LLM request failed: ${response.status} ${await response.text()}`,
+          `LLM request failed: ${response.status} ${await response.text()}`
         );
         return {
           answer_supported: false,
@@ -123,7 +150,6 @@ export class LlmService {
       }
 
       const parsed = JSON.parse(raw) as Partial<LlmResult>;
-
       const answer =
         typeof parsed.answer === "string" ? parsed.answer.trim() : "";
 
@@ -137,10 +163,10 @@ export class LlmService {
       const conciseAnswer = answer
         .replace(/\s+/g, " ")
         .split(/(?<=[.!?])\s+/)
-        .slice(0, 4)
+        .slice(0, LLM_MAX_ANSWER_SENTENCES)
         .join(" ")
         .split(/\s+/)
-        .slice(0, 90)
+        .slice(0, LLM_MAX_ANSWER_WORDS)
         .join(" ")
         .trim();
 
@@ -158,6 +184,3 @@ export class LlmService {
     }
   }
 }
-
-
-
