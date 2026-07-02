@@ -254,3 +254,30 @@ And one protected/private operation only if needed.
 | Public content and copy | DB | Editable content, not security-critical |
 | Gallery/story/event metadata | DB | Content-managed data |
 | Uploaded media files | R2 or static web assets | Do not store binary files in DB |
+
+---
+
+## 12. Media URL rewrite configuration
+
+| Variable | Default | Description | Recommended production value |
+|---|---:|---|---|
+| `MEDIA_SOURCE_BASE_URL` | unset | Existing media URL base to replace in API responses. Usually the old R2 public base. | Set only after custom media domain is ready |
+| `MEDIA_PUBLIC_BASE_URL` | unset | New public media URL base returned to the frontend. Usually the custom media domain. | Set only after custom media domain is ready |
+| `R2_PUBLIC_BASE_URL` | unset | Legacy/fallback source base used by scripts and media utilities. | Prefer `MEDIA_PUBLIC_BASE_URL` for new usage |
+
+Leave these unset until the custom media domain works.
+
+Do not set this early:
+
+~~~env
+MEDIA_SOURCE_BASE_URL=https://pub-cf212b8e52d44f7a99d8dac828687929.r2.dev
+MEDIA_PUBLIC_BASE_URL=https://media.rangbheeni.org
+~~~
+
+Set it only after this test works in the browser:
+
+~~~txt
+https://media.rangbheeni.org/images/gallery/gallery-01.jpeg
+~~~
+
+If these variables are unset, the content API returns existing database media URLs unchanged.
