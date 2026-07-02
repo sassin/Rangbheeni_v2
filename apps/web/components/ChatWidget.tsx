@@ -3,22 +3,35 @@
 import { featureFlags } from "@/lib/featureFlags";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
-const chatApiUrl =
-  process.env.NEXT_PUBLIC_CHATBOT_API_URL || "http://localhost:4100";
-const chatInMaintenance = process.env.NEXT_PUBLIC_AI_CHAT_MAINTENANCE === "true";
-
 const FRONTEND_MAX_WORDS = 100;
 const SEND_MAX_WORDS = 80;
 const FRONTEND_MAX_CHARS = 900;
 const SEND_MAX_CHARS = 700;
 const MIN_SUBMIT_INTERVAL_MS = 5000;
 const REQUEST_TIMEOUT_MS = 30000;
+const MAX_VISIBLE_MESSAGES = 14;
 
 type ChatMessage = {
   role: "assistant" | "user";
   text: string;
   loading?: boolean;
 };
+
+function getChatApiUrl() {
+  const configured = process.env.NEXT_PUBLIC_CHATBOT_API_URL?.trim();
+
+  if (configured) {
+    return configured.replace(/\/+$/, "");
+  }
+
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:4100";
+  }
+
+  throw new Error(
+    "Chatbot API URL is not configured. Set NEXT_PUBLIC_CHATBOT_API_URL."
+  );
+}
 
 function normalizeText(value: string) {
   return value.replace(/\s+/g, " ").trim();
@@ -46,6 +59,11 @@ function getOrCreateSessionId() {
   return generated;
 }
 
+function trimMessages(messages: ChatMessage[]) {
+  if (messages.length <= MAX_VISIBLE_MESSAGES) return messages;
+  return messages.slice(messages.length - MAX_VISIBLE_MESSAGES);
+}
+
 function LoadingDots() {
   return (
     <span className="inline-flex items-center gap-1" aria-label="Loading">
@@ -57,10 +75,6 @@ function LoadingDots() {
 }
 
 export function ChatWidget() {
-  if (!featureFlags.aiChat) return null;
-
-  if (!featureFlags.aiChat) return null;
-
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
@@ -81,7 +95,7 @@ export function ChatWidget() {
   }, []);
 
   useEffect(() => {
-    if (open && !pending) {
+    if (open && !pending && !featureFlags.aiChatMaintenance) {
       window.setTimeout(() => inputRef.current?.focus(), 120);
     }
   }, [open, pending]);
@@ -95,7 +109,16 @@ export function ChatWidget() {
     });
   }, [messages, open]);
 
-  const canSend = useMemo(() => input.trim().length > 0 && !pending, [input, pending]);
+  const canSend = useMemo(
+    () =>
+      featureFlags.aiChat &&
+      !featureFlags.aiChatMaintenance &&
+      input.trim().length > 0 &&
+      !pending,
+    [input, pending]
+  );
+
+  if (!featureFlags.aiChat) return null;
 
   function applyFrontendLimit(value: string) {
     return limitByWordsAndChars(value, FRONTEND_MAX_WORDS, FRONTEND_MAX_CHARS);
@@ -119,16 +142,17 @@ export function ChatWidget() {
 
       if (loadingIndex >= 0) {
         next[loadingIndex] = { role: "assistant", text };
-        return next;
+        return trimMessages(next);
       }
 
-      return [...next, { role: "assistant", text }];
+      return trimMessages([...next, { role: "assistant", text }]);
     });
   }
 
   async function submit(event?: FormEvent) {
     event?.preventDefault();
-    if (pending) return;
+
+    if (!canSend) return;
 
     const now = Date.now();
     const waitMs = MIN_SUBMIT_INTERVAL_MS - (now - lastSubmitAt);
@@ -140,7 +164,7 @@ export function ChatWidget() {
 
     const visibleQuestion = applyFrontendLimit(input);
     const outboundQuestion = normalizeText(
-      limitByWordsAndChars(visibleQuestion, SEND_MAX_WORDS, SEND_MAX_CHARS),
+      limitByWordsAndChars(visibleQuestion, SEND_MAX_WORDS, SEND_MAX_CHARS)
     );
 
     if (!outboundQuestion) return;
@@ -149,17 +173,19 @@ export function ChatWidget() {
     setPending(true);
     setLastSubmitAt(now);
 
-    setMessages((current) => [
-      ...current,
-      { role: "user", text: visibleQuestion.trim() },
-      { role: "assistant", text: "", loading: true },
-    ]);
+    setMessages((current) =>
+      trimMessages([
+        ...current,
+        { role: "user", text: visibleQuestion.trim() },
+        { role: "assistant", text: "", loading: true },
+      ])
+    );
 
     try {
       const controller = new AbortController();
       const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
-      const response = await fetch(`${chatApiUrl.replace(/\/$/, "")}/chat/message`, {
+      const response = await fetch(`${getChatApiUrl()}/chat/message`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: outboundQuestion, sessionId }),
@@ -168,26 +194,26 @@ export function ChatWidget() {
 
       window.clearTimeout(timeout);
 
-      let payload: any = {};
+      let payload: { message?: string; answer?: string } = {};
       try {
-        payload = await response.json();
+        payload = (await response.json()) as { message?: string; answer?: string };
       } catch {
         payload = {};
       }
 
       if (!response.ok) {
         replaceLoadingMessage(
-          typeof payload?.message === "string"
+          typeof payload.message === "string"
             ? payload.message
-            : "I could not respond right now. Please try again shortly.",
+            : "I could not respond right now. Please try again shortly."
         );
         return;
       }
 
       replaceLoadingMessage(
-        typeof payload?.answer === "string" && payload.answer.trim()
+        typeof payload.answer === "string" && payload.answer.trim()
           ? payload.answer.trim()
-          : "I do not have that in Rangbheeni’s published information yet.",
+          : "I do not have that in Rangbheeni’s published information yet."
       );
     } catch {
       replaceLoadingMessage("I could not respond right now. Please try again shortly.");
@@ -198,7 +224,7 @@ export function ChatWidget() {
 
   return (
     <div className="fixed bottom-14 right-5 z-[80] flex flex-col items-end gap-3">
-      {open && !chatInMaintenance ? (
+      {open && !featureFlags.aiChatMaintenance ? (
         <div className="flex h-[520px] max-h-[calc(100dvh-6rem)] w-[min(92vw,390px)] flex-col overflow-hidden rounded-[1.8rem] border border-[var(--color-primary)]/25 bg-[#f4efe4]/95 shadow-2xl backdrop-blur">
           <div className="shrink-0 border-b border-black/10 bg-white/45 px-5 py-4">
             <div className="flex items-center justify-between gap-4">
@@ -247,7 +273,7 @@ export function ChatWidget() {
             <textarea
               ref={inputRef}
               value={input}
-             
+              disabled={pending}
               onChange={(event) => handleInput(event.target.value)}
               onPaste={(event) => {
                 event.preventDefault();
@@ -270,10 +296,10 @@ export function ChatWidget() {
             <div className="mt-3 flex justify-end">
               <button
                 type="submit"
-               
+                disabled={!canSend}
                 className="rounded-full border border-[var(--color-primary)]/35 bg-white/80 px-5 py-2.5 font-body text-sm font-semibold text-[var(--color-brown)] shadow-sm transition hover:border-[var(--color-primary)] hover:bg-[var(--color-lightgreen)]/30 hover:text-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Send
+                {pending ? "Sending..." : "Send"}
               </button>
             </div>
           </form>
@@ -286,9 +312,13 @@ export function ChatWidget() {
           }}
           className={[
             "relative grid h-16 w-16 place-items-center overflow-hidden rounded-full border border-[var(--color-primary)]/35 bg-[#f4efe4]/95 text-[var(--color-brown)] shadow-xl backdrop-blur transition hover:border-[var(--color-primary)] hover:bg-[var(--color-lightgreen)]/35 hover:text-[var(--color-primary)]",
-            featureFlags.aiChatMaintenance ? "cursor-not-allowed" : "",
+            featureFlags.aiChatMaintenance ? "cursor-not-allowed opacity-70" : "",
           ].join(" ")}
-          aria-label={featureFlags.aiChatMaintenance ? "Chat temporarily unavailable" : "Open chat"}
+          aria-label={
+            featureFlags.aiChatMaintenance
+              ? "Chat temporarily unavailable"
+              : "Open chat"
+          }
         >
           <img
             src="/images/rangbheeni.svg"
