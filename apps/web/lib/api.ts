@@ -183,7 +183,7 @@ export async function getGalleryImages(): Promise<GalleryImageDto[]> {
 }
 
 export async function getActiveAnnouncement(): Promise<AnnouncementDto | null> {
-  return fetchJson<AnnouncementDto | null>("/public/announcement", {
+  return fetchJson<AnnouncementDto | null>("/public/announcement/active", {
     next: { revalidate: 300 },
   });
 }
