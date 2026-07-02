@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 export type StoryGalleryCarouselImage = {
@@ -11,11 +12,31 @@ export type StoryGalleryCarouselImage = {
   sortOrder: number;
 };
 
-const SESSION_START_KEY = "rangbheeni-gallery-scatter-v1";
-const ROTATE_MS = 7600;
+const SESSION_START_KEY = "rangbheeni-gallery-scatter-v3";
+const ROTATE_MS = 4000;
+const VISIBLE_COUNT = 6;
+const PRELOAD_AHEAD_COUNT = 8;
 
 function circularItem<T>(items: T[], index: number) {
   return items[((index % items.length) + items.length) % items.length];
+}
+
+function buildFrame(images: StoryGalleryCarouselImage[], startIndex: number) {
+  if (!images.length) return [];
+
+  return Array.from(
+    { length: Math.min(VISIBLE_COUNT, images.length) },
+    (_, index) => circularItem(images, startIndex + index)
+  );
+}
+
+function buildPreloadFrame(images: StoryGalleryCarouselImage[], startIndex: number) {
+  if (!images.length) return [];
+
+  return Array.from(
+    { length: Math.min(PRELOAD_AHEAD_COUNT, images.length) },
+    (_, index) => circularItem(images, startIndex + index)
+  );
 }
 
 function randomStart(length: number) {
@@ -36,6 +57,13 @@ function randomStart(length: number) {
   }
 }
 
+function frameIsLoaded(
+  frame: StoryGalleryCarouselImage[],
+  loadedUrls: Set<string>
+) {
+  return frame.every((image) => loadedUrls.has(image.url));
+}
+
 export default function StoryGalleryCarousel({
   images,
 }: {
@@ -45,6 +73,7 @@ export default function StoryGalleryCarousel({
   const rootRef = useRef<HTMLElement | null>(null);
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const [pendingIndex, setPendingIndex] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
   const [paused, setPaused] = useState(false);
   const [loadedUrls, setLoadedUrls] = useState<Set<string>>(() => new Set());
@@ -57,21 +86,15 @@ export default function StoryGalleryCarousel({
     [images]
   );
 
-  const scatterImages = useMemo(() => {
-    if (!orderedImages.length) return [];
+  const scatterImages = useMemo(
+    () => buildFrame(orderedImages, activeIndex),
+    [activeIndex, orderedImages]
+  );
 
-    return Array.from({ length: Math.min(6, orderedImages.length) }, (_, index) =>
-      circularItem(orderedImages, activeIndex + index)
-    );
-  }, [activeIndex, orderedImages]);
-
-  const preloadImages = useMemo(() => {
-    if (!orderedImages.length) return [];
-
-    return Array.from({ length: Math.min(4, orderedImages.length) }, (_, index) =>
-      circularItem(orderedImages, activeIndex + scatterImages.length + index)
-    );
-  }, [activeIndex, orderedImages, scatterImages.length]);
+  const preloadImages = useMemo(
+    () => buildPreloadFrame(orderedImages, activeIndex + VISIBLE_COUNT),
+    [activeIndex, orderedImages]
+  );
 
   useEffect(() => {
     if (!orderedImages.length) return;
@@ -115,16 +138,82 @@ export default function StoryGalleryCarousel({
   }, [loadedUrls, preloadImages, scatterImages, visible]);
 
   useEffect(() => {
+    if (pendingIndex === null || !orderedImages.length) return;
+
+    const pendingFrame = buildFrame(orderedImages, pendingIndex);
+
+    if (frameIsLoaded(pendingFrame, loadedUrls)) {
+      setActiveIndex(pendingIndex);
+      setPendingIndex(null);
+    }
+  }, [loadedUrls, orderedImages, pendingIndex]);
+
+  useEffect(() => {
     if (reduceMotion || paused || !visible || orderedImages.length <= 1) {
       return;
     }
 
     const timer = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % orderedImages.length);
+      const nextIndex = (activeIndex + 1) % orderedImages.length;
+      const nextFrame = buildFrame(orderedImages, nextIndex);
+
+      if (frameIsLoaded(nextFrame, loadedUrls)) {
+        setActiveIndex(nextIndex);
+        setPendingIndex(null);
+      } else {
+        setPendingIndex(nextIndex);
+
+        for (const image of nextFrame) {
+          if (loadedUrls.has(image.url)) continue;
+
+          const loader = new window.Image();
+          loader.onload = () => {
+            setLoadedUrls((current) => {
+              const next = new Set(current);
+              next.add(image.url);
+              return next;
+            });
+          };
+          loader.src = image.url;
+        }
+      }
     }, ROTATE_MS);
 
     return () => window.clearInterval(timer);
-  }, [orderedImages.length, paused, reduceMotion, visible]);
+  }, [
+    activeIndex,
+    loadedUrls,
+    orderedImages,
+    paused,
+    reduceMotion,
+    visible,
+  ]);
+
+  function requestIndex(index: number) {
+    const frame = buildFrame(orderedImages, index);
+
+    if (frameIsLoaded(frame, loadedUrls)) {
+      setActiveIndex(index);
+      setPendingIndex(null);
+      return;
+    }
+
+    setPendingIndex(index);
+
+    for (const image of frame) {
+      if (loadedUrls.has(image.url)) continue;
+
+      const loader = new window.Image();
+      loader.onload = () => {
+        setLoadedUrls((current) => {
+          const next = new Set(current);
+          next.add(image.url);
+          return next;
+        });
+      };
+      loader.src = image.url;
+    }
+  }
 
   if (!scatterImages.length) return null;
 
@@ -162,7 +251,7 @@ export default function StoryGalleryCarousel({
 
         {scatterImages.map((image, index) => (
           <ScatteredPhoto
-            key={`${index}-${image.id}`}
+            key={`scatter-slot-${index}`}
             image={image}
             index={index}
             reduceMotion={reduceMotion}
@@ -178,12 +267,14 @@ export default function StoryGalleryCarousel({
               <button
                 key={image.id}
                 type="button"
-                onClick={() => setActiveIndex(index)}
+                onClick={() => requestIndex(index)}
                 className={[
                   "h-1.5 rounded-full transition-all duration-500",
                   index === activeIndex
                     ? "w-9 bg-[var(--color-primary)]"
-                    : "w-2 bg-[var(--color-brown)]/20 hover:bg-[var(--color-brown)]/45",
+                    : index === pendingIndex
+                      ? "w-5 bg-[var(--color-primary)]/45"
+                      : "w-2 bg-[var(--color-brown)]/20 hover:bg-[var(--color-brown)]/45",
                 ].join(" ")}
                 aria-label={`Show gallery image ${image.sortOrder}`}
               />
@@ -207,9 +298,11 @@ function ScatteredPhoto({
   index: number;
   reduceMotion: boolean;
   loadedUrls: Set<string>;
-  setLoadedUrls: React.Dispatch<React.SetStateAction<Set<string>>>;
+  setLoadedUrls: Dispatch<SetStateAction<Set<string>>>;
   priority?: boolean;
 }) {
+  const isLoaded = loadedUrls.has(image.url);
+
   const frameClass = [
     "absolute overflow-hidden border border-white/70 bg-white/40 shadow-[0_18px_45px_rgba(72,49,29,0.16)] backdrop-blur-[1px]",
     index === 0
@@ -222,13 +315,13 @@ function ScatteredPhoto({
       ? "bottom-[13%] right-[12%] z-35 w-[40%] rotate-[-2deg] rounded-[1.45rem] md:w-[34%]"
       : "",
     index === 3
-      ? "bottom-[8%] left-[18%] z-20 w-[30%] rotate-[2.8deg] rounded-[1.25rem] opacity-90 md:w-[24%]"
+      ? "bottom-[8%] left-[18%] z-20 w-[30%] rotate-[2.8deg] rounded-[1.25rem] md:w-[24%]"
       : "",
     index === 4
-      ? "right-[35%] top-[0%] z-10 hidden w-[23%] rotate-[4deg] rounded-[1.15rem] opacity-75 md:block"
+      ? "right-[35%] top-[0%] z-10 hidden w-[23%] rotate-[4deg] rounded-[1.15rem] md:block"
       : "",
     index === 5
-      ? "bottom-[1%] right-[2%] z-10 hidden w-[22%] rotate-[-3.4deg] rounded-[1.15rem] opacity-70 md:block"
+      ? "bottom-[1%] right-[2%] z-10 hidden w-[22%] rotate-[-3.4deg] rounded-[1.15rem] md:block"
       : "",
   ].join(" ");
 
@@ -244,42 +337,40 @@ function ScatteredPhoto({
   return (
     <motion.figure
       layout
-      className={frameClass}
+      className={[frameClass, imageAspect].join(" ")}
       initial={
         reduceMotion
           ? false
           : {
               opacity: 0,
-              y: 22,
-              scale: 0.96,
-              filter: "blur(8px)",
+              y: 16,
+              scale: 0.975,
             }
       }
       animate={{
-        opacity: index >= 4 ? 0.72 : index === 3 ? 0.9 : 1,
+        opacity: isLoaded ? (index >= 4 ? 0.72 : index === 3 ? 0.9 : 1) : 0,
         y: 0,
         scale: 1,
-        filter: "blur(0px)",
       }}
       transition={{
-        duration: 0.95,
-        delay: index * 0.04,
+        duration: 0.8,
+        delay: index * 0.025,
         ease: [0.22, 1, 0.36, 1],
       }}
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence initial={false} mode="sync">
         <motion.img
           key={`${index}-${image.id}`}
           src={image.url}
           alt={image.altText || image.hoverText || "Rangbheeni work image"}
-          className={["h-full w-full object-cover", imageAspect].join(" ")}
+          className="absolute inset-0 h-full w-full object-cover will-change-transform"
           loading={priority || loadedUrls.has(image.url) ? "eager" : "lazy"}
           initial={
             reduceMotion
               ? false
               : {
                   opacity: 0,
-                  scale: 1.04,
+                  scale: 1.012,
                 }
           }
           animate={{
@@ -291,12 +382,18 @@ function ScatteredPhoto({
               ? undefined
               : {
                   opacity: 0,
-                  scale: 0.985,
+                  scale: 1.003,
                 }
           }
           transition={{
-            duration: 1.25,
-            ease: [0.22, 1, 0.36, 1],
+            opacity: {
+              duration: 1.15,
+              ease: [0.22, 1, 0.36, 1],
+            },
+            scale: {
+              duration: 1.45,
+              ease: [0.22, 1, 0.36, 1],
+            },
           }}
           onLoad={() => {
             setLoadedUrls((current) => {
@@ -308,18 +405,7 @@ function ScatteredPhoto({
         />
       </AnimatePresence>
 
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/14 via-transparent to-white/10" />
-
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 w-1/2 bg-[linear-gradient(100deg,transparent_0%,rgba(255,250,240,0.34)_48%,transparent_100%)]"
-        initial={reduceMotion ? false : { x: "-140%" }}
-        animate={reduceMotion ? undefined : { x: "230%" }}
-        transition={{
-          duration: 1.3,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/12 via-transparent to-white/8" />
     </motion.figure>
   );
 }
