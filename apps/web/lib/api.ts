@@ -21,10 +21,22 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_CONTENT_API_URL ||
   process.env.CONTENT_API_BASE_URL ||
   process.env.CONTENT_API_URL ||
-  "https://content-api-production-20d9.up.railway.app";
+  (process.env.NODE_ENV === "development" ? "http://localhost:4000" : "");
+
+function getApiBaseUrl() {
+  const base = API_BASE_URL.trim();
+
+  if (!base) {
+    throw new Error(
+      "Content API base URL is not configured. Set NEXT_PUBLIC_CONTENT_API_URL or CONTENT_API_URL."
+    );
+  }
+
+  return base.replace(/\/+$/, "");
+}
 
 function buildUrl(path: string, query?: Record<string, QueryValue>) {
-  const base = API_BASE_URL.replace(/\/+$/, "");
+  const base = getApiBaseUrl();
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
 
   const url = new URL(`${base}${normalizedPath}`);
