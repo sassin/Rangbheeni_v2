@@ -138,6 +138,12 @@ function ArtisanStoryOverlay({
 }) {
   const paragraphs = getArtisanStoryParagraphs(artisan);
   const storyTitle = artisan?.storyTitle || artisan?.experienceTitle || "Artisan story";
+  const displayParagraphs =
+    paragraphs.length > 0
+      ? paragraphs
+      : artisan?.quote
+        ? [artisan.quote]
+        : [];
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -155,7 +161,7 @@ function ArtisanStoryOverlay({
 
   return (
     <motion.div
-      className="fixed inset-0 z-[120] overflow-y-auto bg-[#18110b]/72 px-5 py-6 backdrop-blur-xl md:px-10 md:py-10"
+      className="fixed inset-0 z-[120] overflow-hidden bg-[#18110b]/54 px-3 py-4 backdrop-blur-2xl md:px-8 md:py-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -165,78 +171,128 @@ function ArtisanStoryOverlay({
       aria-label={`${artisan.name}'s story`}
       onClick={onClose}
     >
-      <div
-        className="mx-auto grid min-h-[calc(100dvh-3rem)] max-w-6xl items-center gap-8 md:min-h-[calc(100dvh-5rem)] lg:grid-cols-[0.92fr_1.08fr]"
-        onClick={(event) => event.stopPropagation()}
+      <button
+        type="button"
+        onClick={onClose}
+        className="fixed right-5 top-5 z-[130] inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-white/12 font-body text-2xl leading-none text-white/90 shadow-[0_14px_40px_rgba(0,0,0,0.25)] backdrop-blur-xl transition hover:bg-white/22 hover:text-white"
+        aria-label="Close story"
       >
-        <motion.div
-          layoutId={`artisan-image-${index}`}
-          className="relative min-h-[55vh] overflow-hidden rounded-[2rem] bg-neutral-200 shadow-[0_30px_90px_rgba(0,0,0,0.35)] md:min-h-[68vh]"
-        >
-          <img
-            src={artisan.photo}
-            alt={artisan.name}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
+        ×
+      </button>
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/52 via-black/8 to-transparent" />
-
-          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-            <p className="font-body text-[10px] font-bold uppercase tracking-[0.24em] text-white/65">
-              {storyTitle}
-            </p>
-            <h3 className="mt-3 font-heading text-4xl font-bold leading-none text-white md:text-5xl">
-              {artisan.name}
-            </h3>
-            {artisan.location ? (
-              <p className="mt-3 font-body text-xs font-bold uppercase tracking-[0.22em] text-white/65">
-                {artisan.location}
-              </p>
-            ) : null}
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, y: 12, filter: "blur(5px)" }}
-          transition={{
-            duration: 0.55,
-            delay: 0.08,
-            ease: [0.22, 1, 0.36, 1],
+      <motion.article
+        onClick={(event) => event.stopPropagation()}
+        onWheel={(event) => {
+          event.stopPropagation();
+          event.currentTarget.scrollTop += event.deltaY;
+        }}
+        initial={{ opacity: 0, y: 28, filter: "blur(8px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        exit={{ opacity: 0, y: 18, filter: "blur(5px)" }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        style={{
+          scrollbarWidth: "none",
+        }}
+        className="relative mx-auto h-[calc(100dvh-2rem)] max-w-6xl overflow-y-scroll overscroll-contain rounded-[2.2rem] border border-white/24 bg-white/12 p-5 text-white shadow-[0_34px_120px_rgba(0,0,0,0.34)] backdrop-blur-2xl md:h-[calc(100dvh-4rem)] md:rounded-[2.6rem] md:p-8 lg:p-10 [&::-webkit-scrollbar]:hidden"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.16] mix-blend-screen"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 18% 15%, rgba(255,255,255,0.38), transparent 28%), repeating-linear-gradient(0deg, transparent, transparent 7px, rgba(255,255,255,0.13) 8px), repeating-linear-gradient(90deg, transparent, transparent 9px, rgba(255,255,255,0.08) 10px)",
           }}
-          className="relative"
-        >
-          <button
-            type="button"
-            onClick={onClose}
-            className="mb-8 inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-4 py-2 font-body text-xs font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur transition hover:bg-white/18 hover:text-white"
-          >
-            <span aria-hidden="true">×</span>
-            Close
-          </button>
+        />
 
-          {artisan.quote ? (
-            <blockquote className="border-l-2 border-[var(--rang-secondary)]/80 pl-6 font-heading text-2xl font-semibold italic leading-snug text-white md:text-3xl">
-              “{artisan.quote}”
-            </blockquote>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed -right-24 -top-24 h-72 w-72 rounded-full bg-[var(--rang-primary)]/20 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed -bottom-24 -left-24 h-72 w-72 rounded-full bg-[var(--rang-secondary)]/18 blur-3xl"
+        />
+
+        <div className="relative">
+          <p className="font-body text-[10px] font-bold uppercase tracking-[0.28em] text-[var(--rang-secondary)]">
+            {storyTitle}
+          </p>
+
+          <h3 className="mt-4 max-w-4xl font-heading text-4xl font-bold leading-[0.96] tracking-tight text-white md:text-6xl">
+            {artisan.name}
+          </h3>
+
+          {artisan.location ? (
+            <p className="mt-4 font-body text-xs font-bold uppercase tracking-[0.22em] text-white/58">
+              {artisan.location}
+            </p>
           ) : null}
 
-          {paragraphs.length > 0 ? (
-            <div className="mt-8 space-y-5 font-body text-base leading-8 text-white/78 md:text-lg md:leading-9">
-              {paragraphs.map((paragraph, paragraphIndex) => (
-                <p key={paragraphIndex}>{paragraph}</p>
-              ))}
-            </div>
-          ) : (
-            <p className="mt-8 max-w-2xl font-body text-base leading-8 text-white/72 md:text-lg">
-              This artisan’s full story is being prepared. For now, this space highlights their photograph, location, and voice from the Rangbheeni journey.
-            </p>
-          )}
+          <motion.div
+            aria-hidden="true"
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ duration: 0.9, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-7 h-px origin-left bg-gradient-to-r from-[var(--rang-primary)]/70 via-[var(--rang-secondary)]/70 to-transparent"
+          />
 
-          <div className="mt-10 h-px w-full bg-gradient-to-r from-[var(--rang-secondary)]/60 via-white/18 to-transparent" />
-        </motion.div>
-      </div>
+          <div className="mt-8 font-body text-base leading-8 text-white/80 md:text-lg md:leading-9">
+            <motion.figure
+              layoutId={`artisan-image-${index}`}
+              className="relative mb-7 overflow-hidden rounded-[2rem] bg-neutral-200 shadow-[0_24px_70px_rgba(0,0,0,0.32)] md:float-left md:mb-5 md:mr-8 md:w-[46%] lg:w-[42%]"
+            >
+              <div className="relative aspect-[4/5] min-h-[390px] md:min-h-[520px]">
+                <img
+                  src={artisan.photo}
+                  alt={artisan.name}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/18 via-transparent to-transparent" />
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 opacity-[0.08] mix-blend-overlay"
+                  style={{
+                    backgroundImage:
+                      "repeating-linear-gradient(0deg, transparent, transparent 3px, #fff 4px), repeating-linear-gradient(90deg, transparent, transparent 3px, #fff 4px)",
+                  }}
+                />
+              </div>
+            </motion.figure>
+
+            {displayParagraphs.length > 0 ? (
+              <div className="space-y-5">
+                {displayParagraphs.map((paragraph, paragraphIndex) => (
+                  <motion.p
+                    key={paragraphIndex}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      duration: 0.45,
+                      delay: 0.12 + Math.min(paragraphIndex, 6) * 0.035,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className={
+                      paragraphs.length === 0
+                        ? "font-heading text-2xl italic leading-snug text-white md:text-3xl"
+                        : ""
+                    }
+                  >
+                    {paragraphs.length === 0 ? "“" + paragraph + "”" : paragraph}
+                  </motion.p>
+                ))}
+              </div>
+            ) : (
+              <p>
+                This artisan’s full story is being prepared. For now, this space highlights their photograph, location, and voice from the Rangbheeni journey.
+              </p>
+            )}
+
+            <div className="clear-both" />
+          </div>
+
+          <div className="mt-10 h-px w-full bg-gradient-to-r from-[var(--rang-primary)]/45 via-white/15 to-transparent" />
+        </div>
+      </motion.article>
     </motion.div>
   );
 }
