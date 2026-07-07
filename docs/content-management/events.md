@@ -454,6 +454,7 @@ await prisma.event.update({
     imageId: media.id,
   },
 });
+
 16. Edit an existing event
 
 Use slug, id, or eventCode to identify the event.

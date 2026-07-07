@@ -16,7 +16,7 @@ const easeCurve: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 function DenimTexture() {
   return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+    <div className="pointer-events-none fixed inset-0 z-10 overflow-hidden">
       <div className="absolute inset-0 opacity-20 bg-brand-mesh" />
       <div
         className="absolute inset-0 opacity-[0.14] mix-blend-overlay"
@@ -34,14 +34,14 @@ export default function ProductsPageClient({ data }: { data: ProductsPageData })
     <PageBackground variant="jute">
       <main className="relative min-h-screen overflow-x-hidden bg-[#efeeea] text-[var(--color-brown)]">
         <DenimTexture />
-
-        <div className="relative z-10 md:pr-80 lg:pl-65">
-          <section className="mx-auto max-w-5xl px-6 pt-28 md:pt-32">
+       
+        <div className="relative z-10 pb-16 pl-24 pr-8 pt-52 md:pl-52 md:pr-20 lg:pl-72">
+          <section>
             <motion.div
               initial={{ opacity: 0, y: 22 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, ease: easeCurve }}
-              className="max-w-5xl"
+              
             >
               <h1 className="mt-4 font-heading text-4xl font-bold leading-[1.1] tracking-tighter text-[var(--rang-accent)] md:text-5xl lg:text-5xl">
                 {data.pageTitle ?? "Products"}
@@ -64,11 +64,11 @@ export default function ProductsPageClient({ data }: { data: ProductsPageData })
             </motion.div>
           </section>
 
-          <section className="mx-auto max-w-5xl px-6 py-10 md:py-16">
+          <section className="mx-auto max-w-5xl">
             <ProductsShowcase products={data.items} />
           </section>
 
-          <section className="mx-auto max-w-5xl border-t border-black/10 px-6 pb-10 pt-4 md:pb-14">
+          <section className="max-w-5xl border-t border-black/10">
             <motion.div
               initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}

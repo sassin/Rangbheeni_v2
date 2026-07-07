@@ -76,25 +76,24 @@ export default async function EventsPage() {
       <main className="relative min-h-screen overflow-x-hidden bg-[#efeeea] text-[var(--color-brown)]">
         <DenimTexture opacity="soft" />
 
-        <PageContentReveal className="relative z-10 pb-20 pl-24 pr-8 pt-28 md:pl-52 md:pr-20 lg:pl-72">
-          <section className="max-w-6xl">
+        <PageContentReveal className="relative z-10 pb-20 pl-24 pr-8 pt-52 md:pl-52 md:pr-20 lg:pl-72">
+          <section className="max-w-5xl">
             <PageHeroReveal
-              eyebrow="Our Events"
-              title="Meet Rangbheeni at exhibitions, workshops, and community spaces."
+              eyebrow=""
+              title="Meet Rangbheeni"
             />
           </section>
 
-          <section className="mt-14 max-w-6xl">
+          <section className="mt-14 max-w-5xl">
             <div className="mb-7 flex items-end justify-between gap-6">
-              <div>
-                <h2 className="font-heading text-3xl font-bold text-[var(--color-brown)] md:text-4xl">
-                  Upcoming event
-                </h2>
-                <StaticRangLine />
-                <p className="mt-4 max-w-3xl font-body text-neutral-700">
-                  Compact listings open for details while keeping the event page clean and easy to scan.
+              
+                <p className="font-body text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-accentblue)]">
+                  Upcoming Event
                 </p>
-              </div>
+
+                 <div className="h-px flex-1 bg-gradient-to-r from-[var(--color-brown)]/20 to-transparent" />
+ 
+              
             </div>
 
             {primaryUpcoming ? (
@@ -110,13 +109,13 @@ export default async function EventsPage() {
                 ) : null}
               </div>
             ) : (
-              <div className="rounded-[2rem] border border-dashed border-[var(--color-primary)]/35 bg-white/45 p-8">
+              <div className="rounded-[3rem] border border-dashed border-[var(--color-primary)]/35 bg-white/45 p-8">
                 <h3 className="font-heading text-2xl font-bold text-[var(--color-brown)]">
-                  No upcoming event is currently listed.
+                  No upcoming event
                 </h3>
                 <p className="mt-3 max-w-3xl font-body leading-7 text-neutral-700">
-                  Please contact Rangbheeni for upcoming exhibitions, workshops, collaboration
-                  stalls, or textile reuse events.
+                  Please contact Rangbheeni for upcoming exhibitions, workshops, collaboration,
+                  or textile collection events.
                 </p>
                 <Link
                   href="mailto:enquiries.rangbheeni@gmail.com"
@@ -128,24 +127,19 @@ export default async function EventsPage() {
             )}
           </section>
 
-          <section className="mt-16 max-w-6xl border-t border-black/10 pt-12">
+          <section className="mt-16 max-w-5xl  pt-12">
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="font-heading text-3xl font-bold text-[var(--color-brown)] md:text-4xl">
-                  Past events
-                </h2>
-                <StaticRangLine />
-              </div>
+              
+                <p className="font-body text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-accentblue)]">
+                  Past Events
+                </p>
+              
+              <div className="h-px flex-1 bg-gradient-to-r from-[var(--color-brown)]/20 to-transparent" />
 
-              <Link
-                href="mailto:enquiries.rangbheeni@gmail.com"
-                className="font-body text-sm font-semibold text-[var(--color-primary)] hover:underline"
-              >
-                Inquire about past events
-              </Link>
             </div>
+            
 
-            <div className="mt-7 border-t border-black/10">
+            <div className="mt-7">
               {past.length > 0 ? (
                 past.slice(0, 12).map((event) => <PastEventRow key={event.id} event={event} />)
               ) : (

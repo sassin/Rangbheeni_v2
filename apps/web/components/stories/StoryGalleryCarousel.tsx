@@ -227,7 +227,7 @@ export default function StoryGalleryCarousel({
       onBlur={() => setPaused(false)}
     >
       <div className="mb-4 flex items-center gap-4">
-        <p className="font-body text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-primary)]">
+        <p className="font-body text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-accentblue)]">
           Gallery wall
         </p>
         <div className="h-px flex-1 bg-gradient-to-r from-[var(--color-brown)]/20 to-transparent" />

@@ -7,6 +7,7 @@ import DenimTexture from "@/components/shared/DenimTexture";
 import PageContentReveal from "@/components/shared/PageContentReveal";
 import PageHeroReveal from "@/components/shared/PageHeroReveal";
 import StoryGalleryCarousel from "@/components/stories/StoryGalleryCarousel";
+import RangDivider from "@/components/shared/RangDivider";
 
 export const revalidate = 300;
 
@@ -76,7 +77,7 @@ function PrimaryStoryCard({ story }: { story: StoryDto }) {
 
       <div className="flex flex-col justify-center">
         <p className="font-body text-xs uppercase tracking-[0.24em] text-[var(--color-primary)]">
-          Featured story
+          Cover Story
         </p>
 
         <h2 className="mt-3 font-heading text-2xl font-bold leading-[1.08] text-[var(--color-brown)] md:text-4xl">
@@ -260,9 +261,9 @@ async function StoriesContent() {
 
   return (
     <div className="stories-soft-enter">
-      <section id="featured-story" className="mt-12 max-w-6xl scroll-mt-24">
+      <section id="featured-story" className="mt-12 max-w-5xl scroll-mt-24">
         <div className="mb-5 flex items-center gap-4">
-          <p className="font-body text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-primary)]">
+          <p className="font-body text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-accentblue)]">
             Featured stories
           </p>
           <div className="h-px flex-1 bg-gradient-to-r from-[var(--color-brown)]/20 to-transparent" />
@@ -290,10 +291,10 @@ async function StoriesContent() {
         ) : (
           <div className="rounded-[2rem] border border-dashed border-[var(--color-primary)]/35 bg-white/45 p-8">
             <h2 className="font-heading text-2xl font-bold text-[var(--color-brown)]">
-              No stories are currently published.
+              Stories are in the making.
             </h2>
             <p className="mt-3 font-body text-neutral-700">
-              Stories will appear here once they are published in the Rangbheeni database.
+              Rangbheeni is out in the field.
             </p>
           </div>
         )}
@@ -302,7 +303,7 @@ async function StoriesContent() {
       {carouselImages.length > 0 ? (
         <section
           id="work-in-motion"
-          className="mt-12 max-w-6xl scroll-mt-24 stories-soft-enter-gallery"
+          className="mt-12 max-w-5xl scroll-mt-24 stories-soft-enter-gallery"
         >
           <StoryGalleryCarousel images={carouselImages} />
         </section>
@@ -310,25 +311,14 @@ async function StoriesContent() {
 
       <section
         id="story-archive"
-        className="mt-14 max-w-6xl scroll-mt-24 border-t border-black/10 pt-12 stories-soft-enter-archive"
+        className="mt-14 max-w-5xl scroll-mt-24 border-t border-black/10 pt-12 stories-soft-enter-archive"
       >
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <h2 className="font-heading text-3xl font-bold text-[var(--color-brown)] md:text-4xl">
-              All stories
+              All Stories
             </h2>
-            <p className="mt-2 max-w-3xl font-body text-neutral-700">
-              Non-featured stories are kept here as a compact archive, so the page stays calm
-              while the featured stories and gallery wall carry the visual rhythm.
-            </p>
           </div>
-
-          <Link
-            href="mailto:enquiries.rangbheeni@gmail.com"
-            className="font-body text-sm font-semibold text-[var(--color-primary)] hover:underline"
-          >
-            Inquire about stories
-          </Link>
         </div>
 
         {archive.length > 0 ? (
@@ -361,12 +351,12 @@ export default function StoriesPage() {
       <main className="relative min-h-screen overflow-x-hidden bg-[#efeeea] text-[var(--color-brown)]">
         <DenimTexture opacity="soft" />
 
-        <PageContentReveal className="relative z-10 pb-20 pl-24 pr-8 pt-28 md:pl-52 md:pr-20 lg:pl-72">
-          <section className="max-w-6xl">
+        <PageContentReveal className="relative z-10 pb-16 pl-24 pr-8 pt-52 md:pl-52 md:pr-20 lg:pl-72">
+          <section className="max-w-5xl">
             <PageHeroReveal
-              eyebrow="Our Stories"
-              title="Stories of cloth, craft, care, and community."
-              description="A curated view into Rangbheeni’s work with women, upcycled textiles, community engagement, and climate-conscious livelihoods."
+              eyebrow=""
+              title="Stories of cloth, craft, and community"
+              description=""
             />
           </section>
 
